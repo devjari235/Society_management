@@ -222,7 +222,7 @@
       <h2>Member Login</h2>
 
       <div class="input-field">
-        <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" "></asp:TextBox>
+        <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
         <label for="txtEmail">Email Address</label>
         <i class="fas fa-envelope"></i>
       </div>
