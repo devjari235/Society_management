@@ -1,0 +1,36 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="H_master.master.cs" Inherits="Society_management.H_master" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title></title>
+     <%--bootstrap css--%>
+     <link href="bootstrap\css\bootstrap.min.css" rel="stylesheet" />
+   <%--datatable css--%>
+ <link href="datatable\css\dataTables.dataTables.min.css" rel="stylesheet" />
+   <%--fontawesome css--%>
+ <link href="fontawesome\css\all.css" rel="stylesheet" />
+ <%--Custom css--%>
+  <link href="css\Customstylesheet.css" rel="stylesheet" />
+
+ <%--jquery--%>
+<script src="bootstrap\js\jquery-3.5.1.slim.min.js"></script>
+<%-- popper js--%>
+ <script src="bootstrap\js\popper.min.js"></script>
+ <%--bootstrap js--%>
+ <script src="bootstrap\js\bootstrap.min.js"></script>
+ <%--Datatable  js--%>
+<script src="datatable\js\dataTables.min.js"></script>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>
