@@ -2176,6 +2176,7 @@
     <Content Include="Images\S_1.png" />
     <Content Include="Images\S_2.jpg" />
     <Content Include="Images\S_3.jpg" />
+    <Content Include="Login.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -2192,6 +2193,13 @@
     </Compile>
     <Compile Include="H_master.Master.designer.cs">
       <DependentUpon>H_master.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
