@@ -2180,6 +2180,8 @@
     <Content Include="Images\notice.png" />
     <Content Include="Images\R_1.jpeg" />
     <Content Include="Images\security.jpg" />
+    <Content Include="Images\skyblue.png" />
+    <Content Include="Images\skyblue1.jpg" />
     <Content Include="Images\S_1.png" />
     <Content Include="Images\S_2.jpg" />
     <Content Include="Images\S_3.jpg" />
