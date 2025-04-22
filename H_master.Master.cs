@@ -13,5 +13,10 @@ namespace Society_management
         {
 
         }
+
+        protected void LinkButton5_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Login.aspx");
+        }
     }
 }
