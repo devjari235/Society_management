@@ -21,29 +21,31 @@
             <div class="row">
                  <div class="col-md-4">
                      <center>
-                         <img src="images\digital_inventory.jpg" width="150px"/>
-                         <h4>Digital Inventory</h4>
+                         <img src="images\R_1.jpeg" width="150px" height="100px"/>
+                     
+                         <h4>Resident Management</h4>
                          <p class="text-justify">
-                             Our digital image inventory ensures that all images are organized, searchable, and ready for immediate use in your projects.
+                              Each profile includes contact information, flat number, ownership status, and move-in/move-out history.
                          </p>
                     </center>
                 </div>
 
                  <div class="col-md-4">
                     <center>
-                        <img src="images\Search.png" width="150px"/>
-                        <h4>Search Image</h4>
+                        <img src="images\Bill.png" width="100px" height="100px"/>
+                      
+                        <h4>Maintenance Billing</h4>
                         <p class="text-justify">
-                             Search engines are the backbone of the modern internet, allowing users to quickly find information on virtually any topic.
+                             Automatically generate monthly maintenance invoices based on predefined rules (e.g., per square foot, flat rate, etc.).
                     </center>
                 </div>
 
                  <div class="col-md-4">
                      <center>
-                     <img src="images\default.jpg" width="150px"/>
-                     <h4>Defaulter List</h4>
+                     <img src="images\Booking.jpg" width="170px" height="100px"/>
+                     <h4>Facility Booking</h4>
                      <p class="text-justify">
-                        The defaulter list includes individuals and entities that have failed to meet their financial obligations, categorized by the amount owed and the duration of default.
+                        Residents can view availability and book common society facilities such as the clubhouse, gym, garden area, or guest parking.
                     </center>
                 </div>
             </div>
@@ -60,7 +62,7 @@
             <div class="col-12">
                 <center>
                     <h2>Our Process</h2>
-                    <p><b>We have a Simple 3 step Process-</b></p>
+                    <p><b>We have a Simple step Process-</b></p>
                 </center>
             </div>
         </div>
@@ -68,29 +70,29 @@
         <div class="row">
              <div class="col-md-4">
                  <center>
-                     <img src="images\Singup.png" width="150px"/>
-                     <h4>Sign Up</h4>
+                     <img src="images\C_1.jpeg" width="150px" height="100px"/>
+                     <h4>Complaint Management</h4>
                      <p class="text-justify">
-                        signing up, you'll gain exclusive access to our innovative platform, designed to empower and inspire your journey towards success.
+                        Residents can easily raise complaints or service requests related to plumbing, electricity, security, etc. The system assigns a tracking ID, notifies relevant staff, and updates the status in real time. 
                      </p>
                 </center>
             </div>
 
              <div class="col-md-4">
                 <center>
-                    <img src="images\Search.png" width="150px"/>
-                    <h4>Search Image</h4>
+                    <img src="images\notice.png" width="150px" height="100px"/>
+                    <h4>Notice Board</h4>
                     <p class="text-justify">
-                         Search engines are the backbone of the modern internet, allowing users to quickly find information on virtually any topic.
+                         A digital notice board for sharing important announcements like meeting schedules, maintenance work, water supply interruptions, and event invitations.
                 </center>
             </div>
 
              <div class="col-md-4">
                  <center>
-                 <img src="images\Visti_us.jpg" width="150px"/>
-                 <h4>Vist Us</h4>
+                 <img src="images\security.jpg" width="150px" height="100px"/>
+                 <h4>Security & Visitor Logs</h4>
                  <p class="text-justify">
-                 Discover the heart of our community by visiting us in person. Our welcoming space is designed to inspire and connect individuals from all walks of life.
+                Guards or security staff can log visitor entries,exits,and purpose of visit via a mobile interface.This real-time log increases safety and transparency while allowing residents to receive notifications when a guest or delivery arrives.
                 </center>
             </div>
         </div>

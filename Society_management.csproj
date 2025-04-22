@@ -2172,7 +2172,14 @@
     <Content Include="fontawesome\svgs\solid\z.svg" />
     <Content Include="Home.aspx" />
     <Content Include="Images\Bg.jpg" />
+    <Content Include="Images\Bill.png" />
+    <Content Include="Images\Booking.jpg" />
+    <Content Include="Images\C_1.jpeg" />
     <Content Include="Images\Logo.png" />
+    <Content Include="Images\l_bg.jpg" />
+    <Content Include="Images\notice.png" />
+    <Content Include="Images\R_1.jpeg" />
+    <Content Include="Images\security.jpg" />
     <Content Include="Images\S_1.png" />
     <Content Include="Images\S_2.jpg" />
     <Content Include="Images\S_3.jpg" />
