@@ -1,45 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/H_master.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="Society_management.Home" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 <style>
- 
-    /*.clean-section {
- background-image:url(Images\skyblue.png);
-
-            color: #333;
-        }
-        .clean-section h2 {
-            color: #2c3e50;
-            font-weight: bold;
-        }
-        .clean-section p {
-            color: #555;
-        }
-
-        .clean-section .container {*/
-            /*background-color: #ecf0f1;*/
-            /*padding: 50px 0;*/
-            /*border-radius: 8px;
-        }
-        .clean-section .container h2 {
-            color: #2980b9;
-            font-weight: bold;
-        }
-        .clean-section .container p {
-            color: #7f8c8d;
-        }
-
-        .clean-section img {
-            border-radius: 8px;
-        }
-        .clean-section h4 {*/
-            /*margin-top: 15px;*/
-            /*color: #34495e;
-        }
-        .text-justify {
-            text-align: justify;
-        }*/
             section{
-                background:url('Images/section.png');
+                background:url('Images/Sky.png');
             }
 </style>
 

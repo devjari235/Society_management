@@ -12,208 +12,207 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary-color: #4a6bff;
-      --white: #ffffff;
-      --dark: #1e293b;
-      --light-bg: rgba(255, 255, 255, 0.1);
-      --border-color: rgba(255, 255, 255, 0.2);
-      --text-color: #f8fafc;
-    }
+  --primary-color: #000000;
+  --white: #000000;
+  --dark: #000000;
+  --light-bg: rgba(0, 0, 0, 0.05);
+  --border-color: #000000;
+  --text-color: #000000;
+}
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
 
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: url('Images/U_bg.jpg') no-repeat center center;
-      background-size: cover;
-      background-blend-mode: overlay;
-      color: var(--text-color);
-    }
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('Images/U_bg.jpg') no-repeat center center;
+  background-size: cover;
+  background-blend-mode: overlay;
+  color: var(--text-color);
+}
 
-    .wrapper {
-      width: 100%;
-      max-width: 420px;
-      background: var(--light-bg);
-      border: 2px solid var(--border-color);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); /* Safari support */
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-      color: var(--white);
-      border-radius: 12px;
-      padding: 30px;
-      margin: 20px;
-      transition: all 0.3s ease;
-    }
+.wrapper {
+  width: 100%;
+  max-width: 420px;
+  background: var(--light-bg);
+  border: 2px solid var(--border-color);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  color: var(--white);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 20px;
+  transition: all 0.3s ease;
+}
 
-    .wrapper:hover {
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    }
+.wrapper:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
 
-    .wrapper h2 {
-      font-size: 28px;
-      text-align: center;
-      margin-bottom: 30px;
-      font-weight: 600;
-    }
+.wrapper h2 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 600;
+}
 
-    .input-field {
-      position: relative;
-      width: 100%;
-      height: 50px;
-      margin: 25px 0;
-    }
+.input-field {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 25px 0;
+}
 
-    .input-field .textbox {
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      border: 2px solid var(--border-color);
-      border-radius: 40px;
-      font-size: 16px;
-      color: var(--white);
-      padding: 20px 45px 20px 20px;
-      transition: all 0.3s;
-    }
+.input-field .textbox {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 2px solid var(--border-color);
+  outline: none;
+  border-radius: 40px;
+  font-size: 16px;
+  color: var(--white);
+  padding: 20px 45px 20px 20px;
+  transition: all 0.3s;
+}
 
-    .input-field .textbox:focus {
-      border-color: var(--white);
-    }
+.input-field .textbox:focus {
+  border-color: var(--white);
+}
 
-    .input-field .textbox::placeholder {
-      color: transparent;
-    }
+.input-field .textbox::placeholder {
+  color: transparent;
+}
 
-    .input-field i {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--white);
-      font-size: 16px;
-    }
+.input-field i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--white);
+  font-size: 16px;
+}
 
-    .input-field label {
-      position: absolute;
-      top: 50%;
-      left: 20px;
-      transform: translateY(-50%);
-      font-size: 16px;
-      color: var(--white);
-      pointer-events: none;
-      transition: all 0.3s;
-    }
+.input-field label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--white);
+  pointer-events: none;
+  transition: all 0.3s;
+}
 
-    .input-field .textbox:focus ~ label,
-    .input-field .textbox:not(:placeholder-shown) ~ label {
-      top: 0;
-      left: 20px;
-      font-size: 12px;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 0 6px;
-      border-radius: 10px;
-    }
+.input-field .textbox:focus ~ label,
+.input-field .textbox:not(:placeholder-shown) ~ label {
+  top: 0;
+  left: 20px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0 6px;
+  border-radius: 10px;
+}
 
-    .forget {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin: 20px 0 25px;
-    }
+.forget {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin: 20px 0 25px;
+}
 
-    .forget label {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-    }
+.forget label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
 
-    .forget a {
-      color: var(--white);
-      text-decoration: none;
-      transition: all 0.3s;
-    }
+.forget a {
+  color: var(--white);
+  text-decoration: none;
+  transition: all 0.3s;
+}
 
-    .forget a:hover {
-      color: var(--primary-color);
-      text-decoration: underline;
-    }
+.forget a:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
 
-    .login-button {
-      width: 100%;
-      height: 45px;
-      background: var(--white);
-      border: none;
-      outline: none;
-      border-radius: 40px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      font-size: 16px;
-      color: var(--dark);
-      font-weight: 600;
-      transition: all 0.3s;
-    }
+.login-button {
+  width: 100%;
+  height: 45px;
+  background: #000000;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s;
+}
 
-    .login-button:hover {
-      background: rgba(255, 255, 255, 0.9);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
+.login-button:hover {
+  background: #222222;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
 
-    .register {
-      text-align: center;
-      margin-top: 25px;
-      font-size: 14px;
-    }
+.register {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+}
 
-    .register p {
-      color: var(--white);
-    }
+.register p {
+  color: var(--white);
+}
 
-    .register a {
-      color: var(--primary-color);
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
+.register a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
 
-    .register a:hover {
-      text-decoration: underline;
-    }
+.register a:hover {
+  text-decoration: underline;
+}
 
-    /* Checkbox styling */
-    input[type="checkbox"] {
-      accent-color: var(--primary-color);
-      width: 16px;
-      height: 16px;
-      cursor: pointer;
-    }
+input[type="checkbox"] {
+  accent-color: var(--primary-color);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
 
-    /* Responsive design */
-    @media (max-width: 480px) {
-      .wrapper {
-        padding: 25px;
-        margin: 15px;
-      }
-      
-      .wrapper h2 {
-        font-size: 24px;
-      }
-      
-      .input-field {
-        height: 45px;
-        margin: 20px 0;
-      }
-    }
+/* Responsive design */
+@media (max-width: 480px) {
+  .wrapper {
+    padding: 25px;
+    margin: 15px;
+  }
+
+  .wrapper h2 {
+    font-size: 24px;
+  }
+
+  .input-field {
+    height: 45px;
+    margin: 20px 0;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -244,7 +243,7 @@
       <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="login-button" />
 
       <div class="register">
-        <p>Not a member? <a href="Register.aspx">Create account</a></p>
+        <p style="color:white">Not a member? <a href="Register.aspx"style="color:white">Create account</a></p>
       </div>
     </div>
   </form>

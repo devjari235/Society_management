@@ -22,6 +22,21 @@
  <script src="bootstrap\js\bootstrap.min.js"></script>
  <%--Datatable  js--%>
 <script src="datatable\js\dataTables.min.js"></script>
+    <style>
+    .navbar-nav .nav-link {
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #ffd700 !important; 
+    text-decoration: none;
+}
+
+.navbar-nav .nav-item.action:hover {
+    background-color: #006666; 
+    border-radius: 5px;
+}
+    </style>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>

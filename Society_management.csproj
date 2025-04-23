@@ -2175,12 +2175,13 @@
     <Content Include="Images\Bill.png" />
     <Content Include="Images\Booking.jpg" />
     <Content Include="Images\C_1.jpeg" />
-    <Content Include="Images\Grey.jpg" />
+    <Content Include="Images\light.png" />
     <Content Include="Images\Logo.png" />
     <Content Include="Images\l_bg.jpg" />
     <Content Include="Images\notice.png" />
     <Content Include="Images\R_1.jpeg" />
     <Content Include="Images\security.jpg" />
+    <Content Include="Images\Sky.png" />
     <Content Include="Images\skyblue.png" />
     <Content Include="Images\skyblue1.jpg" />
     <Content Include="Images\S_1.png" />

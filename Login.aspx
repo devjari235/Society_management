@@ -219,7 +219,7 @@
 <body>
   <form id="form1" runat="server">
     <div class="wrapper">
-      <h2>Admin Login</h2>
+      <h2 style="color:black">Admin Login</h2>
 
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
@@ -244,7 +244,7 @@
       <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="login-button" />
 
       <div class="register">
-        <p>Not a member? <a href="Register.aspx">Create account</a></p>
+        <p>Not a member? <a href="Register.aspx" style="color:black">Create account</a></p>
       </div>
     </div>
   </form>
