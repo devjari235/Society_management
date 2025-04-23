@@ -67,7 +67,7 @@
                                         <div class="form-check d-flex justify-content-center mb-5">
                                             <asp:CheckBox ID="chkTerms" CssClass="form-check-input me-2" runat="server" />
                                             <label class="form-check-label" for="chkTerms">
-                                                I agree all statements in <a href="#">Terms of service</a>
+                                                I agree all statements in <a href="Terms.aspx">Terms of service</a>
                                             </label>
                                         </div>
 
