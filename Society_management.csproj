@@ -2175,6 +2175,7 @@
     <Content Include="Images\Bill.png" />
     <Content Include="Images\Booking.jpg" />
     <Content Include="Images\C_1.jpeg" />
+    <Content Include="Images\Grey.jpg" />
     <Content Include="Images\Logo.png" />
     <Content Include="Images\l_bg.jpg" />
     <Content Include="Images\notice.png" />
@@ -2185,7 +2186,9 @@
     <Content Include="Images\S_1.png" />
     <Content Include="Images\S_2.jpg" />
     <Content Include="Images\S_3.jpg" />
+    <Content Include="Images\U_bg.jpg" />
     <Content Include="Login.aspx" />
+    <Content Include="U_login.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -2211,6 +2214,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="U_login.aspx.cs">
+      <DependentUpon>U_login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="U_login.aspx.designer.cs">
+      <DependentUpon>U_login.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="H_master.Master" />
