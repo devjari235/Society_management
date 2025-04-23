@@ -29,9 +29,9 @@
 <body>
      <form id="form1" runat="server">
     <div>
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #7AC6D2">
-           <a class="navbar-brand" href="#">
-               <img src="Images\Logo.png" height="70px" width="90px"/>
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #004d4d;">
+           <a class="navbar-brand" href="#" style="color:#ffffff">
+               <img src="Images\Logo.png" height="70px" width="90px" />
                 Society Management
              </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -42,23 +42,23 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item action">
-                        <a class="nav-link" href="homepage.aspx">Home</a>
+                        <a class="nav-link" href="homepage.aspx" style="color:#ffffff">Home</a>
                     </li>
                     <li class="nav-item action">
-                         <a class="nav-link" href="#">About Us</a>
+                         <a class="nav-link" href="#" style="color:#ffffff">About Us</a>
                     </li>
                     <li class="nav-item action">
-                         <a class="nav-link" href="#">Terms</a>
+                         <a class="nav-link" href="#" style="color:#ffffff">Terms</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item action">
-                         <asp:LinkButton CssClass="nav-link" ID="LinkButton5" runat="server"  Visible="True" OnClick="LinkButton5_Click">
+                         <asp:LinkButton CssClass="nav-link" ID="LinkButton5" style="color:#ffffff" runat="server"  Visible="True" OnClick="LinkButton5_Click">
                              Admin
                          </asp:LinkButton>
                     </li>
                     <li class="nav-item action">
-                         <asp:LinkButton CssClass="nav-link" ID="LinkButton7" runat="server" Visible="True">
+                         <asp:LinkButton CssClass="nav-link" ID="LinkButton7" style="color:#ffffff" runat="server" Visible="True">
                               User
                           </asp:LinkButton>
                      </li>
@@ -104,8 +104,8 @@
          </div>
          <div id="footer2" class="container-fluid">
               <div class="row">
-                   <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                       <p style="color:whitesmoke">&copy All right Reversed.<a class="footerlinks" href="#" target="_blank">Society</a></p>
+                   <div class="col-xs-12 col-sm-12 col-md-12 text-center" style="color:whitesmoke; background-color: #004d4d; font-size: 14px;">
+                       <p">&copy; 2025 Society Management | Built with ❤️ for your community <a class="footerlinks" href="#" target="_blank">Society</a></p>
                    </div>
               </div>
          </div>

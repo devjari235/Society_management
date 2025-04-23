@@ -219,7 +219,7 @@
 <body>
   <form id="form1" runat="server">
     <div class="wrapper">
-      <h2>Member Login</h2>
+      <h2>Admin Login</h2>
 
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
