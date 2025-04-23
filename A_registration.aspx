@@ -72,7 +72,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                                            <asp:Button ID="btnRegister" runat="server" CssClass="btn btn-primary btn-lg" Text="Register"/>
+                                            <asp:Button ID="btnRegister" runat="server" CssClass="btn btn-primary btn-lg" Text="Register" OnClick="btnRegister_Click"/>
                                         </div>
 
                                     </div>
