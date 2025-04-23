@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="A_registration.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\jquery-3.5.1.slim.min.js" />
@@ -2192,6 +2193,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="A_registration.aspx.cs">
+      <DependentUpon>A_registration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="A_registration.aspx.designer.cs">
+      <DependentUpon>A_registration.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
