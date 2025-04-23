@@ -19,7 +19,9 @@ namespace Society_management
             Response.Redirect("Login.aspx");
         }
 
-        protected void LinkButton7_Click(object sender, EventArgs e)
+
+
+        protected void LinkButton7_Click1(object sender, EventArgs e)
         {
             Response.Redirect("U_login.aspx");
         }
