@@ -58,7 +58,7 @@
                          </asp:LinkButton>
                     </li>
                     <li class="nav-item action">
-                         <asp:LinkButton CssClass="nav-link" ID="LinkButton7" runat="server" Visible="True">
+                         <asp:LinkButton CssClass="nav-link" ID="LinkButton7" runat="server" Visible="True" OnClick="LinkButton7_Click">
                               User
                           </asp:LinkButton>
                      </li>
