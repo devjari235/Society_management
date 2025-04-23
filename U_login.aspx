@@ -243,7 +243,7 @@ input[type="checkbox"] {
       <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="login-button" />
 
       <div class="register">
-        <p style="color:white">Not a member? <a href="Register.aspx"style="color:white">Create account</a></p>
+        <p style="color:white">Not a member? <a href="U_registration.aspx"style="color:white">Create account</a></p>
       </div>
     </div>
   </form>
