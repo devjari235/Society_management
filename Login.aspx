@@ -263,7 +263,7 @@
         <a href="ForgotPassword.aspx">Forgot password?</a>
       </div>
 
-      <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="login-button"/>
+      <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="login-button" OnClick="btnLogin_Click"/>
 
       <div class="register">
         <p>Not a member? <a href="A_registration.aspx" style="color:black">Create account</a></p>
