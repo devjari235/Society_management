@@ -38,7 +38,11 @@ body {
 
 /* Sidebar Styles */
 .sidebar-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+position: relative;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
 }
 
 .sidebar-card .card-header {
@@ -135,6 +139,11 @@ body {
         margin-bottom: 1rem;
     }
 }
+.container {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 
 /* Footer Styles */
 footer a {
@@ -236,7 +245,7 @@ footer a:hover {
         </header>
 
         <!-- Main Content -->
-        <main class="container my-4">
+        <main class="container-fluid my-4 px-4">
             <div class="row">
                 <!-- Sidebar -->
                 <div class="col-md-3 d-none d-md-block">
