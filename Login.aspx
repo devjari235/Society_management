@@ -210,7 +210,7 @@
 }
 
 .asp-validation::before {
-  content: "\f071"; 
+  content: "⚠  ";
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
   font-size: 14px;

@@ -250,7 +250,7 @@
       <!-- Email -->
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
-        <label for="txtEmail">Email Or Mobile Number</label>
+        <label for="txtEmail" style="color:white">Email Or Mobile Number</label>
         <i class="fas fa-envelope"></i>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtEmail" Display="Dynamic" ErrorMessage="Please Enter Valid Email ID or Phone Number" CssClass="asp-validation" SetFocusOnError="True" />
       </div>
@@ -258,7 +258,7 @@
       <!-- Password -->
       <div class="input-field">
         <asp:TextBox ID="txtPassword" runat="server" CssClass="textbox" TextMode="Password" placeholder=" "></asp:TextBox>
-        <label for="txtPassword">Password</label>
+        <label for="txtPassword" style="color:white">Password</label>
         <i class="fas fa-lock"></i>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Enter Your Login Password" CssClass="asp-validation" SetFocusOnError="True" />
       </div>
