@@ -250,7 +250,7 @@
       <!-- Email -->
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
-        <label for="txtEmail">Email Address</label>
+        <label for="txtEmail">Email Or Mobile Number</label>
         <i class="fas fa-envelope"></i>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtEmail" Display="Dynamic" ErrorMessage="Please Enter Valid Email ID or Phone Number" CssClass="asp-validation" SetFocusOnError="True" />
       </div>

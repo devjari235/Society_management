@@ -243,7 +243,7 @@
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" CssClass="asp-validation"
           ControlToValidate="txtEmail" Display="Dynamic" ErrorMessage="Please Enter Email ID or Password" SetFocusOnError="True" />
-        <label for="txtEmail">Email Address</label>
+        <label for="txtEmail">Email Or Mobile Number</label>
         <i class="fas fa-envelope"></i>
       </div>
 
