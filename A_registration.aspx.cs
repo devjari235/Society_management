@@ -14,16 +14,16 @@ namespace Society_management
          string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(strcon);
-            if (con.State != System.Data.ConnectionState.Open)
-            {
-                con.Open();
-                Response.Write("Connection Successfully");
-            }
-            else
-            {
-                Response.Write("Fail");
-            }
+            //SqlConnection con = new SqlConnection(strcon);
+            //if (con.State != System.Data.ConnectionState.Open)
+            //{
+            //    con.Open();
+            //    Response.Write("Connection Successfully");
+            //}
+            //else
+            //{
+            //    Response.Write("Fail");
+            //}
         }
 
         protected void btnRegister_Click(object sender, EventArgs e)
