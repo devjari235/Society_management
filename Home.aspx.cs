@@ -14,7 +14,7 @@ namespace Society_management
        
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            Response.Write(Session["a"]);
         }
     }
 }
