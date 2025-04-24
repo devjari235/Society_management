@@ -45,5 +45,10 @@ namespace Society_management
             //Response.Write("<script>alert('Thank you For Sing up and go to Login')</script>");
             Response.Redirect("Login.aspx");
         }
+        protected void cvTerms_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = chkTerms.Checked;
+        }
+
     }
 }

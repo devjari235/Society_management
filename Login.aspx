@@ -44,7 +44,7 @@
       background: var(--light-bg);
       border: 2px solid var(--border-color);
       backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px); /* Safari support */
+      -webkit-backdrop-filter: blur(20px);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
       color: var(--white);
       border-radius: 12px;
@@ -190,7 +190,6 @@
       text-decoration: underline;
     }
 
-    /* Checkbox styling */
     input[type="checkbox"] {
       accent-color: var(--primary-color);
       width: 16px;
@@ -198,17 +197,36 @@
       cursor: pointer;
     }
 
-    /* Responsive design */
+.asp-validation {
+  color: #FFD700;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  margin-left: 5px;
+  transition: all 0.3s ease-in-out;
+}
+
+.asp-validation::before {
+  content: "\f071"; 
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  font-size: 14px;
+}
+
+
     @media (max-width: 480px) {
       .wrapper {
         padding: 25px;
         margin: 15px;
       }
-      
+
       .wrapper h2 {
         font-size: 24px;
       }
-      
+
       .input-field {
         height: 45px;
         margin: 20px 0;
@@ -223,12 +241,16 @@
 
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
+        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" CssClass="asp-validation"
+          ControlToValidate="txtEmail" Display="Dynamic" ErrorMessage="Please Enter Email ID or Password" SetFocusOnError="True" />
         <label for="txtEmail">Email Address</label>
         <i class="fas fa-envelope"></i>
       </div>
 
       <div class="input-field">
         <asp:TextBox ID="txtPassword" runat="server" CssClass="textbox" TextMode="Password" placeholder=" "></asp:TextBox>
+        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" CssClass="asp-validation"
+          ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Please Enter Your Password" SetFocusOnError="True" />
         <label for="txtPassword">Password</label>
         <i class="fas fa-lock"></i>
       </div>
