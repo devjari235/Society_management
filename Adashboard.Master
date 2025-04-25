@@ -412,6 +412,15 @@ footer a:hover {
                         <div class="card-body p-0">
                             <div class="list-group list-group-flush">
                                 <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i>Overview</a>
+                               
+                                    <a class="list-group-item list-group-item-action"  id="SocietyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="fas fa-building me-2"></i> Society
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="residentsDropdown">
+                                        <li><a class="dropdown-item" href="/Residents/List.aspx">All Residents</a></li>
+                                        <li><a class="dropdown-item" href="/Residents/Add.aspx">Add Resident</a></li>
+                                    </ul>
+                                
                                 <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <%--<span class="badge bg-danger float-end">3</span>--%></a>
                                 <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i>Messages</a>
                                 <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i>Documents</a>
