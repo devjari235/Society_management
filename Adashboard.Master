@@ -429,8 +429,8 @@ footer a:hover {
                                         <i class="fas fa-chevron-down small"></i>
                                     </a>
                                    <div class="collapse ps-4" id="flatsSubmenu">
-                                    <a href="/Flats/Add.aspx" class="list-group-item list-group-item-action bg-dark text-light">Add Society</a>
-                                    <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light">View Society</a>
+                                    <a href="/Flats/Add.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-building-fill-add"></i> Add Society</a>
+                                    <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-eye-fill"></i> View Society</a>
                                 </div>
                                 
                                 <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <%--<span class="badge bg-danger float-end">3</span>--%></a>
