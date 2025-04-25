@@ -336,8 +336,8 @@ footer a:hover {
 
 }
 .list-group-item.bg-dark:hover{
-    background-color:gray !important;
-    color:white !important;
+   background-color:lightgray !important; /* Light gray default */
+  color: black !important;
 }
 
     </style>
