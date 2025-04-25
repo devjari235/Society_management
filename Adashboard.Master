@@ -329,6 +329,16 @@ footer a:hover {
 .text-light-blue {
     color: #0d6efd;
 }
+.list-group-item.bg-dark {
+    background-color: whitesmoke !important;
+    color: black !important;
+    font-size: 14px;
+
+}
+.list-group-item.bg-dark:hover{
+    background-color:gray !important;
+    color:white !important;
+}
 
     </style>
 </head>
@@ -413,13 +423,15 @@ footer a:hover {
                             <div class="list-group list-group-flush">
                                 <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i>Overview</a>
                                
-                                    <a class="list-group-item list-group-item-action"  id="SocietyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-building me-2"></i> Society
+                                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                       data-bs-toggle="collapse" href="#flatsSubmenu" role="button" aria-expanded="false" aria-controls="flatsSubmenu">
+                                        <span><i class="fas fa-building me-2"></i>Society</span>
+                                        <i class="fas fa-chevron-down small"></i>
                                     </a>
-                                    <ul class="dropdown-menu" aria-labelledby="residentsDropdown">
-                                        <li><a class="dropdown-item" href="/Residents/List.aspx">All Residents</a></li>
-                                        <li><a class="dropdown-item" href="/Residents/Add.aspx">Add Resident</a></li>
-                                    </ul>
+                                   <div class="collapse ps-4" id="flatsSubmenu">
+                                    <a href="/Flats/Add.aspx" class="list-group-item list-group-item-action bg-dark text-light">Add Society</a>
+                                    <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light">View Society</a>
+                                </div>
                                 
                                 <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <%--<span class="badge bg-danger float-end">3</span>--%></a>
                                 <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i>Messages</a>
