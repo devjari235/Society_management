@@ -385,6 +385,7 @@ footer a:hover {
                                 <a class="nav-link" href="/Events/Calendar.aspx"><i class="fas fa-calendar-alt"></i> Events</a>
                             </li>
                         </ul>
+
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -472,10 +473,25 @@ footer a:hover {
                                     <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-eye-fill"></i> View Committee Member</a>
                                 </div>
                                 <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <%--<span class="badge bg-danger float-end">3</span>--%></a>
-                                <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i>Messages</a>
+                                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                    data-bs-toggle="collapse" href="#notice_board" role="button" aria-expanded="false" aria-controls="notice_board">
+                                    <span><i class="bi bi-envelope-fill"></i> Notice Board</span>
+                                    <i class="fas fa-chevron-down small"></i>
+                                </a>
+                                <div class="collapse ps-4" id="notice_board">
+                                    <a href="/Flats/Add.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-envelope-plus-fill"></i> Add Notice</a>
+                                    <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-eye-fill"></i> View Notice</a>
+                                </div>
                                 <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i>Documents</a>
-                                <a href="/Facilities/Booking.aspx" class="list-group-item list-group-item-action"><i class="fas fa-swimming-pool me-2"></i>Facility Booking</a>
-                                <a href="/Visitors/Log.aspx" class="list-group-item list-group-item-action"><i class="fas fa-user-friends me-2"></i>Visitor Log</a>
+                                <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                                    data-bs-toggle="collapse" href="#visitor" role="button" aria-expanded="false" aria-controls="visitor">
+                                    <span><i <i class="fas fa-user-friends me-2"></i> Visitor Log</span>
+                                    <i class="fas fa-chevron-down small"></i>
+                                </a>
+                                <div class="collapse ps-4" id="visitor">
+                                    <a href="/Flats/Add.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-person-fill-add"></i> Add Visitor</a>
+                                    <a href="/Flats/Manage.aspx" class="list-group-item list-group-item-action bg-dark text-light"><i class="bi bi-person-vcard-fill"></i> View Visitor</a>
+                                </div>
                                 <a href="/Settings.aspx" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i>Settings</a>
                             </div>
                         </div>
