@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/H_master.Master" AutoEventWireup="true" CodeBehind="Home.aspx.cs" Inherits="Society_management.Home" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-<style>
+    <style>
             section{
                 background:url('Images/Sky.png');
             }
