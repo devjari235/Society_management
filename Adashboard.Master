@@ -347,7 +347,7 @@ footer a:hover {
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="/Default.aspx"><i class="fas fa-home"></i> Home</a>
+                                <a class="nav-link" href="AdminDashboard.aspx"><i class="fas fa-home"></i> Home</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="residentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -411,8 +411,8 @@ footer a:hover {
                         </div>
                         <div class="card-body p-0">
                             <div class="list-group list-group-flush">
-                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i>Overview</a>
-                                <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <span class="badge bg-danger float-end">3</span></a>
+                                <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i>Overview</a>
+                                <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <%--<span class="badge bg-danger float-end">3</span>--%></a>
                                 <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i>Messages</a>
                                 <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i>Documents</a>
                                 <a href="/Facilities/Booking.aspx" class="list-group-item list-group-item-action"><i class="fas fa-swimming-pool me-2"></i>Facility Booking</a>
@@ -422,7 +422,7 @@ footer a:hover {
                         </div>
                     </div>
                     
-                    <div class="card sidebar-card">
+                   <%-- <div class="card sidebar-card">
                         <div class="card-header bg-light">
                             <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Quick Stats</h5>
                         </div>
@@ -455,7 +455,7 @@ footer a:hover {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--%>
                 </div>
                 
                 <!-- Main Content Area -->

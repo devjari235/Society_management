@@ -68,15 +68,9 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-        </ol>
-    </nav>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-    <h1 class="h2">Admin Dashboard</h1>
-    <p class="lead">Welcome back, <asp:Label ID="lblAdminName" runat="server" Text="Administrator" />!</p>
+   <p class="lead"> <b>Welcome , <asp:Label ID="lblAdminName" runat="server" Text="Administrator" />!</b></p>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
@@ -136,7 +130,7 @@
         </div>
         
         <!-- Charts and Activity Row -->
-        <div class="row">
+            <%--       <div class="row">
             <!-- Payment Status Chart -->
             <div class="col-xl-8 col-lg-7">
                 <div class="card shadow mb-4">
@@ -170,8 +164,10 @@
                 </div>
             </div>
         </div>
-        
-        <div class="row mt-4">
+        --%>
+
+        <!--Quick Actions-->
+            <%--       <div class="row mt-4">
             <div class="col-12">
                 <div class="card shadow">
                     <div class="card-header py-3">
@@ -220,12 +216,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
 </asp:Content>
 
-<%--<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
+<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
     <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <%-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <script type="text/javascript">
         // Initialize payment chart
@@ -285,5 +281,5 @@
             // You can add AJAX call here to refresh data
             console.log("Refreshing dashboard data...");
         }, 60000);
-    </script>
-</asp:Content>--%>
+    </script>--%>
+</asp:Content>
