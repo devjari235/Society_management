@@ -21,7 +21,8 @@
     
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
-    <style>
+   <style>
+       
         /* General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -39,72 +40,31 @@ body {
 }
 
 /* Sidebar Styles */
-.sidebar-card {
-/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
-position: relative;
-    top: 1rem;
-    max-height: calc(100vh - 2rem);
-    overflow-y: auto;
-}
+/* NEW FLEXBOX LAYOUT */
+        .layout-container {
+            display: flex;
+            flex-direction: row;
+            gap: 50px; /* 50px gap between sidebar and content */
+            padding: 20px;
+        }
 
-.sidebar-card .card-header {
-    padding: 0.75rem 1.25rem;
-}
+        .sidebar-container {
+            width: 250px;
+            transition: width 0.3s ease;
+        }
 
-.sidebar-card .list-group-item {
-    border-left: 0;
-    border-right: 0;
-    padding: 0.75rem 1.25rem;
-    border-radius: 0 !important;
-}
+        .sidebar-collapsed {
+            width: 70px !important;
+        }
 
-.sidebar-card .list-group-item:first-child {
-    border-top: 0;
-}
+        .main-content {
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
 
-.sidebar-card .list-group-item:last-child {
-    border-bottom: 0;
-}
-
-.sidebar-card .list-group-item.active {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-/* Quick Stats */
-.quick-stat {
-    display: flex;
-    align-items: center;
-}
-
-.stat-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    flex-shrink: 0;
-}
-
-.stat-info h6 {
-    font-size: 0.875rem;
-    margin-bottom: 0.25rem;
-    color: #6c757d;
-}
-
-.stat-info p {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0;
-}
-
-/* Page Header */
-.page-header {
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #dee2e6;
-}
+        .main-content-inner {
+            padding: 0 15px;
+        }
 
 /* Card Customization */
 .card {
@@ -251,14 +211,17 @@ footer a:hover {
             </nav>
         </header>
 
-        <!-- Main Content -->
-        <main class="container-fluid my-4 px-4">
-            <div class="row">
+        <main class="container-fluid my-4">
+            <div class="layout-container">
+
                 <!-- Sidebar -->
-                <div class="col-md-3 d-none d-md-block">
+                <div class="sidebar-container" id="sidebarContainer">
                     <div class="card sidebar-card mb-4">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h5>
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                           
+                            <button id="sidebarToggle" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-list"></i>
+                            </button>
                         </div>
                         <div class="card-body p-0">
                            <div class="list-group list-group-flush">
@@ -310,34 +273,38 @@ footer a:hover {
       </div>
   </div>--%>
                 </div>
-                
-                <!-- Main Content Area -->
-                <div class="col-md-9">
-                    <!-- Breadcrumb -->
-                    <nav aria-label="breadcrumb" class="mb-4">
-                        <ol class="breadcrumb">
-                            <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
-                                <li class="breadcrumb-item"><a href="/">Home</a></li>
+
+                <!-- Main Content -->
+                <div class="main-content" id="mainContent">
+                    <div class="main-content-inner">
+                        <!-- Breadcrumb -->
+                        <nav aria-label="breadcrumb" class="mb-4">
+                            <ol class="breadcrumb">
+                                <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
+                                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                </asp:ContentPlaceHolder>
+                            </ol>
+                        </nav>
+
+                        <!-- Page Title -->
+                        <div class="page-header mb-4">
+                            <asp:ContentPlaceHolder ID="PageTitleContent" runat="server">
+                                <h1><i class="fas fa-home me-2"></i>Welcome to Society Management</h1>
                             </asp:ContentPlaceHolder>
-                        </ol>
-                    </nav>
-                    
-                    <!-- Page Title -->
-                    <div class="page-header mb-4">
-                        <asp:ContentPlaceHolder ID="PageTitleContent" runat="server">
-                            <h1><i class="fas fa-home me-2"></i>Welcome to Society Management</h1>
+                        </div>
+
+                        <!-- Main Content -->
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                            <div class="alert alert-info">
+                                Default content goes here. This will be replaced by content pages.
+                            </div>
                         </asp:ContentPlaceHolder>
                     </div>
-                    
-                    <!-- Main Content -->
-                    <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                        <div class="alert alert-info">
-                            Default content goes here. This will be replaced by content pages.
-                        </div>
-                    </asp:ContentPlaceHolder>
                 </div>
+
             </div>
         </main>
+
 
         <!-- Footer -->
         <footer class="bg-dark text-white py-4 mt-4">
