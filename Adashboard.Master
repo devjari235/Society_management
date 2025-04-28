@@ -187,10 +187,9 @@ footer a:hover {
 }
 
 /* Custom Text Colors */
-.text-light-blue {
-    color: #0d6efd;
-}
-
+       .text-light-blue {
+           color: #0d6efd;
+       }
 </style>
   <script>
       
