@@ -21,8 +21,7 @@
     
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
-   <style>
-       
+     <style>
         /* General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -65,6 +64,61 @@ body {
         .main-content-inner {
             padding: 0 15px;
         }
+
+        /* Sidebar card styles */
+        .sidebar-card {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .sidebar-card .list-group-item {
+            padding: 0.75rem 1rem;
+            white-space: nowrap;
+        }
+
+        .sidebar-collapsed .list-group-item {
+            text-align: center;
+        }
+
+        .sidebar-collapsed .list-group-item .sidebar-text,
+        .sidebar-collapsed .badge {
+            display: none;
+        }
+
+        .sidebar-collapsed #sidebarToggle i {
+            transform: rotate(180deg);
+        }
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.stat-info h6 {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+    color: #6c757d;
+}
+
+.stat-info p {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* Page Header */
+.page-header {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
 
 /* Card Customization */
 .card {
@@ -132,10 +186,36 @@ footer a:hover {
 }
 
 /* Custom Text Colors */
-       .text-light-blue {
-           color: #0d6efd;
-       }
+.text-light-blue {
+    color: #0d6efd;
+}
+
 </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarContainer = document.getElementById('sidebarContainer');
+            const mainContent = document.getElementById('mainContent');
+            const toggleButton = document.getElementById('sidebarToggle');
+
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+            if (isCollapsed) {
+                sidebarContainer.classList.add('sidebar-collapsed');
+            }
+
+            toggleButton.addEventListener('click', function () {
+                sidebarContainer.classList.toggle('sidebar-collapsed');
+
+                const icon = toggleButton.querySelector('i');
+                icon.classList.toggle('fa-chevron-left');
+                icon.classList.toggle('fa-chevron-right');
+
+                const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+            });
+        });
+    </script>
+
 </head>
 <body>
     <form runat="server">
@@ -210,6 +290,7 @@ footer a:hover {
             </nav>
         </header>
 
+        <!-- Main Content Area -->
         <main class="container-fluid my-4">
             <div class="layout-container">
 
@@ -223,54 +304,17 @@ footer a:hover {
                             </button>
                         </div>
                         <div class="card-body p-0">
-                           <div class="list-group list-group-flush">
-                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i>Overview</a>
-                                <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i>Notifications <span class="badge bg-danger float-end">3</span></a>
-                                <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i>Messages</a>
-                                <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i>Documents</a>
-                                <a href="/Facilities/Booking.aspx" class="list-group-item list-group-item-action"><i class="fas fa-swimming-pool me-2"></i>Facility Booking</a>
-                                <a href="/Visitors/Log.aspx" class="list-group-item list-group-item-action"><i class="fas fa-user-friends me-2"></i>Visitor Log</a>
-                                <a href="/Settings.aspx" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i>Settings</a>
-                            </div>
+                            <div class="list-group list-group-flush">
+                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i><span class="sidebar-text">Overview</span></a>
+                                <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i><span class="sidebar-text">Notifications</span><span class="badge bg-danger float-end sidebar-text">3</span></a>
+                                <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i><span class="sidebar-text">Messages</span></a>
+                                <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i><span class="sidebar-text">Documents</span></a>
+                                <a href="/Facilities/Booking.aspx" class="list-group-item list-group-item-action"><i class="fas fa-swimming-pool me-2"></i><span class="sidebar-text">Facility Booking</span></a>
+                                <a href="/Visitors/Log.aspx" class="list-group-item list-group-item-action"><i class="fas fa-user-friends me-2"></i><span class="sidebar-text">Visitor Log</span></a>
+                                <a href="/Settings.aspx" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i><span class="sidebar-text">Settings</span></a>
+                            </div>
                         </div>
                     </div>
-                    
-                  
-                
-                 <%-- <div class="card sidebar-card">
-      <div class="card-header bg-light">
-          <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>Quick Stats</h5>
-      </div>
-      <div class="card-body">
-          <div class="quick-stat mb-3">
-              <div class="stat-icon bg-success text-white">
-                  <i class="fas fa-users"></i>
-              </div>
-              <div class="stat-info">
-                  <h6>Total Residents</h6>
-                  <p class="mb-0">245</p>
-              </div>
-          </div>
-          <div class="quick-stat mb-3">
-              <div class="stat-icon bg-info text-white">
-                  <i class="fas fa-home"></i>
-              </div>
-              <div class="stat-info">
-                  <h6>Total Flats</h6>
-                  <p class="mb-0">120</p>
-              </div>
-          </div>
-          <div class="quick-stat">
-              <div class="stat-icon bg-warning text-white">
-                  <i class="fas fa-exclamation-circle"></i>
-              </div>
-              <div class="stat-info">
-                  <h6>Pending Complaints</h6>
-                  <p class="mb-0">8</p>
-              </div>
-          </div>
-      </div>
-  </div>--%>
                 </div>
 
                 <!-- Main Content -->
