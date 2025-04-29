@@ -53,6 +53,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
+    <Content Include="Admin_profile.aspx" />
     <Content Include="A_registration.aspx" />
     <Content Include="Block.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
@@ -2214,6 +2216,13 @@
     </Compile>
     <Compile Include="AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_profile.aspx.cs">
+      <DependentUpon>Admin_profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_profile.aspx.designer.cs">
+      <DependentUpon>Admin_profile.aspx</DependentUpon>
     </Compile>
     <Compile Include="A_registration.aspx.cs">
       <DependentUpon>A_registration.aspx</DependentUpon>
