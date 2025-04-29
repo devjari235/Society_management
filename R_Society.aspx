@@ -135,7 +135,7 @@
 
 
 
-                     <div class="row">
+                     <div class="row justify-content-center">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add"/>

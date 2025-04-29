@@ -5,6 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
              <%--bootstrap css--%>
      <link href="bootstrap\css\bootstrap.min.css" rel="stylesheet" />
    <%--datatable css--%>
@@ -30,13 +32,12 @@
         <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <center>
-                                <img src="Images\Logo.png" width="100px" />
-                            </center>
-                        </div>
-                    </div>
+                   <div class="row">
+                       <div class="col text-center">
+                           <h1><p><i class="bi bi-buildings-fill"></i></p></h1>
+                       </div>
+                   </div>
+
                     <div class="row">
                         <div class="col">
                          <center>
@@ -52,10 +53,10 @@
                     </div>
 
                     <div class="row">
-                           <div class="col-md-12">
+                           <div class="col-md-6">
                                <label>Block Name</label>
                                 <div class="form-group">
-                                   <asp:TextBox CssClass="form-control" ID="txtBname" runat="server" placeholder="Society Name"></asp:TextBox>
+                                   <asp:TextBox CssClass="form-control" ID="txtBname" runat="server" placeholder="Block Name"></asp:TextBox>
                                  </div>
                            </div>
                     </div>
@@ -81,20 +82,21 @@
                          <label>Society Name</label>
                           <div class="form-group">
                                 <asp:DropDownList ID="ddlSociety" runat="server"></asp:DropDownList>
+                                <br />
+                                <br />
                             </div>
                         </div>
                    </div>
                      <div class="row">
-                        <div class="col-md-8">
-                            <div class="form-group" >
-                                <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add"/>
-                            </div>
-                        </div>
-                    </div>
+                         <div class="col-md-4">
+                             <div class="form-group">
+                                 <asp:Button CssClass="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add" OnClick="btnAdd_Click" />
+                             </div>
+                         </div>
+                     </div>
+
                 </div>
             </div>
-
-           
         </div>
     </div>
 </div>

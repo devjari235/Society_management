@@ -37,5 +37,10 @@ namespace Society_management
             con.Close();
             ddlSociety.Items.Insert(0, new ListItem("-- Select Society Name --"));
         }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
