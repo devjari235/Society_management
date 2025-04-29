@@ -15,14 +15,38 @@ namespace Society_management
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            BindBlockName();
+            if (!IsPostBack)
+            {
+                SocietyID();
+                BindBlockName();
+                
+            }
+            
+        }
+
+        int id;
+        public void SocietyID()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Select Society_id from tblSociety where admin_id=@a_id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                id = Convert.ToInt32(reader["Society_id"]);
+            }
+
         }
         public void BindBlockName()
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Select * from tblBlock where Society_id=1 Order by Block_name";
-            SqlDataAdapter sda = new SqlDataAdapter(Query, con);
+            string Query = "Select * from tblBlock where Society_id=@id Order by Block_name";
+            SqlCommand cmd=new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sda.Fill(dt);
             ddlBlock.DataSource = dt;
@@ -31,7 +55,7 @@ namespace Society_management
             ddlBlock.DataValueField = "Block_id";
             ddlBlock.DataBind();
             con.Close();
-            ddlBlock.Items.Insert(0, new ListItem("-- Select Society Name --"));
+            ddlBlock.Items.Insert(0, new ListItem("-- Select Block --"));
         }
     }
 }
