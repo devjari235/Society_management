@@ -74,6 +74,7 @@
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\jquery-3.5.1.slim.min.js" />
     <Content Include="bootstrap\js\popper.min.js" />
+    <Content Include="ChangePassword.aspx" />
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
@@ -2228,6 +2229,13 @@
     </Compile>
     <Compile Include="Block.aspx.designer.cs">
       <DependentUpon>Block.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ChangePassword.aspx.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ChangePassword.aspx.designer.cs">
+      <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Flat.aspx.cs">
       <DependentUpon>Flat.aspx</DependentUpon>

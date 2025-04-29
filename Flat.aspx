@@ -77,7 +77,7 @@
                                      <asp:DropDownList ID="ddlstatus" runat="server">
                                          <asp:ListItem Value="0">--Select Status--</asp:ListItem>
                                          <asp:ListItem>Rental</asp:ListItem>
-                                         <asp:ListItem>self occupy</asp:ListItem>
+                                         <asp:ListItem>Self occupy</asp:ListItem>
                                      </asp:DropDownList>
                                 </div>
                            </div>
@@ -97,13 +97,16 @@
                             </div>
                       </div>
 
-                     <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add"/>
+                    <div class="container">
+                        <div class="row justify-content-center" style="margin-top: 20px;">
+                            <div class="col-md-6">
+                                <div class="form-group text-center">
+                                    <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add" />
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 

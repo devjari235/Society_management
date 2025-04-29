@@ -68,7 +68,7 @@ body {
 
         /* Sidebar card styles */
         .sidebar-card {
-            position: sticky;
+            position:relative;
             top: 20px;
             max-height: calc(100vh - 40px);
             overflow-y: auto;
@@ -276,13 +276,7 @@ footer a:hover {
                                     <li><a class="dropdown-item" href="/Account/Profile.aspx"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="/Account/ChangePassword.aspx"><i class="fas fa-key"></i> Change Password</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <asp:LoginStatus ID="LoginStatus1" runat="server" 
-                                            LogoutAction="Redirect" 
-                                            LogoutText="Logout" 
-                                            LogoutPageUrl="~/Account/Login.aspx"
-                                            CssClass="dropdown-item" />
-                                    </li>
+                                    <li><a class="dropdown-item" href="Login.aspx"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -308,7 +302,7 @@ footer a:hover {
                         </div>
                         <div class="card-body p-0">
                             <div class="list-group list-group-flush">
-                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Dashboard</span></a>
+                                <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Dashboard</span></a>
                                 <a href="/Flat.aspx" class="list-group-item list-group-item-action"><i class="bi bi-house-fill"></i><span class="sidebar-text"> Flat</span></a>
                                 <a href="/Allotment.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-square"></i><span class="sidebar-text"> Allotment</span></a>
                                 <a href="/Committee_Member.aspx" class="list-group-item list-group-item-action"><i class="fas fa-users"></i><span class="sidebar-text"> Committee Member</span></a>
