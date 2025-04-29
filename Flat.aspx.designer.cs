@@ -15,94 +15,67 @@ namespace Society_management
     {
 
         /// <summary>
-        /// ddlAdmin control.
+        /// txtFno control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlAdmin;
+        protected global::System.Web.UI.WebControls.TextBox txtFno;
 
         /// <summary>
-        /// txtSname control.
+        /// txtFloor control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSname;
+        protected global::System.Web.UI.WebControls.TextBox txtFloor;
 
         /// <summary>
-        /// txtINCdate control.
+        /// ddlType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtINCdate;
+        protected global::System.Web.UI.WebControls.DropDownList ddlType;
 
         /// <summary>
-        /// txtNumber control.
+        /// txtsqft control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNumber;
+        protected global::System.Web.UI.WebControls.TextBox txtsqft;
 
         /// <summary>
-        /// txtSlogan control.
+        /// ddlstatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtSlogan;
+        protected global::System.Web.UI.WebControls.DropDownList ddlstatus;
 
         /// <summary>
-        /// txtRDate control.
+        /// txtMentanance control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRDate;
+        protected global::System.Web.UI.WebControls.TextBox txtMentanance;
 
         /// <summary>
-        /// txtEntryDate control.
+        /// ddlBlock control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEntryDate;
-
-        /// <summary>
-        /// FuLogo control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload FuLogo;
-
-        /// <summary>
-        /// txtAdd control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAdd;
-
-        /// <summary>
-        /// txtBuilderDetails control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBuilderDetails;
+        protected global::System.Web.UI.WebControls.DropDownList ddlBlock;
 
         /// <summary>
         /// btnAdd control.

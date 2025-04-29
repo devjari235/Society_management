@@ -4,24 +4,18 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-             <div class="container" style="margin-top:5%; margin-bottom:5%">
+             <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col">
-                            <center>
-                                <img src="Images\Logo.png" width="100px" />
-                            </center>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
                          <center>
-                          <h4>Registration</h4>
+                          <h4>Add Flat</h4>
                          </center>
                         </div>
                     </div>
@@ -33,23 +27,18 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
-                            <label>Admin Name</label>
-                            <div class="form-group">
-                                <asp:DropDownList ID="ddlAdmin" runat="server"></asp:DropDownList>
-                            </div>
-                        </div>
-                           <div class="col-md-4">
-                               <label>Society Name</label>
+                      
+                           <div class="col-md-6">
+                               <label>Flat No</label>
                                 <div class="form-group">
-                                   <asp:TextBox CssClass="form-control" ID="txtSname" runat="server" placeholder="Society Name"></asp:TextBox>
+                                   <asp:TextBox CssClass="form-control" ID="txtFno" runat="server" placeholder="Flat No"></asp:TextBox>
                                  </div>
                            </div>
 
-                        <div class="col-md-4">
-                            <label>IncorporationDate</label>
+                        <div class="col-md-6">
+                            <label>Floor</label>
                             <div class="form-group">
-                                 <asp:TextBox CssClass="form-control" ID="txtINCdate" runat="server" placeholder="IncorporationDate" TextMode="Date"></asp:TextBox>
+                                 <asp:TextBox CssClass="form-control" ID="txtFloor" runat="server" placeholder="Floor"></asp:TextBox>
                             </div>
                        </div>
                         
@@ -58,63 +47,55 @@
 
 
                     <div class="row">
-                       <div class="col-md-6">
-                           <label>Registration Number</label>
+                        <div class="col-md-4">
+                            <label>Flat Type</label>
                             <div class="form-group">
-                                 <asp:TextBox CssClass="form-control" ID="txtNumber" runat="server" placeholder="Registration Number"></asp:TextBox>
-                            </div>
-                       </div>
-
-                   
-                        <div class="col-md-6">
-                            <label>Slogan</label>
-                            <div class="form-group">
-                                 <asp:TextBox CssClass="form-control" ID="txtSlogan" runat="server" placeholder="Slogan"></asp:TextBox>
+                                <asp:DropDownList ID="ddlType" runat="server">
+                                    <asp:ListItem Value="0">--Select Flat Type--</asp:ListItem>
+                                    <asp:ListItem>Studio Apartment</asp:ListItem>
+                                    <asp:ListItem>1 BHK</asp:ListItem>
+                                    <asp:ListItem>2 BHK</asp:ListItem>
+                                    <asp:ListItem>3 BHK</asp:ListItem>
+                                    <asp:ListItem>4 BHK and above</asp:ListItem>
+                                    <asp:ListItem>Duplex</asp:ListItem>
+                                </asp:DropDownList>
                             </div>
                         </div>
-                         
+                       <div class="col-md-6">
+                           <label>Sqft</label>
+                            <div class="form-group">
+                                 <asp:TextBox CssClass="form-control" ID="txtsqft" runat="server" placeholder="Sqft"></asp:TextBox>
+                            </div>
+                       </div>
                    </div>
 
 
                       <div class="row">
                            <div class="col-md-4">
-                            <label>RegistrationDate</label>
+                            <label>Occupancy status</label>
                                 <div class="form-group">
-                                     <asp:TextBox CssClass="form-control" ID="txtRDate" runat="server" placeholder="RegistrationDate" TextMode="Date"></asp:TextBox>
+                                     <asp:DropDownList ID="ddlstatus" runat="server">
+                                         <asp:ListItem Value="0">--Select Status--</asp:ListItem>
+                                         <asp:ListItem>Rental</asp:ListItem>
+                                         <asp:ListItem>self occupy</asp:ListItem>
+                                     </asp:DropDownList>
                                 </div>
                            </div>
 
                          <div class="col-md-4">
-                          <label>EntryDate</label>
+                          <label>Mentanance</label>
                              <div class="form-group">
-                                  <asp:TextBox CssClass="form-control" ID="txtEntryDate" runat="server" placeholder="EntryDate" TextMode="Date"></asp:TextBox>
+                                  <asp:TextBox CssClass="form-control" ID="txtMentanance" runat="server" placeholder="Mentanance"></asp:TextBox>
                              </div>
                           </div>
                           <div class="col-md-4">
-                            <label>Logo</label>
-                                 <div class="form-group">
-                                     <asp:FileUpload ID="FuLogo" runat="server" />
-                                  </div>
+                            <label>Block</label>
+                                  <div class="form-group">
+                                      <asp:DropDownList ID="ddlBlock" runat="server"></asp:DropDownList>
+                                      <br />
+                                 </div>
                             </div>
                       </div>
-
-
-                     <div class="row">
-                             <div class="col-md-6">
-                         <label>Full Address</label>
-                          <div class="form-group">
-                                 <asp:TextBox CssClass="form-control" ID="txtAdd" runat="server" placeholder="Full Address" TextMode="MultiLine"></asp:TextBox>
-                            </div>
-                        </div>
-                             <div class="col-md-6">
-                         <label>BuilderDetails</label>
-                          <div class="form-group">
-                                 <asp:TextBox CssClass="form-control" ID="txtBuilderDetails" runat="server" placeholder="BuilderDetails" TextMode="MultiLine"></asp:TextBox>
-                            </div>
-                        </div>
-                   </div>
-
-
 
                      <div class="row justify-content-center">
                         <div class="col-md-6">
