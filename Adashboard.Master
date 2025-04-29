@@ -274,7 +274,7 @@ footer a:hover {
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" href="/Admin_profile.aspx"><i class="fas fa-user"></i> Profile</a></li>
-                                    <li><a class="dropdown-item" href="/Account/ChangePassword.aspx"><i class="fas fa-key"></i> Change Password</a></li>
+                                    <li><a class="dropdown-item" href="/ChangePassword.aspx"><i class="fas fa-key"></i> Change Password</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="Login.aspx"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
                                 </ul>

@@ -4,6 +4,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+    <div style="margin-bottom: 20px; text-align: left;">
+    <asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary"  />
+    <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary"  />
+    <asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />
+</div>
 
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
