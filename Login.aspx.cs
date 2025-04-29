@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Windows.Forms;
 
 namespace Society_management
 {
@@ -24,7 +25,7 @@ namespace Society_management
             string pass = txtPassword.Text;
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string query = "select count(*) from tblAdmin where email=@mail or phone_no=@phone and password=@pass";
+            string query = "select * from tblAdmin where email=@mail or phone_no=@phone and password=@pass";
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("mail", email);
             cmd.Parameters.AddWithValue("phone", ph);
@@ -48,10 +49,23 @@ namespace Society_management
             }
             else
             {
-                 Session["a"] = txtEmail.Text;
-                Response.Redirect("AdminDashboard.aspx");
-
-
+                // Session["a"] = txtEmail.Text;
+               
+                SqlDataReader dr=cmd.ExecuteReader();
+                
+                
+                if (dr.HasRows)
+                {
+                    while (dr.Read())
+                    {
+                        Session["A_id"]=dr.GetValue(0).ToString();
+                        Session["A_name"]=dr.GetValue(1).ToString();
+                        Session["A_email"]=dr.GetValue(2).ToString();
+                        Session["A_pass"]=dr.GetValue(3).ToString();
+                        Session["A_phone"]=dr.GetValue(4).ToString();
+                    }
+                    Response.Redirect("AdminDashboard.aspx");
+                }
             }
         }
     }
