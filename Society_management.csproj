@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
     <Content Include="A_registration.aspx" />
+    <Content Include="Block.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
     <Content Include="bootstrap\js\bootstrap.min.js" />
     <Content Include="bootstrap\js\jquery-3.5.1.slim.min.js" />
@@ -2219,6 +2220,13 @@
     </Compile>
     <Compile Include="A_registration.aspx.designer.cs">
       <DependentUpon>A_registration.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Block.aspx.cs">
+      <DependentUpon>Block.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Block.aspx.designer.cs">
+      <DependentUpon>Block.aspx</DependentUpon>
     </Compile>
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
