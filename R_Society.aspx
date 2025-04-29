@@ -52,14 +52,20 @@
                     </div>
 
                     <div class="row">
-                           <div class="col-md-6">
+                        <div class="col-md-4">
+                            <label>Admin Name</label>
+                            <div class="form-group">
+                                <asp:DropDownList ID="ddlAdmin" runat="server"></asp:DropDownList>
+                            </div>
+                        </div>
+                           <div class="col-md-4">
                                <label>Society Name</label>
                                 <div class="form-group">
                                    <asp:TextBox CssClass="form-control" ID="txtSname" runat="server" placeholder="Society Name"></asp:TextBox>
                                  </div>
                            </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label>IncorporationDate</label>
                             <div class="form-group">
                                  <asp:TextBox CssClass="form-control" ID="txtINCdate" runat="server" placeholder="IncorporationDate" TextMode="Date"></asp:TextBox>
@@ -130,7 +136,7 @@
 
 
                      <div class="row">
-                        <div class="col">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add"/>
                             </div>

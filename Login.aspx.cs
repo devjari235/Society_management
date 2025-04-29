@@ -24,7 +24,7 @@ namespace Society_management
             string pass = txtPassword.Text;
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string query = "select count(*) from tblAdmin where a_email=@mail or a_phone=@phone and a_pass=@pass";
+            string query = "select count(*) from tblAdmin where email=@mail or phone_no=@phone and password=@pass";
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("mail", email);
             cmd.Parameters.AddWithValue("phone", ph);
