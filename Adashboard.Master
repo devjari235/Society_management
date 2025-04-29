@@ -298,7 +298,9 @@ footer a:hover {
                 <!-- Sidebar -->
                 <div class="sidebar-container" id="sidebarContainer">
                     <div class="card sidebar-card mb-4">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center" style="padding-left: 8px;padding-right: 8px;">
+
                            
                             <button id="sidebarToggle" class="btn btn-sm btn-outline-secondary">
                                 <i class="bi bi-list"></i>
@@ -306,13 +308,13 @@ footer a:hover {
                         </div>
                         <div class="card-body p-0">
                             <div class="list-group list-group-flush">
-                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-home me-2"></i><span class="sidebar-text">Overview</span></a>
-                                <a href="/Notifications.aspx" class="list-group-item list-group-item-action"><i class="fas fa-bell me-2"></i><span class="sidebar-text">Notifications</span><span class="badge bg-danger float-end sidebar-text">3</span></a>
-                                <a href="/Messages.aspx" class="list-group-item list-group-item-action"><i class="fas fa-envelope me-2"></i><span class="sidebar-text">Messages</span></a>
+                                <a href="/Dashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Dashboard</span></a>
+                                <a href="/Flat.aspx" class="list-group-item list-group-item-action"><i class="bi bi-house-fill"></i><span class="sidebar-text"> Flat</span></a>
+                                <a href="/Allotment.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-square"></i><span class="sidebar-text"> Allotment</span></a>
+                                <a href="/Committee_Member.aspx" class="list-group-item list-group-item-action"><i class="fas fa-users"></i><span class="sidebar-text"> Committee Member</span></a>
+                                <a href="/Visitor/Booking.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-vcard-fill"></i><span class="sidebar-text"> Visitor Management</span></a>
+                                <a href="/Notice_Board/Log.aspx" class="list-group-item list-group-item-action"><i class="bi bi-envelope-fill"></i><span class="sidebar-text"> Notice Board</span></a>
                                 <a href="/Documents.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i><span class="sidebar-text">Documents</span></a>
-                                <a href="/Facilities/Booking.aspx" class="list-group-item list-group-item-action"><i class="fas fa-swimming-pool me-2"></i><span class="sidebar-text">Facility Booking</span></a>
-                                <a href="/Visitors/Log.aspx" class="list-group-item list-group-item-action"><i class="fas fa-user-friends me-2"></i><span class="sidebar-text">Visitor Log</span></a>
-                                <a href="/Settings.aspx" class="list-group-item list-group-item-action"><i class="fas fa-cog me-2"></i><span class="sidebar-text">Settings</span></a>
                             </div>
                         </div>
                     </div>

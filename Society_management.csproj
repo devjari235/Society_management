@@ -2192,6 +2192,7 @@
     <Content Include="Images\S_3.jpg" />
     <Content Include="Images\U_bg.jpg" />
     <Content Include="Login.aspx" />
+    <Content Include="R_Society.aspx" />
     <Content Include="Terms.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
@@ -2241,6 +2242,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="R_Society.aspx.cs">
+      <DependentUpon>R_Society.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="R_Society.aspx.designer.cs">
+      <DependentUpon>R_Society.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Terms.aspx.cs">
       <DependentUpon>Terms.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
