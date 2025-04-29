@@ -24,6 +24,8 @@
  <script src="bootstrap\js\bootstrap.min.js"></script>
  <%--Datatable  js--%>
 <script src="datatable\js\dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <form id="form1" runat="server">

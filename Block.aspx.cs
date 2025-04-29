@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace Society_management
 {
@@ -40,7 +41,28 @@ namespace Society_management
 
         protected void btnAdd_Click(object sender, EventArgs e)
         {
-
+            string name = txtBname.Text;
+            string locat = ddlLocation.SelectedValue;
+            string Sname = ddlSociety.SelectedValue;
+            string query = "insert into tblBlock values(@Name,@locat,@Sname)";
+            SqlConnection conn = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@Name", name);
+            cmd.Parameters.AddWithValue("@locat", locat);
+            cmd.Parameters.AddWithValue("@Sname", Sname);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Block inserted successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Block.aspx';
+            });";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
         }
     }
 }
