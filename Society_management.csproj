@@ -77,6 +77,7 @@
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
+    <Content Include="Flat.aspx" />
     <Content Include="fontawesome\css\all.css" />
     <Content Include="fontawesome\css\all.min.css" />
     <Content Include="fontawesome\css\brands.css" />
@@ -2227,6 +2228,13 @@
     </Compile>
     <Compile Include="Block.aspx.designer.cs">
       <DependentUpon>Block.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Flat.aspx.cs">
+      <DependentUpon>Flat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Flat.aspx.designer.cs">
+      <DependentUpon>Flat.aspx</DependentUpon>
     </Compile>
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>
