@@ -93,11 +93,7 @@ namespace Society_management
                     con.Close();
 
                 }
-                catch (Exception ex)
-                {
-
-                    Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
-                }
+                
                 Response.Write("<script>alert('File is Update Successfully.');</script>");
             }
             else
