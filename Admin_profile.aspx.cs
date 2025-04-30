@@ -1,233 +1,109 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Society_management
 {
     public partial class Admin_profile : System.Web.UI.Page
     {
-        private string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                if (Session["A_id"] == null)
-                {
-                    Response.Redirect("Login.aspx");
-                    return;
-                }
-
-                BindAdminDetails();
-                LoadProfilePicture();
+                BindDetails();
             }
         }
-
-        private void BindAdminDetails()
+        string name;
+        string email;
+        string ph;
+        public void BindDetails()
         {
-            try
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Select name,email,phone_no from tblAdmin where admin_id=@a_id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
             {
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    con.Open();
-                    string query = @"SELECT name, email, phone_no, Profile_picture 
-                                     FROM tblAdmin 
-                                     WHERE admin_id = @adminId";
-
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
-
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            txtname.Text = reader["name"].ToString();
-                            txtemail.Text = reader["email"].ToString();
-                            txtphone.Text = reader["phone_no"].ToString();
-                        }
-                    }
-                }
+                name = reader["name"].ToString();
+                email = reader["email"].ToString();
+                ph = reader["phone_no"].ToString();
             }
-            catch (Exception ex)
-            {
-                ShowSweetAlert("Error", "Failed to load admin details: " + ex.Message, "error");
-            }
+            txtname.Text = name;
+            txtemail.Text = email;
+            txtphone.Text = ph;
+
         }
-
-        private void LoadProfilePicture()
-        {
-            try
-            {
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    con.Open();
-                    string query = @"SELECT Profile_picture FROM tblAdmin 
-                                   WHERE admin_id = @adminId";
-
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
-
-                    object result = cmd.ExecuteScalar();
-                    string imagePath = result != null ? result.ToString() : "";
-
-                    if (!string.IsNullOrEmpty(imagePath))
-                    {
-                        string physicalPath = Server.MapPath(imagePath);
-                        if (File.Exists(physicalPath))
-                        {
-                            imgProfile.ImageUrl = ResolveUrl(imagePath);
-                        }
-                        else
-                        {
-                            // If stored path is invalid, set default and update DB
-                            SetDefaultProfileImage();
-                            UpdateProfilePicture("~/Images/default-profile.png");
-                        }
-                    }
-                    else
-                    {
-                        // No profile picture set
-                        SetDefaultProfileImage();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                SetDefaultProfileImage();
-                ShowSweetAlert("Error", "Failed to load profile picture: " + ex.Message, "error");
-            }
-        }
-
-        private void SetDefaultProfileImage()
-        {
-            imgProfile.ImageUrl = "~/Images/default-profile.png";
-        }
-
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            try
-            {
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    con.Open();
-                    string query = @"UPDATE tblAdmin 
-                                   SET name = @name, email = @email, phone_no = @phone 
-                                   WHERE admin_id = @adminId";
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph where admin_id=@id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@name", txtname.Text);
+            cmd.Parameters.AddWithValue("@mail", txtemail.Text);
+            cmd.Parameters.AddWithValue("@ph", txtphone.Text);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            cmd.ExecuteNonQuery();
+            con.Close();
 
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@name", txtname.Text.Trim());
-                    cmd.Parameters.AddWithValue("@email", txtemail.Text.Trim());
-                    cmd.Parameters.AddWithValue("@phone", txtphone.Text.Trim());
-                    cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
-
-                    int rowsAffected = cmd.ExecuteNonQuery();
-
-                    if (rowsAffected > 0)
-                    {
-                        ShowSweetAlert("Success", "Profile updated successfully!", "success");
-                    }
-                    else
-                    {
-                        ShowSweetAlert("Warning", "No changes were made to your profile.", "warning");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowSweetAlert("Error", "Failed to update profile: " + ex.Message, "error");
-            }
+            string successScript = @"
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Details Updated',
+                text: 'Your profile details have been successfully updated.',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Admin_profile.aspx';
+            });
+        </script>";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
-
-        protected void fuUpload_Changed(object sender, EventArgs e)
+        protected void btnUpload_Click(object sender, EventArgs e)
         {
             if (fuUpload.HasFile)
             {
                 try
                 {
-                    // Validate file type
-                    string fileExtension = Path.GetExtension(fuUpload.FileName).ToLower();
-                    if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png")
-                    {
-                        ShowSweetAlert("Error", "Only JPG, JPEG, and PNG files are allowed.", "error");
-                        return;
-                    }
 
-                    // Validate file size (max 5MB)
-                    if (fuUpload.PostedFile.ContentLength > 5242880) // 5MB
-                    {
-                        ShowSweetAlert("Error", "File size must be less than 5MB.", "error");
-                        return;
-                    }
+                    string fileName = Path.GetFileName(fuUpload.PostedFile.FileName);
+                    string filePath = "~/Profile/" + fileName;
+                    fuUpload.SaveAs(Server.MapPath(filePath));
+                    imgProfile.ImageUrl = filePath;
+                    int id = Convert.ToInt32(Session["A_id"]);
+                    string Query = "Update tblAdmin set Profile_picture=@profile where admin_id=@id";
+                    SqlConnection con = new SqlConnection(strcon);
+                    con.Open();
+                    SqlCommand cmd = new SqlCommand(Query, con);
+                    cmd.Parameters.AddWithValue("@profile", filePath);
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                    con.Close();
 
-                    // Create Images directory if it doesn't exist
-                    string imagesDir = Server.MapPath("~/Images/");
-                    if (!Directory.Exists(imagesDir))
-                    {
-                        Directory.CreateDirectory(imagesDir);
-                    }
-
-                    // Generate unique filename
-                    string newFileName = $"admin_{Session["A_id"]}_{DateTime.Now:yyyyMMddHHmmss}{fileExtension}";
-                    string newFilePath = "~/Images/" + newFileName;
-                    string fullPath = Server.MapPath(newFilePath);
-
-                    // Delete old profile picture if it exists and isn't the default
-                    string oldImagePath = Server.MapPath(imgProfile.ImageUrl);
-                    if (File.Exists(oldImagePath) && !oldImagePath.Contains("default-profile"))
-                    {
-                        File.Delete(oldImagePath);
-                    }
-
-                    // Save new file
-                    fuUpload.SaveAs(fullPath);
-
-                    // Update database
-                    UpdateProfilePicture(newFilePath);
-
-                    // Update image display
-                    imgProfile.ImageUrl = newFilePath;
-
-                    ShowSweetAlert("Success", "Profile picture updated successfully!", "success");
                 }
                 catch (Exception ex)
                 {
-                    ShowSweetAlert("Error", "Failed to upload profile picture: " + ex.Message, "error");
+
+                    Response.Write("<script>alert('Error: " + ex.Message + "');</script>");
                 }
+                Response.Write("<script>alert('File is Update Successfully.');</script>");
             }
-        }
-
-        private void UpdateProfilePicture(string imagePath)
-        {
-            using (SqlConnection con = new SqlConnection(strcon))
+            else
             {
-                con.Open();
-                string query = @"UPDATE tblAdmin 
-                               SET Profile_picture = @imagePath 
-                               WHERE admin_id = @adminId";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@imagePath", imagePath);
-                cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
-                cmd.ExecuteNonQuery();
+                Response.Write("<script>alert('Please select a file to upload.');</script>");
             }
-        }
 
-        private void ShowSweetAlert(string title, string text, string type)
-        {
-            string script = $@"
-                <script>
-                    Swal.fire({{
-                        title: '{title}',
-                        text: '{text}',
-                        icon: '{type}',
-                        confirmButtonColor: '#4285f4',
-                        confirmButtonText: 'OK'
-                    }});
-                </script>";
-
-            ScriptManager.RegisterStartupScript(this, GetType(), "SweetAlert", script, false);
         }
     }
 }
