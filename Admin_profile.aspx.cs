@@ -70,37 +70,6 @@ namespace Society_management
         </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
-        protected void btnUpload_Click(object sender, EventArgs e)
-        {
-            if (fuUpload.HasFile)
-            {
-                string ext = Path.GetExtension(fuUpload.FileName).ToLower();
-                if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
-                {
-
-                    string fileName = Path.GetFileName(fuUpload.PostedFile.FileName);
-                    string filePath = "~/Profile/" + fileName;
-                    fuUpload.SaveAs(Server.MapPath(filePath));
-                    imgProfile.ImageUrl = filePath;
-                    int id = Convert.ToInt32(Session["A_id"]);
-                    string Query = "Update tblAdmin set Profile_picture=@profile where admin_id=@id";
-                    SqlConnection con = new SqlConnection(strcon);
-                    con.Open();
-                    SqlCommand cmd = new SqlCommand(Query, con);
-                    cmd.Parameters.AddWithValue("@profile", filePath);
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.ExecuteNonQuery();
-                    con.Close();
-
-                }
-                
-                Response.Write("<script>alert('File is Update Successfully.');</script>");
-            }
-            else
-            {
-                Response.Write("<script>alert('Please select a file to upload.');</script>");
-            }
-
-        }
+       
     }
 }
