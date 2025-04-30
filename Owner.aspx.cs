@@ -106,5 +106,6 @@ namespace Society_management
             });";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
         }
+
     }
 }

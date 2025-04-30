@@ -15,33 +15,6 @@ namespace Society_management
     {
 
         /// <summary>
-        /// btnAddFlat control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAddFlat;
-
-        /// <summary>
-        /// btnViewFlats control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnViewFlats;
-
-        /// <summary>
-        /// btnFlatHistory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnFlatHistory;
-
-        /// <summary>
         /// txtFno control.
         /// </summary>
         /// <remarks>

@@ -46,9 +46,9 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
-        <asp:Button ID="btnAddOwner" runat="server" Text="Add Owner" CssClass="btn btn-primary"/>
-        <asp:Button ID="btnViewOwner" runat="server" Text="View All Owner" CssClass="btn btn-secondary"/>
-        <asp:Button ID="btnOwnerHistory" runat="server" Text="Owner History" CssClass="btn btn-info" />
+        <a href="Owner.aspx"><%--<asp:Button ID="btnAddOwner" runat="server" Text="Add Owner" CssClass="btn btn-primary"/>--%>Add Owner</a>
+        <a href="View_Owner.aspx"><%--<asp:Button ID="btnViewOwner" runat="server" Text="View All Owner" CssClass="btn btn-secondary"/>--%>View All Owner</a>
+       <a>Owner History</a> <%--<asp:Button ID="btnOwnerHistory" runat="server" Text="Owner History" CssClass="btn btn-info" />--%>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
