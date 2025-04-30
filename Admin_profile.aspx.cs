@@ -74,7 +74,8 @@ namespace Society_management
         {
             if (fuUpload.HasFile)
             {
-                try
+                string ext = Path.GetExtension(fuUpload.FileName).ToLower();
+                if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
                 {
 
                     string fileName = Path.GetFileName(fuUpload.PostedFile.FileName);
