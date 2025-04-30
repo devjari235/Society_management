@@ -2203,6 +2203,7 @@
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
     <Content Include="View_flat.aspx" />
+    <Content Include="View_Owner.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -2318,6 +2319,13 @@
     </Compile>
     <Compile Include="View_flat.aspx.designer.cs">
       <DependentUpon>View_flat.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_Owner.aspx.cs">
+      <DependentUpon>View_Owner.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_Owner.aspx.designer.cs">
+      <DependentUpon>View_Owner.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

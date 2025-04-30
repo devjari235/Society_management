@@ -47,9 +47,12 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
-        <asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary" OnClick="btnAddFlat_Click" />
-        <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary" OnClick="btnViewFlats_Click" />
-        <asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />
+        <%--<asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary" OnClick="btnAddFlat_Click" />
+<asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary" OnClick="btnViewFlats_Click" />
+<asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />--%>
+        <a href="Flat.aspx">Add Flat</a>
+        <a href="View_flat.aspx">View All Flats</a>
+        <a>Flat History</a>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">

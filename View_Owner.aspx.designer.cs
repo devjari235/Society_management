@@ -11,8 +11,35 @@ namespace Society_management
 {
 
 
-    public partial class View_flat
+    public partial class View_Owner
     {
+
+        /// <summary>
+        /// btnAddOwner control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnAddOwner;
+
+        /// <summary>
+        /// btnViewOwner control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnViewOwner;
+
+        /// <summary>
+        /// btnOwnerHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnOwnerHistory;
 
         /// <summary>
         /// Panel1 control.

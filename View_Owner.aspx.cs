@@ -7,11 +7,10 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
-using System.Collections;
 
 namespace Society_management
 {
-    public partial class View_flat : System.Web.UI.Page
+    public partial class View_Owner : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
@@ -20,13 +19,15 @@ namespace Society_management
             {
                 BindGrid();
             }
+
         }
         public void BindGrid()
         {
 
             SqlConnection con = new SqlConnection(strcon);
             //string query = "select * from tblImage where A_id=@aid";
-            string query = "select b.Block_name,f.Flate_id, f.Flate_no, f.Floor, f.Flat_type, f.sqft, f.Occupancy_status, f.Mentanance from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
+            // string query = "select b.Block_name,f.Flate_no,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number,o.Total_member,o.Allotment_Date from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblOwner o on b.Block_id=o.Block_id on f.Flate_id=o.Flate_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
+            string query = "SELECT b.Block_name,f.Flate_no,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number, o.Total_member,  o.Allotment_Date FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN  tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id;";
             con.Open();
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
@@ -38,6 +39,5 @@ namespace Society_management
             con.Close();
         }
 
-        
     }
 }

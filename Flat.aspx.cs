@@ -93,15 +93,5 @@ namespace Society_management
             });";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
         }
-
-        protected void btnViewFlats_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("View_flat.aspx");
-        }
-
-        protected void btnAddFlat_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Flat.aspx");
-        }
     }
 }
