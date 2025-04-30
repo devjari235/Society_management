@@ -1,5 +1,10 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Flat.aspx.cs" Inherits="Society_management.Flat" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <style>
+        .col-md-6, .col-md-4{
+            margin-top:10px;
+        }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>

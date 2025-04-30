@@ -70,6 +70,10 @@
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
     <Content Include="Admin_profile.aspx" />
+    <Content Include="App_Data\Soc_mgnt.mdf" />
+    <Content Include="App_Data\Soc_mgnt_log.ldf">
+      <DependentUpon>Soc_mgnt.mdf</DependentUpon>
+    </Content>
     <Content Include="A_registration.aspx" />
     <Content Include="Block.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
