@@ -5,13 +5,14 @@
             margin-top:10px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
-    <asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary"  />
-    <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary"  />
+    <asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary" OnClick="btnAddFlat_Click"  />
+    <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary" OnClick="btnViewFlats_Click"  />
     <asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />
 </div>
 
@@ -111,7 +112,7 @@
                         <div class="row justify-content-center" style="margin-top: 20px;">
                             <div class="col-md-6">
                                 <div class="form-group text-center">
-                                    <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add" />
+                                    <asp:Button class="btn btn-success btn-block btn-lg" ID="btnAdd" runat="server" Text="Add" OnClick="btnAdd_Click" />
                                 </div>
                             </div>
                         </div>
@@ -124,6 +125,8 @@
         </div>
     </div>
 </div>
+
+
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
