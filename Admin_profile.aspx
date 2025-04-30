@@ -75,60 +75,59 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:ScriptManager ID="ScriptManager1" runat="server" />
-    <div class="container profile-container">
-        <div class="card">
-            <div class="card-body">
-                <div class="text-center mb-4">
-                    <h3 class="card-title">Admin Profile</h3>
-                    <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
+<div class="container profile-container">
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <h3 class="card-title">Admin Profile</h3>
+                <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 text-center">
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                        <ContentTemplate>
+                            <div class="profile-image-wrapper" onclick="document.getElementById('<%= fuUpload.ClientID %>').click();">
+                                <asp:Image ID="imgProfile" runat="server" CssClass="profile-image" AlternateText="Profile Picture"
+                                    onerror="this.src='Images/default-profile.png'" />
+                                <div class="upload-overlay">
+                                    <i class="fas fa-camera fa-2x"></i>
+                                </div>
+                            </div>
+                            <asp:FileUpload ID="fuUpload" runat="server" CssClass="file-upload" accept=".jpg,.jpeg,.png" />
+                            <asp:Button ID="btnUpload" runat="server" Text="Upload Image" OnClick="fuUpload_Changed" CssClass="btn btn-sm btn-secondary mt-2" />
+                            <small class="text-muted d-block mt-2">Click image to upload new photo</small>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
-                            <ContentTemplate>
-                                <div class="profile-image-wrapper" onclick="document.getElementById('<%= fuUpload.ClientID %>').click();">
-                                    <asp:Image ID="imgProfile" runat="server" CssClass="profile-image" AlternateText="Profile Picture"
-                                        onerror="this.src='Images/default-profile.png'" />
-                                    <div class="upload-overlay">
-                                        <i class="fas fa-camera fa-2x"></i>
-                                    </div>
-                                </div>
-                                <asp:FileUpload ID="fuUpload" runat="server" CssClass="file-upload" accept=".jpg,.jpeg,.png" />
-                                <asp:Button ID="btnUpload" runat="server" Text="Upload Image" OnClick="fuUpload_Changed" CssClass="btn btn-sm btn-secondary mt-2" />
-                                <small class="text-muted d-block mt-2">Click image to upload new photo</small>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
-                    </div>
-
-                    <div class="col-md-8">
-                        <div class="profile-details">
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label form-label">Name</label>
-                                <div class="col-sm-9">
-                                    <asp:TextBox ID="txtname" runat="server" CssClass="form-control"></asp:TextBox>
-                                </div>
+                <div class="col-md-8">
+                    <div class="profile-details">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label form-label">Name</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="txtname" runat="server" CssClass="form-control"></asp:TextBox>
                             </div>
+                        </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label form-label">Email</label>
-                                <div class="col-sm-9">
-                                    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label form-label">Email</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
                             </div>
+                        </div>
 
-                            <div class="form-group row">
-                                <label class="col-sm-3 col-form-label form-label">Phone</label>
-                                <div class="col-sm-9">
-                                    <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone"></asp:TextBox>
-                                </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label form-label">Phone</label>
+                            <div class="col-sm-9">
+                                <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone"></asp:TextBox>
                             </div>
+                        </div>
 
-                            <div class="form-group row mt-4">
-                                <div class="col-sm-9 offset-sm-3">
-                                    <asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
-                                        CssClass="btn btn-update text-white" OnClick="btnUpdate_Click" />
-                                </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-9 offset-sm-3">
+                                <asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
+                                    CssClass="btn btn-update text-white" OnClick="btnUpdate_Click" />
                             </div>
                         </div>
                     </div>
@@ -136,5 +135,6 @@
             </div>
         </div>
     </div>
+</div>
 
 </asp:Content>

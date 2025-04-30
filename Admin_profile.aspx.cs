@@ -58,45 +58,33 @@ namespace Society_management
 
         private void LoadProfilePicture()
         {
-            try
+            using (SqlConnection con = new SqlConnection(strcon))
             {
-                using (SqlConnection con = new SqlConnection(strcon))
+                con.Open();
+                string query = @"SELECT Profile_picture FROM tblAdmin WHERE admin_id = @adminId";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@adminId", Session["A_id"]);
+
+                object result = cmd.ExecuteScalar();
+                string imagePath = result?.ToString() ?? "";
+
+                if (!string.IsNullOrEmpty(imagePath))
                 {
-                    con.Open();
-                    string query = @"SELECT Profile_picture FROM tblAdmin 
-                                   WHERE admin_id = @adminId";
-
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
-
-                    object result = cmd.ExecuteScalar();
-                    string imagePath = result != null ? result.ToString() : "";
-
-                    if (!string.IsNullOrEmpty(imagePath))
+                    string physicalPath = Server.MapPath(imagePath);
+                    if (File.Exists(physicalPath))
                     {
-                        string physicalPath = Server.MapPath(imagePath);
-                        if (File.Exists(physicalPath))
-                        {
-                            imgProfile.ImageUrl = ResolveUrl(imagePath);
-                        }
-                        else
-                        {
-                            // If stored path is invalid, set default and update DB
-                            SetDefaultProfileImage();
-                            UpdateProfilePicture("~/Images/default-profile.png");
-                        }
+                        imgProfile.ImageUrl = ResolveUrl(imagePath) + "?v=" + DateTime.Now.Ticks;
                     }
                     else
                     {
-                        // No profile picture set
                         SetDefaultProfileImage();
+                        UpdateProfilePicture("~/Images/default-profile.png");
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                SetDefaultProfileImage();
-                ShowSweetAlert("Error", "Failed to load profile picture: " + ex.Message, "error");
+                else
+                {
+                    SetDefaultProfileImage();
+                }
             }
         }
 
@@ -144,72 +132,47 @@ namespace Society_management
         {
             if (fuUpload.HasFile)
             {
-                try
+                string ext = Path.GetExtension(fuUpload.FileName).ToLower();
+                if (ext != ".jpg" && ext != ".jpeg" && ext != ".png")
                 {
-                    // Validate file type
-                    string fileExtension = Path.GetExtension(fuUpload.FileName).ToLower();
-                    if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png")
-                    {
-                        ShowSweetAlert("Error", "Only JPG, JPEG, and PNG files are allowed.", "error");
-                        return;
-                    }
-
-                    // Validate file size (max 5MB)
-                    if (fuUpload.PostedFile.ContentLength > 5242880) // 5MB
-                    {
-                        ShowSweetAlert("Error", "File size must be less than 5MB.", "error");
-                        return;
-                    }
-
-                    // Create Images directory if it doesn't exist
-                    string imagesDir = Server.MapPath("~/Images/");
-                    if (!Directory.Exists(imagesDir))
-                    {
-                        Directory.CreateDirectory(imagesDir);
-                    }
-
-                    // Generate unique filename
-                    string newFileName = $"admin_{Session["A_id"]}_{DateTime.Now:yyyyMMddHHmmss}{fileExtension}";
-                    string newFilePath = "~/Images/" + newFileName;
-                    string fullPath = Server.MapPath(newFilePath);
-
-                    // Delete old profile picture if it exists and isn't the default
-                    string oldImagePath = Server.MapPath(imgProfile.ImageUrl);
-                    if (File.Exists(oldImagePath) && !oldImagePath.Contains("default-profile"))
-                    {
-                        File.Delete(oldImagePath);
-                    }
-
-                    // Save new file
-                    fuUpload.SaveAs(fullPath);
-
-                    // Update database
-                    UpdateProfilePicture(newFilePath);
-
-                    // Update image display
-                    imgProfile.ImageUrl = newFilePath;
-
-                    ShowSweetAlert("Success", "Profile picture updated successfully!", "success");
+                    ShowSweetAlert("Error", "Only JPG, JPEG, PNG allowed.", "error");
+                    return;
                 }
-                catch (Exception ex)
+
+                if (fuUpload.PostedFile.ContentLength > 5 * 1024 * 1024)
                 {
-                    ShowSweetAlert("Error", "Failed to upload profile picture: " + ex.Message, "error");
+                    ShowSweetAlert("Error", "Max file size is 5MB.", "error");
+                    return;
                 }
+
+                string dir = Server.MapPath("~/Images/");
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                string filename = $"admin_{Session["A_id"]}_{DateTime.Now:yyyyMMddHHmmss}{ext}";
+                string relativePath = "~/Images/" + filename;
+                string fullPath = Server.MapPath(relativePath);
+
+                // Delete old image if it's not default
+                string oldImage = Server.MapPath(imgProfile.ImageUrl);
+                if (File.Exists(oldImage) && !imgProfile.ImageUrl.Contains("default-profile"))
+                    File.Delete(oldImage);
+
+                fuUpload.SaveAs(fullPath);
+                UpdateProfilePicture(relativePath);
+                imgProfile.ImageUrl = relativePath + "?v=" + DateTime.Now.Ticks;
+
+                ShowSweetAlert("Success", "Profile picture updated!", "success");
             }
         }
-
         private void UpdateProfilePicture(string imagePath)
         {
             using (SqlConnection con = new SqlConnection(strcon))
             {
                 con.Open();
-                string query = @"UPDATE tblAdmin 
-                               SET Profile_picture = @imagePath 
-                               WHERE admin_id = @adminId";
-
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@imagePath", imagePath);
-                cmd.Parameters.AddWithValue("@adminId", Session["A_id"].ToString());
+                SqlCommand cmd = new SqlCommand("UPDATE tblAdmin SET Profile_picture = @img WHERE admin_id = @id", con);
+                cmd.Parameters.AddWithValue("@img", imagePath);
+                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                 cmd.ExecuteNonQuery();
             }
         }

@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Configuration;
+using System.Collections;
 
 namespace Society_management
 {
@@ -25,10 +26,11 @@ namespace Society_management
 
             SqlConnection con = new SqlConnection(strcon);
             //string query = "select * from tblImage where A_id=@aid";
-            string query = "select b.Block_name,f.Flate_id, f.Flate_no, f.Floor, f.Flat_type, f.sqft, f.Occupancy_status, f.Mentanance from tblBlock b join tblFlat f on b.Block_id=f.Block_id";
+            string query = "select b.Block_name,f.Flate_id, f.Flate_no, f.Floor, f.Flat_type, f.sqft, f.Occupancy_status, f.Mentanance from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
             con.Open();
-
-            SqlDataAdapter ad = new SqlDataAdapter(query, con);
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            SqlDataAdapter ad = new SqlDataAdapter(cmd);
             DataSet ds = new DataSet();
             ad.Fill(ds);
             gvDisplay.DataSource = ds;
