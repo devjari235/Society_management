@@ -70,10 +70,6 @@
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
     <Content Include="Admin_profile.aspx" />
-    <Content Include="App_Data\Soc_mgnt.mdf" />
-    <Content Include="App_Data\Soc_mgnt_log.ldf">
-      <DependentUpon>Soc_mgnt.mdf</DependentUpon>
-    </Content>
     <Content Include="A_registration.aspx" />
     <Content Include="Block.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
@@ -2205,6 +2201,7 @@
     <Content Include="Terms.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
+    <Content Include="View_flat.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -2306,6 +2303,13 @@
     </Compile>
     <Compile Include="U_registration.aspx.designer.cs">
       <DependentUpon>U_registration.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_flat.aspx.cs">
+      <DependentUpon>View_flat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_flat.aspx.designer.cs">
+      <DependentUpon>View_flat.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

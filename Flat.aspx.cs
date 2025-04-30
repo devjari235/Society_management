@@ -24,6 +24,8 @@ namespace Society_management
             
         }
 
+      
+
         int id;
         public void SocietyID()
         {
@@ -56,6 +58,50 @@ namespace Society_management
             ddlBlock.DataBind();
             con.Close();
             ddlBlock.Items.Insert(0, new ListItem("-- Select Block --"));
+        }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            string Fno = txtFno.Text;
+            string Floor = txtFloor.Text;
+            string F_type = ddlType.SelectedValue;
+            string sqft = txtsqft.Text;
+            string status = ddlstatus.SelectedValue;
+            string mentanance=txtMentanance.Text;
+            string block = ddlBlock.SelectedValue;
+            string query = "insert into tblFlat values(@fno,@floor,@type,@sqft,@status,@mentanance,@block)";
+            SqlConnection conn = new SqlConnection(strcon);
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("fno", Fno);
+            cmd.Parameters.AddWithValue("floor", Floor);
+            cmd.Parameters.AddWithValue("type", F_type);
+            cmd.Parameters.AddWithValue("sqft", sqft);
+            cmd.Parameters.AddWithValue("status", status);
+            cmd.Parameters.AddWithValue("mentanance", mentanance);
+            cmd.Parameters.AddWithValue("block", block);
+            conn.Open();
+            cmd.ExecuteNonQuery();
+            conn.Close();
+            string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Flat Add successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Flat.aspx';
+            });";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
+        }
+
+        protected void btnViewFlats_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("View_flat.aspx");
+        }
+
+        protected void btnAddFlat_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Flat.aspx");
         }
     }
 }
