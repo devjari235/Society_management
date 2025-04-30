@@ -24,25 +24,42 @@ namespace Society_management
         string name;
         string email;
         string ph;
+        string img;
+
         public void BindDetails()
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Select name,email,phone_no from tblAdmin where admin_id=@a_id";
+            string Query = "SELECT name, email, phone_no, Profile_picture FROM tblAdmin WHERE admin_id = @a_id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
             SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+
+            if (reader.Read())
             {
                 name = reader["name"].ToString();
                 email = reader["email"].ToString();
                 ph = reader["phone_no"].ToString();
-            }
-            txtname.Text = name;
-            txtemail.Text = email;
-            txtphone.Text = ph;
+                img = reader["Profile_picture"].ToString();
 
+                txtname.Text = name;
+                txtemail.Text = email;
+                txtphone.Text = ph;
+
+                if (!string.IsNullOrEmpty(img))
+                {
+                 imgPhoto.ImageUrl = img;
+                }
+                else
+                {
+                    imgPhoto.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+                }
+            }
+
+            reader.Close();
+            con.Close();
         }
+
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(strcon);

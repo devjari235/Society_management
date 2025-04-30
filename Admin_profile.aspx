@@ -139,15 +139,35 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-4 text-center">
-                          <div id="profile-container">
-                                  <img alt="User Pic" src="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png" id="profile-image1" height="210px" class="image11">
-                              </div>
-                             <input id="profile-image-upload" class="hidden" type="file" onchange="previewFile()">
-                            <small class="text-muted d-block mt-2">Click image to upload new photo</small>
+                   <div class="col-md-4 text-center">
+    <div id="Div1" runat="server">
+        <asp:Image 
+            ID="imgPhoto" 
+            runat="server" 
+            Height="210px" 
+            ImageUrl="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png" 
+            AlternateText="User Pic" 
+            CssClass="image11" 
+            onclick="document.getElementById('profile-image-upload').click();" 
+        />
+    </div>
+    
+    <asp:FileUpload 
+        ID="profileImageUpload" 
+        runat="server" 
+        CssClass="hidden" 
+        onchange="previewFile()" 
+        ClientIDMode="Static" 
+    />
+    
+    <asp:Label 
+        ID="lblInstruction" 
+        runat="server" 
+        Text="Click image to upload new photo" 
+        CssClass="text-muted d-block mt-2" 
+    />
+</div>
 
-                    </div>
-                    
                     <div class="col-md-8">
                         <div class="profile-details">
                             <div class="form-group row">
