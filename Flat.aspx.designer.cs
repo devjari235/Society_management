@@ -51,6 +51,24 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtFno;
 
         /// <summary>
+        /// rfvFlatNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFlatNo;
+
+        /// <summary>
+        /// revFlatNo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revFlatNo;
+
+        /// <summary>
         /// txtFloor control.
         /// </summary>
         /// <remarks>
@@ -58,6 +76,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFloor;
+
+        /// <summary>
+        /// rfvFloor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFloor;
+
+        /// <summary>
+        /// revFloor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revFloor;
 
         /// <summary>
         /// ddlType control.
@@ -69,6 +105,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlType;
 
         /// <summary>
+        /// rfvFlatType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFlatType;
+
+        /// <summary>
         /// txtsqft control.
         /// </summary>
         /// <remarks>
@@ -76,6 +121,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtsqft;
+
+        /// <summary>
+        /// rfvSqft control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvSqft;
+
+        /// <summary>
+        /// revSqft control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revSqft;
 
         /// <summary>
         /// ddlstatus control.
@@ -87,6 +150,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlstatus;
 
         /// <summary>
+        /// rfvOccupancy control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvOccupancy;
+
+        /// <summary>
         /// txtMentanance control.
         /// </summary>
         /// <remarks>
@@ -96,6 +168,24 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtMentanance;
 
         /// <summary>
+        /// rfvMaintenance control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvMaintenance;
+
+        /// <summary>
+        /// revMaintenance control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revMaintenance;
+
+        /// <summary>
         /// ddlBlock control.
         /// </summary>
         /// <remarks>
@@ -103,6 +193,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlBlock;
+
+        /// <summary>
+        /// rfvBlock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBlock;
 
         /// <summary>
         /// btnAdd control.
