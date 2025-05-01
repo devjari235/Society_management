@@ -62,13 +62,16 @@ namespace Society_management
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+            string filename = Path.GetFileName(profileImageUpload.FileName);
+            profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph where admin_id=@id";
+            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph, Profile_picture=@img where admin_id=@id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@name", txtname.Text);
             cmd.Parameters.AddWithValue("@mail", txtemail.Text);
             cmd.Parameters.AddWithValue("@ph", txtphone.Text);
+            cmd.Parameters.AddWithValue("@img", "~/Profile/"+filename);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
             cmd.ExecuteNonQuery();
             con.Close();

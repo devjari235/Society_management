@@ -80,6 +80,7 @@
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
+    <Content Include="Documents.aspx" />
     <Content Include="Flat.aspx" />
     <Content Include="fontawesome\css\all.css" />
     <Content Include="fontawesome\css\all.min.css" />
@@ -2249,6 +2250,13 @@
     <Compile Include="ChangePassword.aspx.designer.cs">
       <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Documents.aspx.cs">
+      <DependentUpon>Documents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Documents.aspx.designer.cs">
+      <DependentUpon>Documents.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Flat.aspx.cs">
       <DependentUpon>Flat.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2395,6 +2403,7 @@
   <ItemGroup>
     <Folder Include="Logo\" />
     <Folder Include="Profile\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
