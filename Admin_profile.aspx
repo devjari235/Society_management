@@ -110,8 +110,8 @@
             }
         }
         $(function () {
-            $('#profile-image1').on('click', function () {
-                $('#profile-image-upload').click();
+            $('#imgPhoto').on('click', function () {
+                $('#profileImageUpload').click();
             });
         });
 
@@ -130,7 +130,7 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
- <div class="container profile-container">
+    <div class="container profile-container">
         <div class="card">
             <div class="card-body">
                 <div class="text-center mb-4">
@@ -148,7 +148,7 @@
             ImageUrl="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png" 
             AlternateText="User Pic" 
             CssClass="image11" 
-            onclick="document.getElementById('profile-image-upload').click();" 
+            onclick="document.getElementById('profileImageUpload').click();" 
         />
     </div>
     
