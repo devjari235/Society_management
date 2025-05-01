@@ -5,6 +5,8 @@ using System.Configuration;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace Society_management
 {
@@ -30,13 +32,15 @@ namespace Society_management
         {
             using (SqlConnection con = new SqlConnection(strcon))
             {
-                string query = @"SELECT d.DocumentID, d.DocumentTitle, d.DocumentType, 
-                               CONVERT(varchar, d.UploadDate, 106) AS UploadDate, 
-                               a.name, d.FileName 
-                               FROM tblDocuments d
-                               INNER JOIN tblAdmin a ON d.admin_id = a.admin_id
-                               WHERE d.admin_id = @id
-                               ORDER BY d.UploadDate DESC";
+                //string query = @"SELECT d.FilePath, d.DocumentTitle, d.DocumentType, d.Description
+                //               CONVERT(varchar, d.UploadDate, 106) AS UploadDate, 
+                //               a.name, d.FileName 
+                //               FROM tblDocuments d
+                //               INNER JOIN tblAdmin a ON d.admin_id = a.admin_id
+                //               WHERE d.admin_id = @id
+                //               ORDER BY d.UploadDate DESC";
+
+                string query= "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE d.admin_id = @id ORDER BY d.UploadDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
