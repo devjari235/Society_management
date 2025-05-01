@@ -14,57 +14,7 @@ namespace Society_management
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                BindDocuments();
-            }
-        }
-
-        private void BindDocuments()
-        {
-            try
-            {
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    string query = @"SELECT DocumentID, DocumentTitle, DocumentType, 
-                                   CONVERT(varchar, UploadDate, 106) AS UploadDate, 
-                                   admin_id, FileName 
-                                   FROM tblDocuments 
-                                   where admin_id=@id
-                                   ORDER BY UploadDate DESC";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            da.Fill(dt);
-
-                            if (dt.Rows.Count > 0)
-                            {
-                                gvDocuments.DataSource = dt;
-                                gvDocuments.DataBind();
-                            }
-                            else
-                            {
-                                dt.Rows.Add(dt.NewRow());
-                                gvDocuments.DataSource = dt;
-                                gvDocuments.DataBind();
-                                gvDocuments.Rows[0].Cells.Clear();
-                                gvDocuments.Rows[0].Cells.Add(new TableCell());
-                                gvDocuments.Rows[0].Cells[0].ColumnSpan = gvDocuments.Columns.Count;
-                                gvDocuments.Rows[0].Cells[0].Text = "No documents found";
-                                gvDocuments.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error loading documents: " + ex.Message);
-            }
+            
         }
 
         protected void btnUpload_Click(object sender, EventArgs e)
@@ -108,10 +58,10 @@ namespace Society_management
                     {
                         string query = @"INSERT INTO tblDocuments 
                                         (DocumentTitle, DocumentType, Description, FileName, 
-                                         StoredFileName, FilePath, FileSize, admin_id)
+                                         StoredFileName, FilePath, FileSize, admin_id, UploadDate)
                                         VALUES 
                                         (@Title, @Type, @Description, @FileName, 
-                                         @StoredFileName, @FilePath, @FileSize, @UploadedBy)";
+                                         @StoredFileName, @FilePath, @FileSize, @admin_id, GETDATE())";
 
                         using (SqlCommand cmd = new SqlCommand(query, con))
                         {
@@ -121,16 +71,17 @@ namespace Society_management
                                 string.IsNullOrEmpty(description) ? DBNull.Value : (object)description);
                             cmd.Parameters.AddWithValue("@FileName", fileName);
                             cmd.Parameters.AddWithValue("@StoredFileName", uniqueFileName);
-                            cmd.Parameters.AddWithValue("@FilePath", "~/Uploads/Documents/" + uniqueFileName);
+                            cmd.Parameters.AddWithValue("@FilePath", "~/Uploads/" + uniqueFileName);
                             cmd.Parameters.AddWithValue("@FileSize", fileSize);
-                            cmd.Parameters.AddWithValue("@UploadedBy", Session["A_id"].ToString());
+                            cmd.Parameters.AddWithValue("@admin_id", Convert.ToInt32(Session["A_id"]));
+
                             con.Open();
                             cmd.ExecuteNonQuery();
                         }
                     }
 
                     ShowSuccessMessage("Document uploaded successfully!");
-                    BindDocuments();
+                    
                     ClearForm();
                 }
                 catch (Exception ex)
@@ -180,7 +131,7 @@ namespace Society_management
                                 string fileName = reader["FileName"].ToString();
                                 string storedFileName = reader["StoredFileName"].ToString();
 
-                                string filePath = Server.MapPath("~/Uploads/Documents/" + storedFileName);
+                                string filePath = Server.MapPath("~/Uploads/" + storedFileName);
 
                                 if (File.Exists(filePath))
                                 {
@@ -253,9 +204,10 @@ namespace Society_management
                     }
                 }
 
+                // Delete file from server
                 if (!string.IsNullOrEmpty(storedFileName))
                 {
-                    string filePath = Server.MapPath("~/Uploads/Documents/" + storedFileName);
+                    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
                     if (File.Exists(filePath))
                     {
                         File.Delete(filePath);
@@ -263,7 +215,7 @@ namespace Society_management
                 }
 
                 ShowSuccessMessage("Document deleted successfully!");
-                BindDocuments();
+            
             }
             catch (Exception ex)
             {
@@ -271,43 +223,7 @@ namespace Society_management
             }
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            string searchTerm = txtSearch.Text.Trim();
-
-            try
-            {
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    string query = @"SELECT DocumentID, DocumentTitle, DocumentType, 
-                                   CONVERT(varchar, UploadDate, 106) AS UploadDate, 
-                                   admin_id, FileName 
-                                   FROM tblDocuments 
-                                   WHERE DocumentTitle LIKE @SearchTerm OR 
-                                         DocumentType LIKE @SearchTerm OR
-                                         Description LIKE @SearchTerm
-                                   ORDER BY UploadDate DESC";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
-
-                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                        {
-                            DataTable dt = new DataTable();
-                            da.Fill(dt);
-
-                            gvDocuments.DataSource = dt;
-                            gvDocuments.DataBind();
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage("Error searching documents: " + ex.Message);
-            }
-        }
+       
 
         private void ClearForm()
         {
@@ -315,7 +231,6 @@ namespace Society_management
             txtDocumentTitle.Text = "";
             txtDescription.Text = "";
             fileUpload.Dispose();
-            //fileInfo.InnerHtml = "";
         }
 
         private void ShowSuccessMessage(string message)
@@ -330,10 +245,6 @@ namespace Society_management
                 $"alert('{message.Replace("'", "\\'")}');", true);
         }
 
-        protected void gvDocuments_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvDocuments.PageIndex = e.NewPageIndex;
-            BindDocuments();
-        }
+
     }
 }

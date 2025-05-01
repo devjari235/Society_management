@@ -2205,6 +2205,7 @@
     <Content Include="Terms.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
+    <Content Include="View_Document.aspx" />
     <Content Include="View_flat.aspx" />
     <Content Include="View_Owner.aspx" />
     <Content Include="Web.config" />
@@ -2336,6 +2337,13 @@
     </Compile>
     <Compile Include="U_registration.aspx.designer.cs">
       <DependentUpon>U_registration.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_Document.aspx.cs">
+      <DependentUpon>View_Document.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_Document.aspx.designer.cs">
+      <DependentUpon>View_Document.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_flat.aspx.cs">
       <DependentUpon>View_flat.aspx</DependentUpon>

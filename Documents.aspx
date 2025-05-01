@@ -117,6 +117,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+        <asp:Label ID="lblDocument" runat="server" CssClass="btn btn-primary"><b><a href="Documents.aspx" style="color:black; text-decoration: none;">Add Document</a></b></asp:Label>
+<asp:Label id="lblDocumentView" runat="server" CssClass="btn btn-secondary"><b><a href="View_Document.aspx" style="color:black; text-decoration: none;">View All Documents</a></b></asp:Label>
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
@@ -124,15 +126,6 @@
         <div class="upload-header">
             <h3><i class="fas fa-cloud-upload-alt"></i> Upload Society Documents</h3>
             <p class="text-muted">Upload important society documents like notices, meeting minutes, financial reports, etc.</p>
-        </div>
-        
-        <div class="search-box">
-            <div class="input-group">
-                <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control" placeholder="Search documents..." AutoCompleteType="Disabled"></asp:TextBox>
-                <div class="input-group-append">
-                    <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
-                </div>
-            </div>
         </div>
         
         <asp:Panel ID="pnlUpload" runat="server" DefaultButton="btnUpload">
@@ -195,7 +188,7 @@
             </div>
         </asp:Panel>
         
-        <div class="document-list">
+        <%--<div class="document-list">
             <h5>Uploaded Documents</h5>
             <asp:GridView ID="gvDocuments" runat="server" AutoGenerateColumns="False" 
                 CssClass="table table-striped table-bordered" EmptyDataText="No documents found."
@@ -204,7 +197,7 @@
                     <asp:BoundField DataField="DocumentTitle" HeaderText="Title" />
                     <asp:BoundField DataField="DocumentType" HeaderText="Type" />
                     <asp:BoundField DataField="UploadDate" HeaderText="Upload Date" DataFormatString="{0:dd-MMM-yyyy}" />
-                    <asp:BoundField DataField="UploadedBy" HeaderText="Uploaded By" />
+                    <asp:BoundField DataField="name" HeaderText="Uploaded By" />
                     <asp:TemplateField HeaderText="Actions">
                         <ItemTemplate>
                             <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" 
@@ -220,7 +213,7 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
-        </div>
+        </div>--%>
     </div>
 </asp:Content>
 
