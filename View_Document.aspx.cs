@@ -172,8 +172,19 @@ namespace Society_management
                         File.Delete(filePath);
                     }
                 }
+                string script =
+                       @"Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure',
+            text: 'You won't be able to revert this!',
+                showCancelButton: true,
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Try Again'
+        }); ";
 
-                ShowAlert("Success", "Document deleted successfully!", "success");
+                ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
                 BindDocuments(); // Refresh the GridView
             }
             catch (Exception ex)
@@ -200,17 +211,19 @@ namespace Society_management
 
         private void ShowAlert(string title, string message, string type)
         {
-            string script = $@"
-                <script>
-                    Swal.fire({{
-                        title: '{title}',
-                        text: '{message}',
-                        icon: '{type}',
-                        confirmButtonText: 'OK'
-                    }});
-                </script>";
+            string script=
+        @"Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure',
+            text: 'You won't be able to revert this!',
+                showCancelButton: true,
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Try Again'
+        }); ";
 
-            ClientScript.RegisterStartupScript(this.GetType(), "ShowAlert", script);
+                ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
         }
 
         protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
