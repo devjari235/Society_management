@@ -27,7 +27,7 @@
 
     <div class="row">
      <div class="col-sm-12 col-md-12">
-        <asp:GridView CssClass="table table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath">
+        <asp:GridView CssClass="table table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath"  OnRowCommand="gvDisplay_RowCommand" OnPageIndexChanging="gvDisplay_PageIndexChanging1">
     <Columns>
         <asp:TemplateField HeaderText="Document Info">
             <ItemTemplate>

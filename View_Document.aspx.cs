@@ -72,7 +72,7 @@ namespace Society_management
             }
         }
 
-        protected void gvDocuments_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Download")
             {
@@ -84,12 +84,6 @@ namespace Society_management
                 int documentId = Convert.ToInt32(e.CommandArgument);
                 DeleteDocument(documentId);
             }
-        }
-
-        protected void gvDocuments_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            gvDisplay.PageIndex = e.NewPageIndex;
-            BindDocuments();
         }
 
         private void DownloadDocument(int documentId)
@@ -217,6 +211,12 @@ namespace Society_management
                 </script>";
 
             ClientScript.RegisterStartupScript(this.GetType(), "ShowAlert", script);
+        }
+
+        protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        {
+            gvDisplay.PageIndex = e.NewPageIndex;
+            BindDocuments();
         }
     }
 }
