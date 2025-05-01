@@ -299,7 +299,7 @@ footer a:hover {
                              </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user-circle"></i> 
+                                    <i class="fas fa-user-circle fa-lg"></i> 
                                     <asp:LoginName ID="LoginName1" runat="server" />
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
