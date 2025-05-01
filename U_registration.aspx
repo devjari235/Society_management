@@ -173,7 +173,7 @@ h2 {
                 <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control" TextMode="Password" required></asp:TextBox>
             </div>
 
-            <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn btn-primary" />
+            <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn btn-primary" OnClick="btnRegister_Click" />
         </div>
     </form>
 
