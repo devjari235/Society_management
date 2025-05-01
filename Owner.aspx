@@ -54,9 +54,9 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
-        <a href="Owner.aspx"><%--<asp:Button ID="btnAddOwner" runat="server" Text="Add Owner" CssClass="btn btn-primary"/>--%>Add Owner</a>
-        <a href="View_Owner.aspx"><%--<asp:Button ID="btnViewOwner" runat="server" Text="View All Owner" CssClass="btn btn-secondary"/>--%>View All Owner</a>
-       <a>Owner History</a> <%--<asp:Button ID="btnOwnerHistory" runat="server" Text="Owner History" CssClass="btn btn-info" />--%>
+<asp:Label ID="lblOwner" runat="server" CssClass="btn btn-primary"><b><a href="Owner.aspx" style="color:black; text-decoration: none;">Add Owner</a></b></asp:Label>
+<asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><a href="View_Owner.aspx" style="color:black; text-decoration: none;">View All Owner</a></b></asp:Label>
+<asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b><a  href="#" style="color:black; text-decoration: none; ">Owner History</a></b></asp:Label>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
