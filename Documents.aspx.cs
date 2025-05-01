@@ -28,8 +28,8 @@ namespace Society_management
                 {
                     string query = @"SELECT DocumentID, DocumentTitle, DocumentType, 
                                    CONVERT(varchar, UploadDate, 106) AS UploadDate, 
-                                   UploadedBy, FileName 
-                                   FROM SocietyDocuments 
+                                   admin_id, FileName 
+                                   FROM tblDocuments 
                                    where admin_id=@id
                                    ORDER BY UploadDate DESC";
 
@@ -106,9 +106,9 @@ namespace Society_management
                     // Insert document info into database
                     using (SqlConnection con = new SqlConnection(strcon))
                     {
-                        string query = @"INSERT INTO SocietyDocuments 
+                        string query = @"INSERT INTO tblDocuments 
                                         (DocumentTitle, DocumentType, Description, FileName, 
-                                         StoredFileName, FilePath, FileSize, UploadedBy)
+                                         StoredFileName, FilePath, FileSize, admin_id)
                                         VALUES 
                                         (@Title, @Type, @Description, @FileName, 
                                          @StoredFileName, @FilePath, @FileSize, @UploadedBy)";
@@ -123,9 +123,7 @@ namespace Society_management
                             cmd.Parameters.AddWithValue("@StoredFileName", uniqueFileName);
                             cmd.Parameters.AddWithValue("@FilePath", "~/Uploads/Documents/" + uniqueFileName);
                             cmd.Parameters.AddWithValue("@FileSize", fileSize);
-                            cmd.Parameters.AddWithValue("@UploadedBy",
-                                Session["A_name"] ?? User.Identity.Name ?? "System");
-
+                            cmd.Parameters.AddWithValue("@UploadedBy", Session["A_id"].ToString());
                             con.Open();
                             cmd.ExecuteNonQuery();
                         }
@@ -168,7 +166,7 @@ namespace Society_management
             {
                 using (SqlConnection con = new SqlConnection(strcon))
                 {
-                    string query = "SELECT FileName, StoredFileName FROM SocietyDocuments WHERE DocumentID = @DocumentID";
+                    string query = "SELECT FileName, StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
 
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
@@ -232,7 +230,7 @@ namespace Society_management
                 // First get the filename from database
                 using (SqlConnection con = new SqlConnection(strcon))
                 {
-                    string query = "SELECT StoredFileName FROM SocietyDocuments WHERE DocumentID = @DocumentID";
+                    string query = "SELECT StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
 
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
@@ -245,7 +243,7 @@ namespace Society_management
                 // Delete from database
                 using (SqlConnection con = new SqlConnection(strcon))
                 {
-                    string query = "DELETE FROM SocietyDocuments WHERE DocumentID = @DocumentID";
+                    string query = "DELETE FROM tblDocuments WHERE DocumentID = @DocumentID";
 
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
@@ -255,7 +253,6 @@ namespace Society_management
                     }
                 }
 
-                // Delete file from server
                 if (!string.IsNullOrEmpty(storedFileName))
                 {
                     string filePath = Server.MapPath("~/Uploads/Documents/" + storedFileName);
@@ -284,8 +281,8 @@ namespace Society_management
                 {
                     string query = @"SELECT DocumentID, DocumentTitle, DocumentType, 
                                    CONVERT(varchar, UploadDate, 106) AS UploadDate, 
-                                   UploadedBy, FileName 
-                                   FROM SocietyDocuments 
+                                   admin_id, FileName 
+                                   FROM tblDocuments 
                                    WHERE DocumentTitle LIKE @SearchTerm OR 
                                          DocumentType LIKE @SearchTerm OR
                                          Description LIKE @SearchTerm
