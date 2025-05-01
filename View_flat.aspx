@@ -15,9 +15,9 @@
 <%--<asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary" OnClick="btnAddFlat_Click" />
 <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary" OnClick="btnViewFlats_Click" />
 <asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />--%>
-        <a href="Flat.aspx">Add Flat</a>
-        <a href="View_flat.aspx">View All Flats</a>
-        <a>Flat History</a>
+               <asp:Label ID="lblFlat" runat="server" CssClass="btn btn-primary"><b><a href="Flat.aspx" style="color:black; text-decoration: none;">Add Flat</a></b></asp:Label>
+        <asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><a href="View_flat.aspx" style="color:black; text-decoration: none;">View All Flats</a></b></asp:Label>
+        <asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b><a  href="#" style="color:black; text-decoration: none; ">Flat History</a></b></asp:Label>
         </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
