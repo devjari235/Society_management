@@ -19,6 +19,7 @@ namespace Society_management
         {
             if (!IsPostBack)
             {
+                MarkNoticesSeen();
                 LoadActiveNotices();
                 ExpireOldNotices();
             }
@@ -70,6 +71,17 @@ namespace Society_management
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
             {
                 string query = "UPDATE tblNoticeBoard SET Status = 'Expired' WHERE Status = 'Active' AND DATEDIFF(DAY, Date, GETDATE()) > 1";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void MarkNoticesSeen()
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+            {
+                string query = "UPDATE tblNoticeBoard SET IsSeen = 1 WHERE IsSeen = 0";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
                 cmd.ExecuteNonQuery();
