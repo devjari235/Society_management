@@ -30,7 +30,7 @@ namespace Society_management
             {
                 using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
                 {
-                    string query = "INSERT INTO tblNoticeBoard VALUES (@title, @Des,@date, @a_Id, 'Active')";
+                    string query = "INSERT INTO tblNoticeBoard(Title,Description,Date,admin_id,Status) VALUES (@title, @Des,@date, @a_Id, 'Active')";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@title", title);
                     cmd.Parameters.AddWithValue("@Des", message);
