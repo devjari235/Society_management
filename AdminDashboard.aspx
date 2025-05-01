@@ -90,7 +90,7 @@
                         </div>
                         <div class="card-title">TOTAL RESIDENTS</div>
                         <div class="card-value"><asp:Label ID="lblTotalResidents" runat="server" Text="0" /></div>
-                        <a href="Residents.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <a href="View_Owner.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="card-title">TOTAL FLATS</div>
                         <div class="card-value"><asp:Label ID="lblTotalFlats" runat="server" Text="0" /></div>
-                        <a href="Flats.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <a href="View_Flat.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
