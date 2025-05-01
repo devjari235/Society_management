@@ -24,46 +24,7 @@ namespace Society_management
             }
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            string searchTerm = txtSearch.Text.Trim();
-
-            using (SqlConnection con = new SqlConnection(strcon))
-            {
-                string query = @"SELECT d.DocumentID, d.DocumentTitle, d.DocumentType, 
-                               CONVERT(varchar, d.UploadDate, 106) AS UploadDate, 
-                               a.name, d.FileName 
-                               FROM tblDocuments d
-                               INNER JOIN tblAdmin a ON d.admin_id = a.admin_id
-                               WHERE (d.DocumentTitle LIKE @SearchTerm OR 
-                                     d.DocumentType LIKE @SearchTerm OR
-                                     d.Description LIKE @SearchTerm)
-                               AND d.admin_id = @id
-                               ORDER BY d.UploadDate DESC";
-
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    cmd.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
-                    cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
-
-                        if (dt.Rows.Count > 0)
-                        {
-                            gvDocuments.DataSource = dt;
-                            gvDocuments.DataBind();
-                        }
-                        else
-                        {
-                            ShowAlert("No Results", "No documents found matching your search criteria", "info");
-                        }
-                    }
-                }
-            }
-        }
+        
 
         private void BindDocuments()
         {
@@ -88,19 +49,19 @@ namespace Society_management
 
                         if (dt.Rows.Count > 0)
                         {
-                            gvDocuments.DataSource = dt;
-                            gvDocuments.DataBind();
+                            gvDisplay.DataSource = dt;
+                            gvDisplay.DataBind();
                         }
                         else
                         {
                             dt.Rows.Add(dt.NewRow());
-                            gvDocuments.DataSource = dt;
-                            gvDocuments.DataBind();
-                            gvDocuments.Rows[0].Cells.Clear();
-                            gvDocuments.Rows[0].Cells.Add(new TableCell());
-                            gvDocuments.Rows[0].Cells[0].ColumnSpan = gvDocuments.Columns.Count;
-                            gvDocuments.Rows[0].Cells[0].Text = "No documents found";
-                            gvDocuments.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
+                            gvDisplay.DataSource = dt;
+                            gvDisplay.DataBind();
+                            gvDisplay.Rows[0].Cells.Clear();
+                            gvDisplay.Rows[0].Cells.Add(new TableCell());
+                            gvDisplay.Rows[0].Cells[0].ColumnSpan = gvDisplay.Columns.Count;
+                            gvDisplay.Rows[0].Cells[0].Text = "No documents found";
+                            gvDisplay.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
                         }
                     }
                 }
@@ -123,7 +84,7 @@ namespace Society_management
 
         protected void gvDocuments_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-            gvDocuments.PageIndex = e.NewPageIndex;
+            gvDisplay.PageIndex = e.NewPageIndex;
             BindDocuments();
         }
 

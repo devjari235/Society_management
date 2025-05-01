@@ -9,42 +9,71 @@
     <asp:Label id="lblDocumentView" runat="server" CssClass="btn btn-secondary"><b><a href="View_Document.aspx" style="color:black; text-decoration: none;">View All Documents</a></b></asp:Label>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="search-box">
+   <%-- <div class="search-box">
         <div class="input-group">
             <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control" placeholder="Search documents..." AutoCompleteType="Disabled"></asp:TextBox>
             <div class="input-group-append">
                 <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
             </div>
         </div>
-    </div>
+    </div>--%>
 
-    <div class="document-list">
-        <h5>Uploaded Documents</h5>
-        <asp:GridView ID="gvDocuments" runat="server" AutoGenerateColumns="False" 
-            CssClass="table table-striped table-bordered" EmptyDataText="No documents found."
-            OnRowCommand="gvDocuments_RowCommand" DataKeyNames="DocumentID"
-            OnPageIndexChanging="gvDocuments_PageIndexChanging" AllowPaging="True" PageSize="10">
-            <Columns>
-                <asp:BoundField DataField="DocumentTitle" HeaderText="Title" />
-                <asp:BoundField DataField="DocumentType" HeaderText="Type" />
-                <asp:BoundField DataField="UploadDate" HeaderText="Upload Date" DataFormatString="{0:dd-MMM-yyyy}" />
-                <asp:BoundField DataField="name" HeaderText="Uploaded By" />
-                <asp:TemplateField HeaderText="Actions">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" 
-                            CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-sm btn-primary">
-                            <i class="fas fa-download"></i> Download
-                        </asp:LinkButton>
-                        <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteDocument" 
-                            CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-sm btn-danger" 
-                            OnClientClick="return confirmDelete();">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-            </Columns>
-        </asp:GridView>
-    </div>
+    <div class="row">
+     <div class="col-sm-12 col-md-12">
+         <div class="table-responsive">
+             <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath">
+                 <Columns>
+                     <asp:BoundField DataField="FilePath" HeaderText="Document" ReadOnly="true" SortExpression="FilePath" />
+                     <asp:TemplateField HeaderText="Details">
+                         <ItemTemplate>
+                             <div class="container-fluid">
+                                 <div class="row">
+                                     <div class="col-lg-10">
+                                         <div class="row">
+                                             <div class="col- 12">
+                                                
+                                                 Document Title-<asp:Label ID="lblDocumentTitle" runat="server" Text='<%#Eval("DocumentTitle") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
+                                                 &nbsp;| DocumentType-<asp:Label ID="lblDocumentType" runat="server" Text='<%#Eval("DocumentType") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div>
+                                                 Description-<asp:Label ID="lblDescription" runat="server" Text='<%#Eval("Description") %>' Font-Bold="True"></asp:Label>
+                                                 
+
+                                             </div>
+                                         </div>
+                                         <div class="row">
+                                             <div>
+                                                 UploadDate-<asp:Label ID="lblUploadDate" runat="server" Text='<%#Eval("UploadDate") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                 &nbsp;| Upload By-<asp:Label ID="lblUploadBy" runat="server" Text='<%#Eval("name") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
+
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="col-lg-2">
+                                         <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" 
+                         CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-sm btn-primary">
+                         <i class="fas fa-download"></i> Download
+                     </asp:LinkButton>
+                     <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteDocument" 
+                         CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-sm btn-danger" 
+                         OnClientClick="return confirmDelete();">
+                         <i class="fas fa-trash-alt"></i> Delete
+                     </asp:LinkButton>
+
+                                     </div>
+                                 </div>
+                             </div>
+                         </ItemTemplate>
+                     </asp:TemplateField>
+
+                 </Columns>
+             </asp:GridView>
+         </div>
+
+     </div>
+ </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
