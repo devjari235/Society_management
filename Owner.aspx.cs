@@ -19,6 +19,7 @@ namespace Society_management
             {
                 SocietyID();
                 BindBlockName();
+                txtdate.Text = DateTime.Now.ToString("dd-MM-yyyy");
             }
 
         }

@@ -40,6 +40,14 @@
         font-size: 14px;
     }
     </style>
+
+    <script type="text/javascript">
+        window.onload = function () {
+            var today = new Date().toISOString().substr(0, 10);
+            document.getElementById('<%= txtdate.ClientID %>').value = today;
+        };
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -176,7 +184,7 @@
                             <div class="col-md-6">
                                 <label>Allotment Date</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtdate" runat="server" placeholder="Allotment Date" TextMode="Date"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtdate" runat="server" placeholder="Allotment Date" Enabled="False" TextMode="Date"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvDate" runat="server" 
                                         ControlToValidate="txtdate" ErrorMessage="Allotment date is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
