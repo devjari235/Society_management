@@ -217,5 +217,7 @@ namespace Society_management
             gvDisplay.PageIndex = e.NewPageIndex;
             BindDocuments();
         }
+
+        
     }
 }

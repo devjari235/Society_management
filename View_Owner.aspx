@@ -32,48 +32,51 @@ $(document).ready(function () {
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <div class="table-responsive">
-                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="Block_name">
-                    <Columns>
-                        <asp:BoundField DataField="Block_name" HeaderText="Block Name" ReadOnly="true" SortExpression="Block_name" />
-                        <asp:TemplateField HeaderText="Details">
-                            <ItemTemplate>
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="row">
-                                                <div class="col- 12">
-                                                   
-                                                    Owner Name-<asp:Label ID="lblOwner_name" runat="server" Text='<%#Eval("Owner_name") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
-                                                    &nbsp;| Email-<asp:Label ID="lblEmail" runat="server" Text='<%#Eval("Email_id") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div>
-                                                    Contact Number-<asp:Label ID="lblContact_no" runat="server" Text='<%#Eval("Contact_no") %>' Font-Bold="True"></asp:Label>
-                                                    &nbsp;| Emergency Number-<asp:Label ID="lblEmergency_Number" runat="server" Text='<%#Eval("Emergency_Number") %>' Font-Bold="True"></asp:Label>
-
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div>
-                                                    Flat Number-<asp:Label ID="lblflat" runat="server" Text='<%#Eval("Flate_no") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                    &nbsp;| Total Member-<asp:Label ID="lblmember" runat="server" Text='<%#Eval("Total_member") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
-
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div>
-                                                    Allotment Date-<asp:Label ID="lblAllotment_Date" runat="server" Text='<%#Eval("Allotment_Date") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-
-                    </Columns>
-                </asp:GridView>
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
+     <Columns>
+         
+         <asp:TemplateField HeaderText="Block Name">
+             <ItemTemplate>
+               <asp:Label Text='<%#Eval("Block_name") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Flat Number">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Flate_no") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Owner name">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Owner_name") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Email">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Email_id") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Contact Number">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Contact_no") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Emergency Number">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Emergency_Number") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Total Member">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Total_member") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+         <asp:TemplateField HeaderText="Allotment Date">
+             <ItemTemplate>
+                 <asp:Label Text='<%#Eval("Allotment_Date") %>' runat="server"></asp:Label>
+             </ItemTemplate>
+         </asp:TemplateField>
+     </Columns>
+ </asp:GridView>
             </div>
 
         </div>

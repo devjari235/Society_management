@@ -26,7 +26,7 @@ namespace Society_management
 
             SqlConnection con = new SqlConnection(strcon);
             //string query = "select * from tblImage where A_id=@aid";
-            string query = "select b.Block_name,f.Flate_id, f.Flate_no, f.Floor, f.Flat_type, f.sqft, f.Occupancy_status, f.Mentanance from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
+            string query = "SELECT b.Block_name, f.Flate_id, f.Flate_no, f.Floor, f.Flat_type, f.sqft, f.Occupancy_status, f.Mentanance, o.Owner_name FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN  tblSociety s ON s.Society_id = b.Society_id LEFT JOIN  tblOwner o ON o.Block_id = f.Block_id AND o.Flate_id = f.Flate_id WHERE s.admin_id = @id";
             con.Open();
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());

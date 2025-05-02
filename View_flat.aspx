@@ -35,41 +35,49 @@
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="table-responsive">
-                    <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="Flate_no">
+                    <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
                         <Columns>
-                            <asp:BoundField DataField="Flate_no" HeaderText="Flate No" ReadOnly="true" SortExpression="Flate_no" />
-                            <asp:TemplateField HeaderText="Details">
+                            
+                            <asp:TemplateField HeaderText="Flate No">
                                 <ItemTemplate>
-                                    <div class="container-fluid">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="row">
-                                                    <div class="col- 12">
-                                                       
-                                                        &nbsp;| Floor-<asp:Label ID="lblFloor" runat="server" Text='<%#Eval("Floor") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
-                                                        &nbsp;| Flat Type-<asp:Label ID="lblType" runat="server" Text='<%#Eval("Flat_type") %>' Font-Bold="True" Font-Size="Large"></asp:Label>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div>
-                                                        Sqft-<asp:Label ID="lblsqft" runat="server" Text='<%#Eval("sqft") %>' Font-Bold="True"></asp:Label>
-                                                        &nbsp;| Occupancy_status-<asp:Label ID="lblNumber" runat="server" Text='<%#Eval("Occupancy_status") %>' Font-Bold="True"></asp:Label>
-
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div>
-                                                        Mentanance-<asp:Label ID="tblMentanance" runat="server" Text='<%#Eval("Mentanance") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                        &nbsp;| Block-<asp:Label ID="lblBlock" runat="server" Text='<%#Eval("Block_name") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                  <asp:Label Text='<%#Eval("Flate_no") %>' runat="server"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
-
+                            <asp:TemplateField HeaderText="Owner name">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Owner_name") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Floor">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Floor") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Flat Type">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Flat_type") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Sqft">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("sqft") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Occupancy_status">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Occupancy_status") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Mentanance">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Mentanance") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Block">
+                                <ItemTemplate>
+                                    <asp:Label Text='<%#Eval("Block_name") %>' runat="server"></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
