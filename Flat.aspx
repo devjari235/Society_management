@@ -79,7 +79,7 @@
                             <div class="col-md-6">
                                 <label>Flat No</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtFno" runat="server" placeholder="Flat No"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtFno" runat="server" placeholder="Flat No" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvFlatNo" runat="server" 
                                         ControlToValidate="txtFno" ErrorMessage="Flat number is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -92,7 +92,7 @@
                             <div class="col-md-6">
                                 <label>Floor</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtFloor" runat="server" placeholder="Floor"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtFloor" runat="server" placeholder="Floor" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvFloor" runat="server" 
                                         ControlToValidate="txtFloor" ErrorMessage="Floor is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -125,7 +125,7 @@
                             <div class="col-md-6">
                                 <label>Sqft</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtsqft" runat="server" placeholder="Sqft"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtsqft" runat="server" placeholder="Sqft" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvSqft" runat="server" 
                                         ControlToValidate="txtsqft" ErrorMessage="Sqft is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -155,7 +155,7 @@
                             <div class="col-md-4">
                                 <label>Maintenance</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtMentanance" runat="server" placeholder="Maintenance"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtMentanance" runat="server" placeholder="Maintenance" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvMaintenance" runat="server" 
                                         ControlToValidate="txtMentanance" ErrorMessage="Maintenance is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>

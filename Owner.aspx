@@ -83,7 +83,7 @@
                             <div class="col-md-6">
                                 <label>Owner Name</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtname" runat="server" placeholder="Owner Name"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtname" runat="server" placeholder="Owner Name" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvName" runat="server" 
                                         ControlToValidate="txtname" ErrorMessage="Owner name is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -96,7 +96,7 @@
                             <div class="col-md-6">
                                 <label>Email</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtEmail" runat="server" placeholder="Email" TextMode="Email"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtEmail" runat="server" placeholder="Email" TextMode="Email" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvEmail" runat="server" 
                                         ControlToValidate="txtEmail" ErrorMessage="Email is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -112,7 +112,7 @@
                             <div class="col-md-6">
                                 <label>Contact Number</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtnumber" runat="server" placeholder="Contact Number" MaxLength="10"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtnumber" runat="server" placeholder="Contact Number" MaxLength="10" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvContact" runat="server" 
                                         ControlToValidate="txtnumber" ErrorMessage="Contact number is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -124,7 +124,7 @@
                             <div class="col-md-6">
                                 <label>Emergency Number</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtE_number" runat="server" placeholder="Emergency Number" MaxLength="10"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtE_number" runat="server" placeholder="Emergency Number" MaxLength="10" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvEmergency" runat="server" 
                                         ControlToValidate="txtE_number" ErrorMessage="Emergency number is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -171,7 +171,7 @@
                             <div class="col-md-6">
                                 <label>Total Member</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtmember" runat="server" placeholder="Total Member" TextMode="Number" min="1" max="20"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtmember" runat="server" placeholder="Total Member" TextMode="Number" min="1" max="20" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvMember" runat="server" 
                                         ControlToValidate="txtmember" ErrorMessage="Total member is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
@@ -184,7 +184,7 @@
                             <div class="col-md-6">
                                 <label>Allotment Date</label>
                                 <div class="form-group">
-                                    <asp:TextBox CssClass="form-control" ID="txtdate" runat="server" placeholder="Allotment Date" Enabled="False" TextMode="Date"></asp:TextBox>
+                                    <asp:TextBox CssClass="form-control" ID="txtdate" runat="server" placeholder="Allotment Date" Enabled="False" TextMode="Date" AutoCompleteType="Disabled"></asp:TextBox>
                                     <asp:RequiredFieldValidator ID="rfvDate" runat="server" 
                                         ControlToValidate="txtdate" ErrorMessage="Allotment date is required" 
                                         CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
