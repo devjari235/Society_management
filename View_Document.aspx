@@ -10,8 +10,10 @@
         </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function confirmDelete() {
-        return Swal.fire({
+    function confirmDelete(btn) {
+        event.preventDefault();
+
+        Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -20,10 +22,18 @@
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
-            return result.isConfirmed;
+            if (result.isConfirmed) {
+                // This is the correct way to trigger a LinkButton postback
+                __doPostBack(btn.getAttribute("name"), '');
+            }
         });
+
+        return false;
     }
 </script>
+
+
+
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -68,9 +78,17 @@
                         <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm mb-2">
                             <i class="fas fa-download"></i> Download
                         </asp:LinkButton>
-                        <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteDocument" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-danger btn-sm" OnClientClick="return confirmDelete();">
+                      <asp:LinkButton 
+                            ID="lnkDelete" 
+                            runat="server" 
+                            CommandName="DeleteDocument" 
+                            CommandArgument='<%# Eval("DocumentID") %>' 
+                            OnClientClick="return confirmDelete(this);"
+                            CssClass="btn btn-danger btn-sm">
                             <i class="fas fa-trash-alt"></i> Delete
                         </asp:LinkButton>
+
+
                     </div>
                 </div>
             </ItemTemplate>
@@ -82,5 +100,6 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-    
+
+
 </asp:Content>

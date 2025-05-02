@@ -118,7 +118,7 @@ namespace Society_management
                                 }
                                 else
                                 {
-                                    ShowAlert("Error", "File not found on server.", "error");
+                                    //ShowAlert("Error", "File not found on server.", "error");
                                 }
                             }
                         }
@@ -127,7 +127,7 @@ namespace Society_management
             }
             catch (Exception ex)
             {
-                ShowAlert("Error", "Error downloading document: " + ex.Message, "error");
+               // ShowAlert("Error", "Error downloading document: " + ex.Message, "error");
             }
         }
 
@@ -172,24 +172,24 @@ namespace Society_management
                         File.Delete(filePath);
                     }
                 }
-                string script =
-                       @"Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure',
-            text: 'You won't be able to revert this!',
-                showCancelButton: true,
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Try Again'
-        }); ";
+        //        string script =
+        //               @"Swal.fire({
+        //    icon: 'warning',
+        //    title: 'Are you sure',
+        //    text: 'You won't be able to revert this!',
+        //        showCancelButton: true,
+        //        cancelButtonColor: '#3085d6',
+        //        confirmButtonText: 'Yes, delete it!'
+        //    confirmButtonColor: '#d33',
+        //    confirmButtonText: 'Try Again'
+        //}); ";
 
-                ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
+        //        ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
                 BindDocuments(); // Refresh the GridView
             }
             catch (Exception ex)
             {
-                ShowAlert("Error", "Error deleting document: " + ex.Message, "error");
+                //ShowAlert("Error", "Error deleting document: " + ex.Message, "error");
             }
         }
 
@@ -209,22 +209,7 @@ namespace Society_management
             }
         }
 
-        private void ShowAlert(string title, string message, string type)
-        {
-            string script =
-        @"Swal.fire({
-            icon: 'warning',
-            title: 'Are you sure',
-            text: 'You won't be able to revert this!',
-                showCancelButton: true,
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, delete it!'
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Try Again'
-        }); ";
-
-            ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
-        }
+       
 
         protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
         {
