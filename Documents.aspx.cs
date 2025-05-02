@@ -80,8 +80,16 @@ namespace Society_management
                         }
                     }
 
-                    ShowSuccessMessage("Document uploaded successfully!");
-                    
+                    string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Document Add successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Documents.aspx';
+            });";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
                     ClearForm();
                 }
                 catch (Exception ex)

@@ -112,6 +112,8 @@
             margin-bottom: 20px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
