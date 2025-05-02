@@ -40,7 +40,7 @@ namespace Society_management
                     }
 
                     // Create upload directory if it doesn't exist
-                    string uploadFolder = Server.MapPath("~/Uploads/Documents/");
+                    string uploadFolder = Server.MapPath("~/Uploads/");
                     if (!Directory.Exists(uploadFolder))
                     {
                         Directory.CreateDirectory(uploadFolder);

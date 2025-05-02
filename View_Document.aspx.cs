@@ -26,7 +26,7 @@ namespace Society_management
             }
         }
 
-        
+
 
         private void BindDocuments()
         {
@@ -40,7 +40,7 @@ namespace Society_management
                 //               WHERE d.admin_id = @id
                 //               ORDER BY d.UploadDate DESC";
 
-                string query= "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE d.admin_id = @id ORDER BY d.UploadDate DESC";
+                string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE d.admin_id = @id ORDER BY d.UploadDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -106,7 +106,7 @@ namespace Society_management
                                 string fileName = reader["FileName"].ToString();
                                 string storedFileName = reader["StoredFileName"].ToString();
 
-                                string filePath = Server.MapPath("~/Uploads/Documents/" + storedFileName);
+                                string filePath = Server.MapPath("~/Uploads/" + storedFileName);
 
                                 if (File.Exists(filePath))
                                 {
@@ -166,7 +166,7 @@ namespace Society_management
                 // Delete file from server
                 if (!string.IsNullOrEmpty(storedFileName))
                 {
-                    string filePath = Server.MapPath("~/Uploads/Documents/" + storedFileName);
+                    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
                     if (File.Exists(filePath))
                     {
                         File.Delete(filePath);
@@ -211,7 +211,7 @@ namespace Society_management
 
         private void ShowAlert(string title, string message, string type)
         {
-            string script=
+            string script =
         @"Swal.fire({
             icon: 'warning',
             title: 'Are you sure',
@@ -223,7 +223,7 @@ namespace Society_management
             confirmButtonText: 'Try Again'
         }); ";
 
-                ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
+            ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
         }
 
         protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
