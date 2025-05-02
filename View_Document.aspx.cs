@@ -72,8 +72,9 @@ namespace Society_management
             }
         }
 
-        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvDisplay_RowCommand1(object sender, GridViewCommandEventArgs e)
         {
+
             if (e.CommandName == "Download")
             {
                 int documentId = Convert.ToInt32(e.CommandArgument);
@@ -82,9 +83,12 @@ namespace Society_management
             else if (e.CommandName == "DeleteDocument")
             {
                 int documentId = Convert.ToInt32(e.CommandArgument);
+                // Your delete logic here
                 DeleteDocument(documentId);
+                //BindDocuments(); // Rebind to refresh GridView
             }
         }
+
 
         private void DownloadDocument(int documentId)
         {
@@ -206,5 +210,7 @@ namespace Society_management
             gvDisplay.PageIndex = e.NewPageIndex;
             BindDocuments();
         }
+
+       
     }
 }

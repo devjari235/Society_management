@@ -8,7 +8,7 @@
             })
 
         </script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function confirmDelete(btn) {
         event.preventDefault();
@@ -33,8 +33,6 @@
 </script>
 
 
-
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
@@ -54,7 +52,7 @@
 
     <div class="row">
      <div class="col-sm-12 col-md-12">
-        <asp:GridView CssClass="table table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath"  OnRowCommand="gvDisplay_RowCommand" OnPageIndexChanging="gvDisplay_PageIndexChanging1">
+        <asp:GridView CssClass="table table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath"  OnPageIndexChanging="gvDisplay_PageIndexChanging1" OnRowCommand="gvDisplay_RowCommand1">
     <Columns>
         <asp:TemplateField HeaderText="Document Info">
             <ItemTemplate>
@@ -78,17 +76,15 @@
                         <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm mb-2">
                             <i class="fas fa-download"></i> Download
                         </asp:LinkButton>
-                      <asp:LinkButton 
-                            ID="lnkDelete" 
-                            runat="server" 
-                            CommandName="DeleteDocument" 
-                            CommandArgument='<%# Eval("DocumentID") %>' 
+                        <asp:LinkButton
+                            ID="lnkDelete"
+                            runat="server"
+                            CommandName="DeleteDocument"
+                            CommandArgument='<%# Eval("DocumentID") %>'
                             OnClientClick="return confirmDelete(this);"
                             CssClass="btn btn-danger btn-sm">
-                            <i class="fas fa-trash-alt"></i> Delete
-                        </asp:LinkButton>
-
-
+      <i class="fas fa-trash-alt"></i> Delete
+  </asp:LinkButton>
                     </div>
                 </div>
             </ItemTemplate>
@@ -100,6 +96,4 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-
-
 </asp:Content>
