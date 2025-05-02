@@ -100,6 +100,4 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-
-
 </asp:Content>
