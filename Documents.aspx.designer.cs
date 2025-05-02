@@ -15,22 +15,22 @@ namespace Society_management
     {
 
         /// <summary>
-        /// lblDocument control.
+        /// lblOwner control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDocument;
+        protected global::System.Web.UI.WebControls.Label lblOwner;
 
         /// <summary>
-        /// lblDocumentView control.
+        /// lblFlatView control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDocumentView;
+        protected global::System.Web.UI.WebControls.Label lblFlatView;
 
         /// <summary>
         /// pnlUpload control.

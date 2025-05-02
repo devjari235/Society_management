@@ -5,8 +5,6 @@ using System.Configuration;
 using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Reflection;
-using System.Xml.Linq;
 
 namespace Society_management
 {
@@ -26,20 +24,10 @@ namespace Society_management
             }
         }
 
-
-
         private void BindDocuments()
         {
             using (SqlConnection con = new SqlConnection(strcon))
             {
-                //string query = @"SELECT d.FilePath, d.DocumentTitle, d.DocumentType, d.Description
-                //               CONVERT(varchar, d.UploadDate, 106) AS UploadDate, 
-                //               a.name, d.FileName 
-                //               FROM tblDocuments d
-                //               INNER JOIN tblAdmin a ON d.admin_id = a.admin_id
-                //               WHERE d.admin_id = @id
-                //               ORDER BY d.UploadDate DESC";
-
                 string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE d.admin_id = @id ORDER BY d.UploadDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -72,9 +60,8 @@ namespace Society_management
             }
         }
 
-        protected void gvDisplay_RowCommand1(object sender, GridViewCommandEventArgs e)
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-
             if (e.CommandName == "Download")
             {
                 int documentId = Convert.ToInt32(e.CommandArgument);
@@ -83,12 +70,9 @@ namespace Society_management
             else if (e.CommandName == "DeleteDocument")
             {
                 int documentId = Convert.ToInt32(e.CommandArgument);
-                // Your delete logic here
                 DeleteDocument(documentId);
-                //BindDocuments(); // Rebind to refresh GridView
             }
         }
-
 
         private void DownloadDocument(int documentId)
         {
@@ -122,7 +106,16 @@ namespace Society_management
                                 }
                                 else
                                 {
-                                    //ShowAlert("Error", "File not found on server.", "error");
+                                    string script = @"
+                                        <script type='text/javascript'>
+                                            Swal.fire({
+                                                title: 'Error!',
+                                                text: 'File not found on server.',
+                                                icon: 'error',
+                                                confirmButtonText: 'OK'
+                                            });
+                                        </script>";
+                                    ClientScript.RegisterStartupScript(this.GetType(), "FileNotFoundError", script);
                                 }
                             }
                         }
@@ -131,7 +124,15 @@ namespace Society_management
             }
             catch (Exception ex)
             {
-               // ShowAlert("Error", "Error downloading document: " + ex.Message, "error");
+                //string script = $@"
+                //    <script type='text/javascript'>
+                //        Swal.fire({title: 'Error!',
+                //            text: 'Error downloading document: {ex.Message}',
+                //            icon: 'error',
+                //            confirmButtonText: 'OK'
+                //        });
+                //    </script>";
+                //ClientScript.RegisterStartupScript(this.GetType(), "DownloadError", script);
             }
         }
 
@@ -139,26 +140,24 @@ namespace Society_management
         {
             try
             {
-                string storedFileName = "";
+                //string storedFileName = "";
 
                 // First get the filename from database
-                using (SqlConnection con = new SqlConnection(strcon))
-                {
-                    string query = "SELECT StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
-
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        cmd.Parameters.AddWithValue("@DocumentID", documentId);
-                        con.Open();
-                        storedFileName = cmd.ExecuteScalar()?.ToString();
-                    }
-                }
+                //using (SqlConnection con = new SqlConnection(strcon))
+                //{
+                //    string query = "SELECT StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
+                //    using (SqlCommand cmd = new SqlCommand(query, con))
+                //    {
+                //        cmd.Parameters.AddWithValue("@DocumentID", documentId);
+                //        con.Open();
+                //        storedFileName = cmd.ExecuteScalar()?.ToString();
+                //    }
+                //}
 
                 // Delete from database
                 using (SqlConnection con = new SqlConnection(strcon))
                 {
                     string query = "DELETE FROM tblDocuments WHERE DocumentID = @DocumentID";
-
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@DocumentID", documentId);
@@ -168,22 +167,32 @@ namespace Society_management
                 }
 
                 // Delete file from server
-                if (!string.IsNullOrEmpty(storedFileName))
-                {
-                    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
-                }
+                //if (!string.IsNullOrEmpty(storedFileName))
+                //{
+                //    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
+                //    if (File.Exists(filePath))
+                //    {
+                //        File.Delete(filePath);
+                //    }
+                //}
 
+                // **Crucially, rebind the GridView here to reflect the changes**
+                BindDocuments();
 
-        //        ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
-                BindDocuments(); // Refresh the GridView
+                // Optionally, show a success message
             }
             catch (Exception ex)
             {
-                //ShowAlert("Error", "Error deleting document: " + ex.Message, "error");
+                // Handle the error appropriately (logging, displaying a user-friendly message)
+                //string script = $@"
+                //    <script type='text/javascript'>
+                //        Swal.fire({title: 'Error!',
+                //            text: 'Error deleting document: {ex.Message}',
+                //            icon: 'error',
+                //            confirmButtonText: 'OK'
+                //        });
+                //    </script>";
+                //ClientScript.RegisterStartupScript(this.GetType(), "DeleteError", script);
             }
         }
 
@@ -203,14 +212,10 @@ namespace Society_management
             }
         }
 
-       
-
         protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
         {
             gvDisplay.PageIndex = e.NewPageIndex;
             BindDocuments();
         }
-
-       
     }
 }

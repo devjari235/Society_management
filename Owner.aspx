@@ -47,16 +47,19 @@
             document.getElementById('<%= txtdate.ClientID %>').value = today;
         };
     </script>
-
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="fontawesome\css\all.css" rel="stylesheet" />
+           <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="fontawesome\css\all.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
-<asp:Label ID="lblOwner" runat="server" CssClass="btn btn-primary"><b><a href="Owner.aspx" style="color:black; text-decoration: none;">Add Owner</a></b></asp:Label>
-<asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><a href="View_Owner.aspx" style="color:black; text-decoration: none;">View All Owner</a></b></asp:Label>
-<asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b><a  href="#" style="color:black; text-decoration: none; ">Owner History</a></b></asp:Label>
+<a href="Owner.aspx" style="color:white; text-decoration: none;"><asp:Label ID="lblOwner" runat="server" CssClass="btn btn-primary"><b><i class="bi bi-person-plus-fill"></i> Add Owner</b></asp:Label></a>
+<a href="View_Owner.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Owner</b></asp:Label></a>
+<a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Owner History</b></asp:Label></a>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">

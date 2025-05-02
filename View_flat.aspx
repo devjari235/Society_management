@@ -7,6 +7,8 @@
         }) 
 
         </script>
+       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<link href="fontawesome\css\all.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
@@ -15,9 +17,9 @@
 <%--<asp:Button ID="btnAddFlat" runat="server" Text="Add Flat" CssClass="btn btn-primary" OnClick="btnAddFlat_Click" />
 <asp:Button ID="btnViewFlats" runat="server" Text="View All Flats" CssClass="btn btn-secondary" OnClick="btnViewFlats_Click" />
 <asp:Button ID="btnFlatHistory" runat="server" Text="Flat History" CssClass="btn btn-info" />--%>
-               <asp:Label ID="lblFlat" runat="server" CssClass="btn btn-primary"><b><a href="Flat.aspx" style="color:black; text-decoration: none;">Add Flat</a></b></asp:Label>
-        <asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><a href="View_flat.aspx" style="color:black; text-decoration: none;">View All Flats</a></b></asp:Label>
-        <asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b><a  href="#" style="color:black; text-decoration: none; ">Flat History</a></b></asp:Label>
+        <a href="Flat.aspx" style="color:white; text-decoration: none;"><asp:Label ID="lblFlat" runat="server" CssClass="btn btn-primary"><b><i class="bi bi-house-add-fill"></i> Add Flat</b></asp:Label></a>
+        <a href="View_flat.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Flats</b></asp:Label></a>
+        <a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Flat History</b></asp:Label></a>
         </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
