@@ -172,17 +172,7 @@ namespace Society_management
                         File.Delete(filePath);
                     }
                 }
-        //        string script =
-        //               @"Swal.fire({
-        //    icon: 'warning',
-        //    title: 'Are you sure',
-        //    text: 'You won't be able to revert this!',
-        //        showCancelButton: true,
-        //        cancelButtonColor: '#3085d6',
-        //        confirmButtonText: 'Yes, delete it!'
-        //    confirmButtonColor: '#d33',
-        //    confirmButtonText: 'Try Again'
-        //}); ";
+
 
         //        ClientScript.RegisterStartupScript(this.GetType(), "DeleteSuccess", script);
                 BindDocuments(); // Refresh the GridView
