@@ -46,7 +46,7 @@
             <!-- Admin Input Form -->
             <asp:Panel ID="pnlAdmin" runat="server">
                 <div class="form-group">
-                    <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" Placeholder="Notice Title"></asp:TextBox>
+                    <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" Placeholder="Notice Title" AutoCompleteType="Disabled"></asp:TextBox>
                 </div>
                 <div class="form-group">
                     <asp:TextBox ID="txtDescription" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="4" Placeholder="Notice Description"></asp:TextBox>
