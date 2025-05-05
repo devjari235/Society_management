@@ -129,7 +129,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Title</label>
-                    <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" placeholder="Enter notice title" />
+                    <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" placeholder="Enter notice title" AutoCompleteType="Disabled" />
                 </div>
 
                 <div class="mb-3">

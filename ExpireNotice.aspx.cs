@@ -32,7 +32,8 @@ namespace Society_management
                 SqlCommand updateCmd = new SqlCommand("UPDATE tblNotices SET Status='Expired' WHERE Expiry_date < GETDATE() AND Status != 'Expired'", conn);
                 updateCmd.ExecuteNonQuery();
 
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblNotices WHERE Status='Expired' ORDER BY Expiry_date DESC", conn);
+                SqlCommand cmd = new SqlCommand("SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE a.admin_id=@id AND Status='Expired' ORDER BY Expiry_date DESC", conn);
+                cmd.Parameters.AddWithValue("id", Session["A_id"]);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
