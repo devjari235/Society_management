@@ -77,11 +77,13 @@
     <Content Include="bootstrap\js\jquery-3.5.1.slim.min.js" />
     <Content Include="bootstrap\js\popper.min.js" />
     <Content Include="ChangePassword.aspx" />
+    <Content Include="CreateNotice.aspx" />
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
     <Content Include="Event.aspx" />
+    <Content Include="ExpireNotice.aspx" />
     <Content Include="Flat.aspx" />
     <Content Include="fontawesome\css\all.css" />
     <Content Include="fontawesome\css\all.min.css" />
@@ -2198,14 +2200,17 @@
     <Content Include="Images\S_2.jpg" />
     <Content Include="Images\S_3.jpg" />
     <Content Include="Images\U_bg.jpg" />
+    <Content Include="LiveNotice.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="NoticeBoard.aspx" />
+    <Content Include="NoticeDashboard.aspx" />
     <Content Include="Notification.aspx" />
     <Content Include="Owner.aspx" />
     <Content Include="R_Society.aspx" />
     <Content Include="Terms.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
+    <Content Include="View_Allnotice.aspx" />
     <Content Include="View_Document.aspx" />
     <Content Include="View_flat.aspx" />
     <Content Include="View_Owner.aspx" />
@@ -2254,6 +2259,13 @@
     <Compile Include="ChangePassword.aspx.designer.cs">
       <DependentUpon>ChangePassword.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CreateNotice.aspx.cs">
+      <DependentUpon>CreateNotice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CreateNotice.aspx.designer.cs">
+      <DependentUpon>CreateNotice.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Documents.aspx.cs">
       <DependentUpon>Documents.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2267,6 +2279,13 @@
     </Compile>
     <Compile Include="Event.aspx.designer.cs">
       <DependentUpon>Event.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ExpireNotice.aspx.cs">
+      <DependentUpon>ExpireNotice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ExpireNotice.aspx.designer.cs">
+      <DependentUpon>ExpireNotice.aspx</DependentUpon>
     </Compile>
     <Compile Include="Flat.aspx.cs">
       <DependentUpon>Flat.aspx</DependentUpon>
@@ -2289,6 +2308,13 @@
     <Compile Include="H_master.Master.designer.cs">
       <DependentUpon>H_master.Master</DependentUpon>
     </Compile>
+    <Compile Include="LiveNotice.aspx.cs">
+      <DependentUpon>LiveNotice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LiveNotice.aspx.designer.cs">
+      <DependentUpon>LiveNotice.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2302,6 +2328,13 @@
     </Compile>
     <Compile Include="NoticeBoard.aspx.designer.cs">
       <DependentUpon>NoticeBoard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NoticeDashboard.aspx.cs">
+      <DependentUpon>NoticeDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NoticeDashboard.aspx.designer.cs">
+      <DependentUpon>NoticeDashboard.aspx</DependentUpon>
     </Compile>
     <Compile Include="Notification.aspx.cs">
       <DependentUpon>Notification.aspx</DependentUpon>
@@ -2345,6 +2378,13 @@
     </Compile>
     <Compile Include="U_registration.aspx.designer.cs">
       <DependentUpon>U_registration.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_Allnotice.aspx.cs">
+      <DependentUpon>View_Allnotice.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_Allnotice.aspx.designer.cs">
+      <DependentUpon>View_Allnotice.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_Document.aspx.cs">
       <DependentUpon>View_Document.aspx</DependentUpon>
