@@ -178,7 +178,13 @@ namespace Society_management
 
                 // **Crucially, rebind the GridView here to reflect the changes**
                 BindDocuments();
-
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "deleteSuccess", @"
+            Swal.fire({
+                title: 'Deleted!',
+                text: 'Document deleted successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });", true);
                 // Optionally, show a success message
             }
             catch (Exception ex)

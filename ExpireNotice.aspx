@@ -145,6 +145,40 @@
         justify-content: center;
     }
 }
+.notice-scroller-container {
+        max-height: 600px; /* Adjust height as needed */
+        overflow-y: auto;
+        padding-right: 10px; /* Prevents content from touching scrollbar */
+    }
+
+    /* Custom scrollbar styling */
+    .notice-scroller-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Adjust card spacing for scroller */
+    .swiper-slide {
+        margin-bottom: 20px;
+    }
+
+    /* Remove any fixed heights from cards if they exist */
+    .notice-card {
+        height: auto !important;
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -169,6 +203,7 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="notice-scroller-container">
     <asp:Repeater ID="rptExpired" runat="server">
                 <ItemTemplate>
                     <div class="card mb-3 border-danger">
@@ -186,7 +221,7 @@
                     </div>
                 </ItemTemplate>
             </asp:Repeater>
-
+        </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

@@ -174,6 +174,40 @@
         justify-content: center;
     }
 }
+.notice-scroller-container {
+        max-height: 600px; /* Adjust height as needed */
+        overflow-y: auto;
+        padding-right: 10px; /* Prevents content from touching scrollbar */
+    }
+
+    /* Custom scrollbar styling */
+    .notice-scroller-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+    .notice-scroller-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    /* Adjust card spacing for scroller */
+    .swiper-slide {
+        margin-bottom: 20px;
+    }
+
+    /* Remove any fixed heights from cards if they exist */
+    .notice-card {
+        height: auto !important;
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -198,43 +232,39 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="notice-scroller-container">
+        <asp:Repeater ID="rptAllNotices" runat="server">
+            <ItemTemplate>
+                <div class='<%# "swiper-slide notice-card " + 
+                    (Eval("Status").ToString().ToLower() == "live" ? "notice-live" : "notice-expired") %>'>
+                    
+                    <div class="notice-title"><%# Eval("Title") %></div>
 
+                    <%-- Importance Badge --%>
+                    <span class='<%# "badge me-2 " + 
+                        (Eval("Importance").ToString().ToLower() == "urgent" ? "bg-danger" : 
+                         Eval("Importance").ToString().ToLower() == "important" ? "bg-warning text-dark" : 
+                         "bg-primary") %>'>
+                        <%# Eval("Importance") %>
+                    </span>
 
-    <asp:Repeater ID="rptAllNotices" runat="server">
-        <ItemTemplate>
-            <div class='<%# "swiper-slide notice-card " + 
-    (Eval("Status").ToString().ToLower() == "live" ? "notice-live" : "notice-expired") %>'>
+                    <%-- Status Badge --%>
+                    <span class='<%# "badge " + 
+                        (Eval("Status").ToString().ToLower() == "live" ? "bg-success" : "bg-secondary") %>'>
+                        <%# Eval("Status") %>
+                    </span>
 
-                <div class="notice-title"><%# Eval("Title") %></div>
+                    <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
+                    <p><%# Eval("Description") %></p>
 
-                <%-- Importance Badge with Dynamic Color --%>
-                <span class='<%# "badge me-2 " + 
-        (Eval("Importance").ToString().ToLower() == "urgent" ? "bg-danger" : 
-         Eval("Importance").ToString().ToLower() == "important" ? "bg-warning text-dark" : 
-         "bg-primary") %>'>
-                    <%# Eval("Importance") %>
-                </span>
-
-                <%-- Status Badge with Dynamic Color --%>
-                <span class='<%# "badge " + 
-        (Eval("Status").ToString().ToLower() == "live" ? "bg-success" : "bg-secondary") %>'>
-                    <%# Eval("Status") %>
-                </span>
-
-                <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
-                <p><%# Eval("Description") %></p>
-
-                <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>'
-                    Text="📎 View Attachment" Target="_blank"
-                    CssClass="btn btn-sm btn-outline-secondary mt-2"
-                    Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-            </div>
-
-
-        </ItemTemplate>
-    </asp:Repeater>
-
-
+                    <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>'
+                        Text="📎 View Attachment" Target="_blank"
+                        CssClass="btn btn-sm btn-outline-secondary mt-2"
+                        Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
+                </div>
+            </ItemTemplate>
+        </asp:Repeater>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
