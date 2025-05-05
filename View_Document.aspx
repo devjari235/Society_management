@@ -13,11 +13,11 @@
             <b><i class="bi bi-file-earmark-plus-fill"></i> Add Document</b>
         </asp:Label>
     </a>
-    <a href="View_Document.aspx" style="color:white; text-decoration: none;">
+<%--    <a href="View_Document.aspx" style="color:white; text-decoration: none;">
         <asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary">
             <b><i class="bi bi-eye-fill"></i> View All Document</b>
         </asp:Label>
-    </a>
+    </a>--%>
 </asp:Content>
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">

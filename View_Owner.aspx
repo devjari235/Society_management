@@ -15,7 +15,7 @@ $(document).ready(function () {
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div style="margin-bottom: 20px; text-align: left;">
 <a href="Owner.aspx" style="color:white; text-decoration: none;"><asp:Label ID="lblOwner" runat="server" CssClass="btn btn-primary"><b><i class="bi bi-person-plus-fill"></i> Add Owner</b></asp:Label></a>
-<a href="View_Owner.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Owner</b></asp:Label></a>
+<%--<a href="View_Owner.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Owner</b></asp:Label></a>--%>
 <a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Owner History</b></asp:Label></a>
 </div>
 </asp:Content>
