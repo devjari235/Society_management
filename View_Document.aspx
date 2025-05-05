@@ -26,34 +26,51 @@
             <asp:GridView CssClass="table table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" DataKeyNames="FilePath"
                 OnRowCommand="gvDisplay_RowCommand" OnPageIndexChanging="gvDisplay_PageIndexChanging1">
                 <Columns>
-                    <asp:TemplateField HeaderText="Document Info">
+                    <asp:TemplateField HeaderText="Documents">
                         <ItemTemplate>
-                            <div class="row align-items-center">
-                                <div class="col-md-3">
-                                    <asp:Image CssClass="img-fluid" ID="Image1" ImageUrl='<%# Eval("FilePath") %>' runat="server" Style="max-height: 120px;" />
-                                </div>
-                                <div class="col-md-6">
-                                    <div><strong>DocumentTitle:</strong> <asp:Label ID="lblDocumentTitle" runat="server" Text='<%#Eval("DocumentTitle") %>' /></div>
-                                    <div><strong>DocumentType:</strong> <asp:Label ID="lblDocumentType" runat="server" Text='<%#Eval("DocumentType") %>' /></div>
-                                    <div><strong>Description:</strong> <asp:Label ID="lblDescription" runat="server" Text='<%#Eval("Description") %>' /></div>
-                                    <div><strong>UploadDate:</strong> <asp:Label ID="lblUploadDate" runat="server" Text='<%#Eval("UploadDate") %>' /></div>
-                                    <div><strong>Upload By:</strong> <asp:Label ID="lblUpload_By" runat="server" Text='<%#Eval("name") %>' /></div>
-                                </div>
-                                <div class="col-md-3 d-flex flex-column justify-content-center align-items-start gap-2">
-                                    <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm mb-2">
-                                        <i class="fas fa-download"></i> Download
-                                    </asp:LinkButton>
-                                    <asp:LinkButton
-                                        ID="lnkDelete"
-                                        runat="server"
-                                        CommandName="DeleteDocument"
-                                        CommandArgument='<%# Eval("DocumentID") %>'
-                                        OnClientClick="return confirm('Are you sure you want to delete this document?');"
-                                        CssClass="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </asp:LinkButton>
-                                </div>
-                            </div>
+                            <asp:Image CssClass="img-fluid" ID="Image1" ImageUrl='<%# Eval("FilePath") %>' runat="server" Style="max-height: 120px;" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="DocumentTitle">
+                        <ItemTemplate>
+                            <asp:Label Text='<%#Eval("DocumentTitle") %>' runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="DocumentType">
+                        <ItemTemplate>
+                            <asp:Label Text='<%#Eval("DocumentType") %>' runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Description">
+                        <ItemTemplate>
+                            <asp:Label Text='<%#Eval("Description") %>' runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="UploadDate">
+                        <ItemTemplate>
+                            <asp:Label Text='<%#Eval("UploadDate") %>' runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Upload By">
+                        <ItemTemplate>
+                            <asp:Label Text='<%#Eval("name") %>' runat="server"></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Action">
+                        <ItemTemplate>
+                            <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm mb-2">
+                                     <i class="fas fa-download"></i> Download
+                            </asp:LinkButton>
+                            <asp:LinkButton
+                                ID="lnkDelete"
+                                runat="server"
+                                CommandName="DeleteDocument"
+                                CommandArgument='<%# Eval("DocumentID") %>'
+                                OnClientClick="return confirm('Are you sure you want to delete this document?');"
+                                CssClass="btn btn-danger btn-sm">
+                                     <i class="fas fa-trash-alt"></i> Delete
+                            </asp:LinkButton>
+
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
