@@ -210,6 +210,7 @@
                         <div class="card-body">
                             <h5><%# Eval("Title") %></h5>
                             <p><%# Eval("Description") %></p>
+                             <b><p>Posted By: <%# Eval("name") %></p></b>
                             <small><b>Status:</b> <%# Eval("Status") %></small> |
                             <small><b>Expired On:</b> <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></small>
                             <p> </p>

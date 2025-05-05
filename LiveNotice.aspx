@@ -227,6 +227,7 @@
                                 <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
                                 <span class="badge bg-success"><%# Eval("Status") %></span>
                                 <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
+                                <b><p>Posted By: <%# Eval("name") %></p></b>
                                 <p><%# Eval("Description") %></p>
                                 <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
                                                Text="📎 View Attachment" Target="_blank"

@@ -15,7 +15,10 @@ namespace Society_management
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
+            {
                 BindNotices();
+            }
+                
         }
         private void BindNotices()
         {
@@ -33,11 +36,15 @@ namespace Society_management
                 updateCmd.ExecuteNonQuery();
 
                 // Step 2: Fetch notices
-                string selectQuery = @"SELECT Notice_id, Title, Description, Expiry_date, File_path, Importance, Status 
-                               FROM tblNotices 
-                               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
-                               ORDER BY Posted_date DESC";
-                SqlDataAdapter da = new SqlDataAdapter(selectQuery, conn);
+                //string selectQuery = @"SELECT Notice_id, Title, Description, Expiry_date, File_path, Importance, Status 
+                //               FROM tblNotices 
+                //               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
+                //               ORDER BY Posted_date DESC";
+
+                string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE a.admin_id = @id AND (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE())  ORDER BY  n.Posted_date DESC";
+                SqlCommand cmd=new SqlCommand(selectQuery, conn);
+                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
