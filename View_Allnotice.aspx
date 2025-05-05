@@ -1,5 +1,91 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_Allnotice.aspx.cs" Inherits="Society_management.View_Allnotice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        color: #212529;
+    }
+
+    .card h5 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .card small {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .badge-live {
+        background-color: #198754;
+        color: white;
+    }
+
+    .badge-expired {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+
+.notice-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    color: #212529;
+    height: auto;
+    border-left: 6px solid transparent; /* default to transparent */
+}
+
+.notice-live {
+    border-left-color: #198754; /* green */
+}
+
+.notice-expired {
+    border-left-color: #dc3545; /* red */
+}
+
+.swiper-slide {
+/*    background: #ffffff;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    color: #212529;
+    height: auto;
+    border-left: 6px solid transparent;*/
+    margin-bottom: 20px; /* <-- add space between cards */
+}
+
+
+
+</style>
+
+
     <style>
  /* Page Title Buttons Container */
 .page-title-buttons {
@@ -112,6 +198,43 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+
+
+    <asp:Repeater ID="rptAllNotices" runat="server">
+        <ItemTemplate>
+            <div class='<%# "swiper-slide notice-card " + 
+    (Eval("Status").ToString().ToLower() == "live" ? "notice-live" : "notice-expired") %>'>
+
+                <div class="notice-title"><%# Eval("Title") %></div>
+
+                <%-- Importance Badge with Dynamic Color --%>
+                <span class='<%# "badge me-2 " + 
+        (Eval("Importance").ToString().ToLower() == "urgent" ? "bg-danger" : 
+         Eval("Importance").ToString().ToLower() == "important" ? "bg-warning text-dark" : 
+         "bg-primary") %>'>
+                    <%# Eval("Importance") %>
+                </span>
+
+                <%-- Status Badge with Dynamic Color --%>
+                <span class='<%# "badge " + 
+        (Eval("Status").ToString().ToLower() == "live" ? "bg-success" : "bg-secondary") %>'>
+                    <%# Eval("Status") %>
+                </span>
+
+                <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
+                <p><%# Eval("Description") %></p>
+
+                <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>'
+                    Text="📎 View Attachment" Target="_blank"
+                    CssClass="btn btn-sm btn-outline-secondary mt-2"
+                    Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
+            </div>
+
+
+        </ItemTemplate>
+    </asp:Repeater>
+
+
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
