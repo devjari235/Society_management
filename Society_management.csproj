@@ -2474,6 +2474,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Logo\" />
+    <Folder Include="Notice\" />
     <Folder Include="Profile\" />
     <Folder Include="Uploads\" />
   </ItemGroup>

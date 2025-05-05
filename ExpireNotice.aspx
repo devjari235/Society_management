@@ -1,5 +1,62 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="ExpireNotice.aspx.cs" Inherits="Society_management.ExpireNotice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+     <style>
+   
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        color: #212529;
+    }
+
+    .card h5 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .card small {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+
+    .badge-live {
+        background-color: #198754;
+        color: white;
+    }
+
+    .badge-expired {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+
+    .border-danger {
+        border-left: 5px solid #dc3545;
+    }
+
+</style>
+
         <style>
  /* Page Title Buttons Container */
 .page-title-buttons {
@@ -112,6 +169,24 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:Repeater ID="rptExpired" runat="server">
+                <ItemTemplate>
+                    <div class="card mb-3 border-danger">
+                        <div class="card-body">
+                            <h5><%# Eval("Title") %></h5>
+                            <p><%# Eval("Description") %></p>
+                            <small><b>Status:</b> <%# Eval("Status") %></small> |
+                            <small><b>Expired On:</b> <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></small>
+                            <p> </p>
+                            <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
+               Text="📎 View Attachment" Target="_blank"
+               CssClass="btn btn-sm btn-outline-secondary mt-2"
+               Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
+                        </div>
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
