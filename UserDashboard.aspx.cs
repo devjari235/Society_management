@@ -15,8 +15,7 @@ namespace Society_management
         }
         private void LoadDashboardData()
         {
-            // In a real application, you would fetch this data from your database
-            // For demonstration, we're using mock data
+
 
             // Load user stats
             lblMaintenanceDue.Text = "₹2,500";

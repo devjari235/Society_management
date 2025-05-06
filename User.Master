@@ -17,13 +17,12 @@
     <link href="Styles/Site.css" rel="stylesheet" />
   <style>
 body {
-            padding-top: 56px;
-            overflow-x: hidden;
+            overflow-x:visible;
         }
 
         /* Sidebar styling */
         .sidebar {
-            position: fixed;
+            position: sticky;
             top: 56px;
             left: 0;
             bottom: 0;

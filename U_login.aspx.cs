@@ -60,7 +60,7 @@ namespace Society_management
                         Session["U_id"] = dr.GetValue(0).ToString();
                         
                     }
-                    Response.Redirect("Home.aspx");
+                    Response.Redirect("UserDashboard.aspx");
                 }
             }
         }
