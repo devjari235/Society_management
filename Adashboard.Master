@@ -220,6 +220,7 @@ footer a:hover {
     }
 
 </style>
+  
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const sidebarContainer = document.getElementById('sidebarContainer');
