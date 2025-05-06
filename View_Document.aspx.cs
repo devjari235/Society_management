@@ -28,7 +28,7 @@ namespace Society_management
         {
             using (SqlConnection con = new SqlConnection(strcon))
             {
-                string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE d.admin_id = @id ORDER BY d.UploadDate DESC";
+                string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE a.admin_id = @id ORDER BY d.UploadDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {

@@ -105,7 +105,7 @@
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
-    <Content Include="Event.aspx" />
+    <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Flat.aspx" />
     <Content Include="fontawesome\css\all.css" />
@@ -2296,12 +2296,12 @@
     <Compile Include="Documents.aspx.designer.cs">
       <DependentUpon>Documents.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Event.aspx.cs">
-      <DependentUpon>Event.aspx</DependentUpon>
+    <Compile Include="Events.aspx.cs">
+      <DependentUpon>Events.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Event.aspx.designer.cs">
-      <DependentUpon>Event.aspx</DependentUpon>
+    <Compile Include="Events.aspx.designer.cs">
+      <DependentUpon>Events.aspx</DependentUpon>
     </Compile>
     <Compile Include="ExpireNotice.aspx.cs">
       <DependentUpon>ExpireNotice.aspx</DependentUpon>

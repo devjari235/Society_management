@@ -62,7 +62,7 @@ namespace Society_management
             SqlConnection conn = new SqlConnection(strcon);
 
             conn.Open();
-            SqlCommand cmd = new SqlCommand("select * from tblFlat where Block_id=@B_id", conn);
+            SqlCommand cmd = new SqlCommand("SELECT * \r\nFROM tblFlat \r\nWHERE Block_id = @B_id\r\nAND Flate_id NOT IN (\r\n    SELECT Flate_id FROM tblOwner\r\n) ", conn);
             cmd.Parameters.AddWithValue("B_id", ddlBlock.SelectedValue);
             ddlFlat.DataSource = cmd.ExecuteReader();
             ddlFlat.DataTextField = "Flate_no";
