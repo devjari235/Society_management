@@ -6,16 +6,20 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using System.Xml.Linq;
 
 namespace Society_management
 {
     public partial class Adashboard : System.Web.UI.MasterPage
     {
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 ShowNotificationCount();
+               // Details();
             }
         }
 
@@ -41,5 +45,37 @@ namespace Society_management
                 }
             }
         }
+
+        //string img;
+
+        //public void Details()
+        //{
+        //    SqlConnection con = new SqlConnection(strcon);
+        //    con.Open();
+        //    string Query = "SELECT Profile_picture FROM tblAdmin WHERE admin_id = @a_id";
+        //    SqlCommand cmd = new SqlCommand(Query, con);
+        //    cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+        //    SqlDataReader reader = cmd.ExecuteReader();
+
+        //    if (reader.Read())
+        //    {
+               
+        //        img = reader["Profile_picture"].ToString();
+
+
+        //        if (!string.IsNullOrEmpty(img))
+        //        {
+        //            image.ImageUrl = img;
+        //        }
+        //        else
+        //        {
+        //            image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+        //        }
+        //    }
+
+        //    reader.Close();
+        //    con.Close();
+        //}
+
     }
 }
