@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 using System.Xml.Linq;
+using System.Web.Security;
 
 namespace Society_management
 {
@@ -46,6 +47,13 @@ namespace Society_management
             }
         }
 
+        protected void lnkLogout_Click(object sender, EventArgs e)
+        {
+            FormsAuthentication.SignOut();
+            Session.Abandon();
+            Response.Redirect("Login.aspx");
+        }
+
         //string img;
 
         //public void Details()
@@ -59,7 +67,7 @@ namespace Society_management
 
         //    if (reader.Read())
         //    {
-               
+
         //        img = reader["Profile_picture"].ToString();
 
 

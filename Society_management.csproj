@@ -2231,6 +2231,7 @@
     <Content Include="Owner.aspx" />
     <Content Include="R_Society.aspx" />
     <Content Include="Terms.aspx" />
+    <Content Include="UserDashboard.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
     <Content Include="View_Allnotice.aspx" />
@@ -2388,6 +2389,20 @@
     <Compile Include="Terms.aspx.designer.cs">
       <DependentUpon>Terms.aspx</DependentUpon>
     </Compile>
+    <Compile Include="User.Master.cs">
+      <DependentUpon>User.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User.Master.designer.cs">
+      <DependentUpon>User.Master</DependentUpon>
+    </Compile>
+    <Compile Include="UserDashboard.aspx.cs">
+      <DependentUpon>UserDashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UserDashboard.aspx.designer.cs">
+      <DependentUpon>UserDashboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="U_login.aspx.cs">
       <DependentUpon>U_login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2488,6 +2503,7 @@
     <Content Include="fontawesome\webfonts\fa-v4compatibility.woff2" />
     <Content Include="Adashboard.Master" />
     <None Include="packages.config" />
+    <Content Include="User.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
