@@ -1,35 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Society_management
 {
     public partial class Admin_profile : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 BindDetails();
             }
-            if (Request.Form["__EVENTTARGET"] == profileImageUpload.ClientID && profileImageUpload.HasFile)
-            {
-                UpdateProfilePicture();
-            }
         }
-        string name;
-        string email;
-        string ph;
-        string img;
 
         public void BindDetails()
         {
@@ -42,18 +30,14 @@ namespace Society_management
 
             if (reader.Read())
             {
-                name = reader["name"].ToString();
-                email = reader["email"].ToString();
-                ph = reader["phone_no"].ToString();
-                img = reader["Profile_picture"].ToString();
+                txtname.Text = reader["name"].ToString();
+                txtemail.Text = reader["email"].ToString();
+                txtphone.Text = reader["phone_no"].ToString();
 
-                txtname.Text = name;
-                txtemail.Text = email;
-                txtphone.Text = ph;
-
-                if (!string.IsNullOrEmpty(img))
+                string imgPath = reader["Profile_picture"].ToString();
+                if (!string.IsNullOrEmpty(imgPath))
                 {
-                 imgPhoto.ImageUrl = img;
+                    imgPhoto.ImageUrl = imgPath;
                 }
                 else
                 {
@@ -69,7 +53,7 @@ namespace Society_management
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph where admin_id=@id";
+            string Query = "UPDATE tblAdmin SET name=@name, email=@mail, phone_no=@ph WHERE admin_id=@id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@name", txtname.Text);
             cmd.Parameters.AddWithValue("@mail", txtemail.Text);
@@ -79,36 +63,6 @@ namespace Society_management
             con.Close();
 
             string successScript = @"
-        <script>
-            Swal.fire({
-                icon: 'success',
-                title: 'Details Updated',
-                text: 'Your profile details have been successfully updated.',
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: 'OK'
-            }).then(function() {
-                window.location = 'Admin_profile.aspx';
-            });
-        </script>";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
-        }
-
-       
-        private void UpdateProfilePicture()
-        {
-            string filename = Path.GetFileName(profileImageUpload.FileName);
-            profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "Update tblAdmin set Profile_picture=@img where admin_id=@id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@img", "~/Profile/" + filename);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            cmd.ExecuteNonQuery();
-            con.Close();
-
-            string successScript = @"
-            <script>
                 Swal.fire({
                     icon: 'success',
                     title: 'Details Updated',
@@ -117,11 +71,66 @@ namespace Society_management
                     confirmButtonText: 'OK'
                 }).then(function() {
                     window.location = 'Admin_profile.aspx';
-                });
-            </script>";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
+                });";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, true);
+        }
+
+        protected void btnUpload_Click(object sender, EventArgs e)
+        {
+            if (profileImageUpload.HasFile)
+            {
+                try
+                {
+                    // Create directory if it doesn't exist
+                    string profileDir = Server.MapPath("~/Profile/");
+                    if (!Directory.Exists(profileDir))
+                    {
+                        Directory.CreateDirectory(profileDir);
+                    }
+
+                    // Generate unique filename
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(profileImageUpload.FileName);
+                    string filePath = Server.MapPath("~/Profile/" + fileName);
+
+                    // Save file
+                    profileImageUpload.SaveAs(filePath);
+
+                    // Update database
+                    SqlConnection con = new SqlConnection(strcon);
+                    con.Open();
+                    string Query = "UPDATE tblAdmin SET Profile_picture=@img WHERE admin_id=@id";
+                    SqlCommand cmd = new SqlCommand(Query, con);
+                    cmd.Parameters.AddWithValue("@img", "~/Profile/" + fileName);
+                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+                    cmd.ExecuteNonQuery();
+                    con.Close();
+
+                    // Update image display
+                    imgPhoto.ImageUrl = "~/Profile/" + fileName;
+
+                    string successScript = @"
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Profile Picture Updated',
+                            text: 'Your profile picture has been successfully updated.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        });";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "UploadSuccess", successScript, true);
+                }
+                catch (Exception ex)
+                {
+                    string errorScript = @"
+                        Swal.fire({
+                        icon: 'error',
+                            title: 'Upload Failed',
+                            text: 'An error occurred: {ex.Message.Replace("", "")}',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }); ";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "UploadError", errorScript, true);
+                }
+            }
         }
     }
-
 }
-
