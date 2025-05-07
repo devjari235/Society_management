@@ -201,13 +201,10 @@ body {
                                 <asp:Label ID="lblUserName" runat="server" Text="Guest"></asp:Label>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="Profile.aspx"><i class="fas fa-user me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="ChangePassword.aspx"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                                <li><a class="dropdown-item" href="User_profile.aspx"><i class="fas fa-user me-2"></i>Profile</a></li>
+                                <li><a class="dropdown-item" href="User_pass_change.aspx"><i class="fas fa-key me-2"></i>Change Password</a></li>
                                 <li><hr class="dropdown-divider" /></li>
-                                <li>
-                                    <asp:LinkButton ID="lnkLogout" runat="server" CssClass="dropdown-item" OnClick="lnkLogout_Click">
-                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                    </asp:LinkButton>
+                                <li><a class="dropdown-item" href="U_login.aspx"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                                 </li>
                             </ul>
                         </li>

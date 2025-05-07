@@ -116,6 +116,21 @@
         });
 
     </script>
+    <script>
+    function uploadProfilePicture() {
+    // Show loading indicator (optional)
+    Swal.fire({
+        title: 'Uploading...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Trigger postback to server
+    __doPostBack('<%= profileImageUpload.ClientID %>', '');
+        }
+        </script>
      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" type="text/css" href="profileone.css">
       <!-- <link rel="stylesheet" type="text/css" href="profile.css"> -->
@@ -156,7 +171,7 @@
         ID="profileImageUpload" 
         runat="server" 
         CssClass="hidden" 
-        onchange="previewFile()" 
+        onchange="uploadProfilePicture()" 
         ClientIDMode="Static" 
     />
     
@@ -173,21 +188,21 @@
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Name</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtname" runat="server" CssClass="form-control"></asp:TextBox>
+                                    <asp:TextBox ID="txtname" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
                             
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Email</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
+                                    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
                             
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Phone</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone"></asp:TextBox>
+                                    <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
                             

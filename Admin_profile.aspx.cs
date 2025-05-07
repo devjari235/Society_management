@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -19,6 +20,10 @@ namespace Society_management
             if (!IsPostBack)
             {
                 BindDetails();
+            }
+            if (Request.Form["__EVENTTARGET"] == profileImageUpload.ClientID && profileImageUpload.HasFile)
+            {
+                UpdateProfilePicture();
             }
         }
         string name;
@@ -62,16 +67,13 @@ namespace Society_management
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            string filename = Path.GetFileName(profileImageUpload.FileName);
-            profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph, Profile_picture=@img where admin_id=@id";
+            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph where admin_id=@id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@name", txtname.Text);
             cmd.Parameters.AddWithValue("@mail", txtemail.Text);
             cmd.Parameters.AddWithValue("@ph", txtphone.Text);
-            cmd.Parameters.AddWithValue("@img", "~/Profile/"+filename);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
             cmd.ExecuteNonQuery();
             con.Close();
@@ -90,6 +92,36 @@ namespace Society_management
         </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
+
        
+        private void UpdateProfilePicture()
+        {
+            string filename = Path.GetFileName(profileImageUpload.FileName);
+            profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Update tblAdmin set Profile_picture=@img where admin_id=@id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@img", "~/Profile/" + filename);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            string successScript = @"
+            <script>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Details Updated',
+                    text: 'Your profile details have been successfully updated.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                }).then(function() {
+                    window.location = 'Admin_profile.aspx';
+                });
+            </script>";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
+        }
     }
+
 }
+
