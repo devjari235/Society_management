@@ -20,7 +20,7 @@ namespace Society_management
             if (!IsPostBack)
             {
                 ShowNotificationCount();
-               // Details();
+                Details();
             }
         }
 
@@ -54,36 +54,36 @@ namespace Society_management
             Response.Redirect("Login.aspx");
         }
 
-        //string img;
+        string img;
 
-        //public void Details()
-        //{
-        //    SqlConnection con = new SqlConnection(strcon);
-        //    con.Open();
-        //    string Query = "SELECT Profile_picture FROM tblAdmin WHERE admin_id = @a_id";
-        //    SqlCommand cmd = new SqlCommand(Query, con);
-        //    cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
-        //    SqlDataReader reader = cmd.ExecuteReader();
+        public void Details()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "SELECT Profile_picture FROM tblAdmin WHERE admin_id = @a_id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
 
-        //    if (reader.Read())
-        //    {
+            if (reader.Read())
+            {
 
-        //        img = reader["Profile_picture"].ToString();
+                img = reader["Profile_picture"].ToString();
 
 
-        //        if (!string.IsNullOrEmpty(img))
-        //        {
-        //            image.ImageUrl = img;
-        //        }
-        //        else
-        //        {
-        //            image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
-        //        }
-        //    }
+                if (!string.IsNullOrEmpty(img))
+                {
+                    image.ImageUrl = img;
+                }
+                else
+                {
+                    image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+                }
+            }
 
-        //    reader.Close();
-        //    con.Close();
-        //}
+            reader.Close();
+            con.Close();
+        }
 
     }
 }

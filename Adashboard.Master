@@ -300,11 +300,11 @@ footer a:hover {
                              </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                               <%-- <asp:Image ID="image" runat="server" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />--%>
+                                <asp:Image ID="image" runat="server" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
                                         
                                         <%-- style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;"--%>
-                                    <i class="fas fa-user-circle fa-lg"></i> 
-                                    <asp:LoginName ID="LoginName1" runat="server" />
+                                   <%-- <i class="fas fa-user-circle fa-lg"></i> 
+                                    <asp:LoginName ID="LoginName1" runat="server" />--%>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" href="/Admin_profile.aspx"><i class="fas fa-user"></i> Profile</a></li>
