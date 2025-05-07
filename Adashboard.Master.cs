@@ -47,12 +47,6 @@ namespace Society_management
             }
         }
 
-        protected void lnkLogout_Click(object sender, EventArgs e)
-        {
-            FormsAuthentication.SignOut();
-            Session.Abandon();
-            Response.Redirect("Login.aspx");
-        }
 
         string img;
 
