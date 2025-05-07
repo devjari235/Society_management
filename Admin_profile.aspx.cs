@@ -53,7 +53,7 @@ namespace Society_management
 
                 if (!string.IsNullOrEmpty(img))
                 {
-                 imgPhoto.ImageUrl = img;
+                    imgPhoto.ImageUrl = img;
                 }
                 else
                 {
@@ -93,7 +93,7 @@ namespace Society_management
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
 
-       
+
         private void UpdateProfilePicture()
         {
             string filename = Path.GetFileName(profileImageUpload.FileName);
@@ -124,4 +124,3 @@ namespace Society_management
     }
 
 }
-

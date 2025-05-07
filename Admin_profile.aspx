@@ -117,20 +117,20 @@
 
     </script>
     <script>
-    function uploadProfilePicture() {
-    // Show loading indicator (optional)
-    Swal.fire({
-        title: 'Uploading...',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
+        function uploadProfilePicture() {
+            // Show loading indicator (optional)
+            Swal.fire({
+                title: 'Uploading...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-    // Trigger postback to server
-    __doPostBack('<%= profileImageUpload.ClientID %>', '');
+            // Trigger postback to server
+            __doPostBack('<%= profileImageUpload.ClientID %>', '');
         }
-        </script>
+    </script>
      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" type="text/css" href="profileone.css">
       <!-- <link rel="stylesheet" type="text/css" href="profile.css"> -->
