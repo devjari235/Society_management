@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -10,9 +12,41 @@ namespace Society_management
 {
     public partial class User : System.Web.UI.MasterPage
     {
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
+            Details();
+        }
 
+        string img;
+
+        public void Details()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "SELECT Photo FROM tblUser WHERE User_id = @id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+
+                img = reader["Photo"].ToString();
+
+
+                if (!string.IsNullOrEmpty(img))
+                {
+                    image.ImageUrl = img;
+                }
+                else
+                {
+                    image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+                }
+            }
+
+            reader.Close();
+            con.Close();
         }
     }
 }
