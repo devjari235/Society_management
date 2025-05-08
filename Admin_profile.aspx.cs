@@ -38,6 +38,7 @@ namespace Society_management
                 if (!string.IsNullOrEmpty(imgPath))
                 {
                     imgPhoto.ImageUrl = imgPath;
+                    imgPhoto.ImageUrl = img;
                 }
                 else
                 {
@@ -105,6 +106,19 @@ namespace Society_management
                     cmd.ExecuteNonQuery();
                     con.Close();
 
+        private void UpdateProfilePicture()
+        {
+            string filename = Path.GetFileName(profileImageUpload.FileName);
+            profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Update tblAdmin set Profile_picture=@img where admin_id=@id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@img", "~/Profile/" + filename);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            cmd.ExecuteNonQuery();
+            con.Close();
+
                     // Update image display
                     imgPhoto.ImageUrl = "~/Profile/" + fileName;
 
@@ -134,3 +148,4 @@ namespace Society_management
         }
     }
 }
+
