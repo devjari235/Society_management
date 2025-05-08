@@ -82,10 +82,5 @@ namespace Society_management
                 }
             }
         }
-
-        protected void btn1_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Family_member.aspx");
-        }
     }
 }
