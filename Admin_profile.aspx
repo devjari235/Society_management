@@ -110,8 +110,27 @@
             }
         }
     </script>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        function uploadProfilePicture() {
+            // Show loading indicator (optional)
+            Swal.fire({
+                title: 'Uploading...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Trigger postback to server
+            __doPostBack('<%= profileImageUpload.ClientID %>', '');
+        }
+    </script>
+     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link rel="stylesheet" type="text/css" href="profileone.css">
+      <!-- <link rel="stylesheet" type="text/css" href="profile.css"> -->
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+             <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">

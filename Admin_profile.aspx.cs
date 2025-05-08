@@ -37,7 +37,6 @@ namespace Society_management
                 string imgPath = reader["Profile_picture"].ToString();
                 if (!string.IsNullOrEmpty(imgPath))
                 {
-                    imgPhoto.ImageUrl = imgPath;
                     imgPhoto.ImageUrl = img;
                 }
                 else
@@ -89,22 +88,6 @@ namespace Society_management
                         Directory.CreateDirectory(profileDir);
                     }
 
-                    // Generate unique filename
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(profileImageUpload.FileName);
-                    string filePath = Server.MapPath("~/Profile/" + fileName);
-
-                    // Save file
-                    profileImageUpload.SaveAs(filePath);
-
-                    // Update database
-                    SqlConnection con = new SqlConnection(strcon);
-                    con.Open();
-                    string Query = "UPDATE tblAdmin SET Profile_picture=@img WHERE admin_id=@id";
-                    SqlCommand cmd = new SqlCommand(Query, con);
-                    cmd.Parameters.AddWithValue("@img", "~/Profile/" + fileName);
-                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-                    cmd.ExecuteNonQuery();
-                    con.Close();
 
         private void UpdateProfilePicture()
         {
@@ -147,5 +130,5 @@ namespace Society_management
             }
         }
     }
-}
 
+}
