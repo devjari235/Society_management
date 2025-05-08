@@ -2,31 +2,29 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <style type="text/css">
         input[type="file"] {
-    display: none;
-}
+            display: none;
+        }
 
-
-.profile-pic{
-    position: absolute;
-    height:120px;
-    width:120px;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0px;
-    z-index: 1001;
-    padding: 10px;
-}
-.profile-pic img{
-   
-    border-radius: 50%;
-    box-shadow: 0px 0px 5px 0px #c1c1c1;
-    cursor: pointer;
-    width: 100px;
-    height: 100px;
-}   
-.image11:hover{
-    cursor:pointer;
-}
+        .profile-pic{
+            position: absolute;
+            height:120px;
+            width:120px;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0px;
+            z-index: 1001;
+            padding: 10px;
+        }
+        .profile-pic img{
+            border-radius: 50%;
+            box-shadow: 0px 0px 5px 0px #c1c1c1;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+        }   
+        .image11:hover{
+            cursor:pointer;
+        }
         .profile-container {
             margin-top: 30px;
             max-width: 800px;
@@ -94,27 +92,23 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        .hidden {
+            display: none;
+        }
     </style>
     <script>
-        function previewFile() {
-            var preview = document.querySelector('img');
-            var file = document.querySelector('input[type=file]').files[0];
-            var reader = new FileReader();
-
-            reader.addEventListener("load", function () {
-                preview.src = reader.result;
-            }, false);
-
-            if (file) {
-                reader.readAsDataURL(file);
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('<%= imgPhoto.ClientID %>').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+                
+                // Trigger the upload
+                __doPostBack('<%= btnUpload.UniqueID %>', '');
             }
         }
-        $(function () {
-            $('#imgPhoto').on('click', function () {
-                $('#profileImageUpload').click();
-            });
-        });
-
     </script>
     <script>
         function uploadProfilePicture() {
@@ -138,7 +132,6 @@
       <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
              <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
@@ -154,34 +147,42 @@
                 </div>
                 
                 <div class="row">
-                   <div class="col-md-4 text-center">
-    <div id="Div1" runat="server">
-        <asp:Image 
-            ID="imgPhoto" 
-            runat="server" 
-            Height="210px" 
-            ImageUrl="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png" 
-            AlternateText="User Pic" 
-            CssClass="image11" 
-            onclick="document.getElementById('profileImageUpload').click();" 
-        />
-    </div>
-    
-    <asp:FileUpload 
-        ID="profileImageUpload" 
-        runat="server" 
-        CssClass="hidden" 
-        onchange="uploadProfilePicture()" 
-        ClientIDMode="Static" 
-    />
-    
-    <asp:Label 
-        ID="lblInstruction" 
-        runat="server" 
-        Text="Click image to upload new photo" 
-        CssClass="text-muted d-block mt-2" 
-    />
-</div>
+                    <div class="col-md-4 text-center">
+                        <div id="Div1" runat="server">
+                            <label for="<%= profileImageUpload.ClientID %>" style="cursor:pointer;">
+                                <asp:Image 
+                                    ID="imgPhoto" 
+                                    runat="server" 
+                                    Height="210px" 
+                                    ImageUrl="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png" 
+                                    AlternateText="User Pic" 
+                                    CssClass="image11"
+                                />
+                            </label>
+                        </div>
+                        
+                        <asp:FileUpload 
+                            ID="profileImageUpload" 
+                            runat="server" 
+                            CssClass="hidden" 
+                            onchange="previewImage(this)"
+                        />
+                        
+                        <asp:Button 
+                            ID="btnUpload" 
+                            runat="server" 
+                            Text="Upload" 
+                          
+                            OnClick="btnUpload_Click" 
+                        />
+                        
+                        <asp:Label 
+                            ID="lblInstruction" 
+                            runat="server" 
+                            Text="Click image to upload new photo" 
+                            CssClass="text-muted d-block mt-2" 
+                        />
+                    </div>
 
                     <div class="col-md-8">
                         <div class="profile-details">
@@ -218,7 +219,4 @@
             </div>
         </div>
     </div>
-
-</asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
