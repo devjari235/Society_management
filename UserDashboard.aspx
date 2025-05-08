@@ -40,11 +40,10 @@
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
-    <li class="breadcrumb-item active">Dashboard</li>
+   
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
        <h1 class="h2">Dashboard</h1>
-    <small class="text-muted">Welcome back, <asp:Label ID="lblWelcomeUser" runat="server" />!</small>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
        <button class="btn btn-sm btn-outline-secondary" onclick="window.print()">

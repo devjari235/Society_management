@@ -11,133 +11,133 @@ namespace Society_management
 {
 
 
-    public partial class UserDashboard
+    public partial class MyFlat
     {
 
         /// <summary>
-        /// lblMaintenanceDue control.
+        /// btn1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMaintenanceDue;
+        protected global::System.Web.UI.WebControls.Button btn1;
 
         /// <summary>
-        /// lblDueDate control.
+        /// lblBlockTop control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDueDate;
+        protected global::System.Web.UI.WebControls.Label lblBlockTop;
 
         /// <summary>
-        /// lblPendingPayments control.
+        /// lblFlatTop control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPendingPayments;
+        protected global::System.Web.UI.WebControls.Label lblFlatTop;
 
         /// <summary>
-        /// lnkPayNow control.
+        /// pnlDetails control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkPayNow;
+        protected global::System.Web.UI.WebControls.Panel pnlDetails;
 
         /// <summary>
-        /// lblOpenComplaints control.
+        /// lblName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOpenComplaints;
+        protected global::System.Web.UI.WebControls.Label lblName;
 
         /// <summary>
-        /// lnkViewComplaints control.
+        /// lblContact control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkViewComplaints;
+        protected global::System.Web.UI.WebControls.Label lblContact;
 
         /// <summary>
-        /// lblNewNotices control.
+        /// lblEmergency control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNewNotices;
+        protected global::System.Web.UI.WebControls.Label lblEmergency;
 
         /// <summary>
-        /// lnkViewNotices control.
+        /// lblMembers control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkViewNotices;
+        protected global::System.Web.UI.WebControls.Label lblMembers;
 
         /// <summary>
-        /// rptRecentActivity control.
+        /// lblBlock control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptRecentActivity;
+        protected global::System.Web.UI.WebControls.Label lblBlock;
 
         /// <summary>
-        /// pnlNoActivity control.
+        /// lblFlatNo control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoActivity;
+        protected global::System.Web.UI.WebControls.Label lblFlatNo;
 
         /// <summary>
-        /// lnkViewAllActivity control.
+        /// lblFloor control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkViewAllActivity;
+        protected global::System.Web.UI.WebControls.Label lblFloor;
 
         /// <summary>
-        /// rptImportantNotices control.
+        /// lblFlatType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptImportantNotices;
+        protected global::System.Web.UI.WebControls.Label lblFlatType;
 
         /// <summary>
-        /// pnlNoNotices control.
+        /// lblMaintenance control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoNotices;
+        protected global::System.Web.UI.WebControls.Label lblMaintenance;
 
         /// <summary>
-        /// lnkViewAllNotices control.
+        /// lblAllotmentDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkViewAllNotices;
+        protected global::System.Web.UI.WebControls.Label lblAllotmentDate;
     }
 }
