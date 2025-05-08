@@ -99,8 +99,18 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        .card{
 
-
+            width:120%;
+            height:110%;
+            display:flex;
+            right:125px;
+            justify-content:center;
+            text-align:center;
+        }
+        .form-group{
+            margin-top:5px;
+        }
     </style>
         <script>
             function previewFile() {
@@ -194,7 +204,7 @@
         <div class="card">
             <div class="card-body ">
                 <div class="text-center mb-4">
-                    <h3 class="card-title">Admin Profile</h3>
+                    <h3 class="card-title">Your Profile</h3>
                     <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
                 </div>
                 

@@ -17,14 +17,14 @@ namespace Society_management
         {
             Details();
         }
-
+        string name;
         string img;
 
         public void Details()
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "SELECT Photo FROM tblUser WHERE User_id = @id";
+            string Query = "SELECT User_name,Photo FROM tblUser WHERE User_id = @id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
             SqlDataReader reader = cmd.ExecuteReader();
@@ -32,6 +32,7 @@ namespace Society_management
             if (reader.Read())
             {
 
+                name=reader["User_name"].ToString();
                 img = reader["Photo"].ToString();
 
 
@@ -44,7 +45,7 @@ namespace Society_management
                     image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
                 }
             }
-
+            lblUserName.Text = name;
             reader.Close();
             con.Close();
         }

@@ -211,7 +211,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
                                 <%--<i class="fas fa-user-circle me-1"></i>--%>
                                 <asp:Image ID="image" runat="server" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
-                                <asp:Label ID="lblUserName" runat="server" Text="Guest"></asp:Label>
+                                <asp:Label ID="lblUserName" runat="server"></asp:Label>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="User_profile.aspx"><i class="fas fa-user me-2"></i>Profile</a></li>
