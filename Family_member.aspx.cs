@@ -40,7 +40,7 @@ namespace Society_management
         {
             int ownerId = id;
             int totalAllowed = 0;
-            int currentCount = 0;
+            int currentCount = 1;
 
             string connStr = WebConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             using (SqlConnection con = new SqlConnection(connStr))
@@ -61,17 +61,30 @@ namespace Society_management
                 {
                     // 3. Insert family member
                     SqlCommand cmd3 = new SqlCommand(@"INSERT INTO tblFamilyMember 
-                    (Owner_id, Member_name, Age, Gender, Relationship) 
-                    VALUES (@Owner_id, @Member_name, @Age, @Gender, @Relationship)", con);
+                    (Owner_id, Member_name, Email, Phone_no, Age, Gender, Relationship) 
+                    VALUES (@Owner_id, @Member_name, @email, @no, @Age, @Gender, @Relationship)", con);
                     cmd3.Parameters.AddWithValue("@Owner_id", ownerId);
                     cmd3.Parameters.AddWithValue("@Member_name", txtName.Text);
+                    cmd3.Parameters.AddWithValue("@email",txtEmail.Text);
+                    cmd3.Parameters.AddWithValue("@no",txtPhone.Text);
                     cmd3.Parameters.AddWithValue("@Age", Convert.ToInt32(txtAge.Text));
                     cmd3.Parameters.AddWithValue("@Gender", ddlGender.SelectedValue);
                     cmd3.Parameters.AddWithValue("@Relationship", ddlRelationship.Text);
 
                     cmd3.ExecuteNonQuery();
-                    lblMessage.ForeColor = System.Drawing.Color.Green;
-                    lblMessage.Text = "Member added successfully.";
+                    //lblMessage.ForeColor = System.Drawing.Color.Green;
+                    //lblMessage.Text = "Member added successfully.";
+
+                    string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Member added successfully.!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Family_member.aspx';
+            });";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
 
                     txtName.Text = "";
                     txtAge.Text = "";
@@ -80,8 +93,21 @@ namespace Society_management
                 }
                 else
                 {
-                    lblMessage.ForeColor = System.Drawing.Color.Red;
-                    lblMessage.Text = "You have already added the maximum number of family members.";
+                    string script = @"
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'error',
+                                text: 'You have already added the maximum number of family members.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'Try Again'
+                            });
+                        </script>";
+
+                    ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
+
+                    //lblMessage.ForeColor = System.Drawing.Color.Red;
+                    //lblMessage.Text = "You have already added the maximum number of family members.";
                 }
 
                 con.Close();

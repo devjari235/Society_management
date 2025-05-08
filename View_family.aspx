@@ -2,6 +2,14 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $(".table").prepend($("<thead></thead>").append($(this).find("tr:first"))).dataTable();
+        })
+
+    </script>
+
     <style>
     /* Button Group Container */
     .action-button-group {
@@ -38,7 +46,10 @@
         background-color: #2980b9;
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
     }
+
 
     /* View Button */
     .btn-view-notice {
@@ -49,6 +60,8 @@
     .btn-view-notice:hover {
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
     }
 
     /* Icons */
@@ -102,16 +115,68 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
-<div class="action-button-group">
+    <div class="action-button-group">
      <a href="Myflat.aspx" class="btn-register-notice">
      <i class="fas fa-arrow-left"></i> Back to Details
  </a>
-    <a href="Myflat.aspx" class="btn-view-notice">
+    <a href="Family_member.aspx" class="btn-view-notice">
         <i class="fas fa-user-plus"></i> Register a member
     </a>
 </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </asp:Panel>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
+                    <Columns>
+                        
+                        <asp:TemplateField HeaderText="Member Name">
+                            <ItemTemplate>
+                              <asp:Label Text='<%#Eval("Member_name") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Email">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Email") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Phone Number">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Phone_no") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Age">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Age") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Gender">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Gender") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Relationship">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Relationship") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+
+        </div>
+    </div>
+</div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

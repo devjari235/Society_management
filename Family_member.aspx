@@ -5,7 +5,7 @@
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -71,6 +71,8 @@
         background-color: #2980b9;
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
     }
 
     /* View Button */
@@ -83,6 +85,8 @@
         background-color: #27ae60;
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
     }
 
     /* Icons */
@@ -153,12 +157,21 @@
             <div class="card-body">
                 <div class="mb-3">
                     <label for="txtName" class="form-label">Member Name</label>
-                    <asp:TextBox ID="txtName" CssClass="form-control" runat="server" />
+                    <asp:TextBox ID="txtName" CssClass="form-control" runat="server" AutoCompleteType="Disabled" />
+                </div>
+                <div class="mb-3">
+                    <label for="txtEmail" class="form-label">Email</label>
+                    <asp:TextBox ID="txtEmail" CssClass="form-control" TextMode="Email" runat="server" AutoCompleteType="Disabled" />
+                </div>
+                <div class="mb-3">
+                    <label for="txtPhone" class="form-label">Phone Number</label>
+                    <asp:TextBox ID="txtPhone" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
                 </div>
                 <div class="mb-3">
                     <label for="txtAge" class="form-label">Age</label>
-                    <asp:TextBox ID="txtAge" CssClass="form-control" TextMode="Number" runat="server" />
+                    <asp:TextBox ID="txtAge" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
                 </div>
+
                 <div class="mb-3">
                     <label for="ddlGender" class="form-label">Gender</label>
                     <asp:DropDownList ID="ddlGender" CssClass="form-select" runat="server">

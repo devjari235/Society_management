@@ -81,6 +81,8 @@
         background-color: #2980b9;
         transform: translateY(-3px);
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
     }
 
     /* View Button */
@@ -92,7 +94,9 @@
     .btn-view-notice:hover {
         background-color: #27ae60;
         transform: translateY(-3px);
+        text-decoration:none;
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        color: white;
     }
 
     /* Icons */
