@@ -2,6 +2,9 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+        <!-- Remove one of these - keep only one jQuery version -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <style type="text/css">
         input[type="file"] {
     display: none;
@@ -96,6 +99,8 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
+
     </style>
         <script>
             function previewFile() {
@@ -119,47 +124,35 @@
                });
     });
     </script>
-    <script type="text/javascript">
-        // Make sure this runs after all scripts are loaded
-        function pageLoad() {
-            // Get references to the controls using proper ClientID
-            var imgPhoto = document.getElementById('<%= imgPhoto.ClientID %>');
-        var fileUpload = document.getElementById('<%= profileImageUpload.ClientID %>');
-        
-        if (imgPhoto && fileUpload) {
-            imgPhoto.onclick = function() {
-                fileUpload.click();
-            };
-        }
-    }
+     <script>
+         function previewAndUpload(input) {
+             if (input.files && input.files[0]) {
+                 var reader = new FileReader();
 
-    function previewAndUpload(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            var imgPreview = document.getElementById('<%= imgPhoto.ClientID %>');
+                 reader.onload = function (e) {
+                     document.getElementById('<%= imgPhoto.ClientID %>').src = e.target.result;
 
-            reader.onload = function(e) {
-                imgPreview.src = e.target.result;
-                
-                // Show loader
-                Swal.fire({
-                    title: 'Uploading...',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+             // Show loader for 2 seconds
+             Swal.fire({
+                 title: 'Uploading...',
+                 text: 'Please wait while we upload your photo.',
+                 allowOutsideClick: false,
+                 showConfirmButton: false,
+                 didOpen: () => {
+                     Swal.showLoading();
+                 }
+             });
 
-                // Trigger postback after short delay to allow preview to show
-                setTimeout(function() {
-                    __doPostBack('<%= profileImageUpload.ClientID %>', '');
-                }, 500);
-                };
+             setTimeout(function () {
+                 Swal.close();
+                 __doPostBack('<%= profileImageUpload.ClientID %>', '');
+             }, 2000);
+                 };
 
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
+                 reader.readAsDataURL(input.files[0]);
+             }
+         }
+     </script>
 
 
 
@@ -180,7 +173,8 @@
             __doPostBack('<%= profileImageUpload.ClientID %>', '');
         }
     </script>--%>
-     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
       <link rel="stylesheet" type="text/css" href="profileone.css">
       <!-- <link rel="stylesheet" type="text/css" href="profile.css"> -->
       <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -198,7 +192,7 @@
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
         <div class="container profile-container">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body ">
                 <div class="text-center mb-4">
                     <h3 class="card-title">Admin Profile</h3>
                     <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
@@ -206,7 +200,7 @@
                 
                 <div class="row">
 <div class="col-md-4 text-center">
-    <div id="profileImageContainer" runat="server">
+    <div id="Div1" runat="server">
         <asp:Image ID="imgPhoto" runat="server" 
             ClientIDMode="Static"
             Height="210px" 
@@ -215,10 +209,13 @@
             Style="cursor: pointer;" />
     </div>
     
-    <asp:FileUpload ID="profileImageUpload" runat="server" 
-        Style="display: none;"
-        ClientIDMode="Static"
-        onchange="previewAndUpload(this);" />
+   <asp:FileUpload
+    ID="profileImageUpload"
+    runat="server"
+    Style="display: none;"
+    ClientIDMode="Static"
+    onchange="previewAndUpload(this);"
+    AutoPostBack="true" />
     
     <asp:Label ID="lblInstruction" runat="server" 
         Text="Click image to upload new photo" 
@@ -279,7 +276,5 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <!-- Remove one of these - keep only one jQuery version -->
-<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ 
 </asp:Content>

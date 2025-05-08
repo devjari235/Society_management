@@ -23,7 +23,7 @@ namespace Society_management
             //{
             //    UpdateProfilePicture();
             //}
-            else if (Request.Files.Count > 0 && profileImageUpload.HasFile)
+            if (profileImageUpload.HasFile)
             {
                 UpdateProfilePicture();
             }
@@ -129,7 +129,7 @@ namespace Society_management
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'OK'
                 }).then(function() {
-                    window.location = 'Admin_profile.aspx';
+                    window.location = 'User_profile.aspx';
                 });
             </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
