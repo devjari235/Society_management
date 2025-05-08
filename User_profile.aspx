@@ -1,6 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Admin_profile.aspx.cs" Inherits="Society_management.Admin_profile" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <style type="text/css">
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User.Master" AutoEventWireup="true" CodeBehind="User_profile.aspx.cs" Inherits="Society_management.User_profile" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+        <style type="text/css">
         input[type="file"] {
     display: none;
 }
@@ -117,35 +119,47 @@
                });
     });
     </script>
-       <script>
-           function previewAndUpload(input) {
+    <script type="text/javascript">
+        // Make sure this runs after all scripts are loaded
+        function pageLoad() {
+            // Get references to the controls using proper ClientID
+            var imgPhoto = document.getElementById('<%= imgPhoto.ClientID %>');
+        var fileUpload = document.getElementById('<%= profileImageUpload.ClientID %>');
+        
+        if (imgPhoto && fileUpload) {
+            imgPhoto.onclick = function() {
+                fileUpload.click();
+            };
+        }
+    }
+
+    function previewAndUpload(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
+            var imgPreview = document.getElementById('<%= imgPhoto.ClientID %>');
 
-           reader.onload = function (e) {
-               document.getElementById('<%= imgPhoto.ClientID %>').src = e.target.result;
-
-                // Show loader for 2 seconds
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                
+                // Show loader
                 Swal.fire({
                     title: 'Uploading...',
-                    text: 'Please wait while we upload your photo.',
                     allowOutsideClick: false,
-                    showConfirmButton: false,
                     didOpen: () => {
                         Swal.showLoading();
                     }
                 });
 
-                setTimeout(function () {
-                    Swal.close();
+                // Trigger postback after short delay to allow preview to show
+                setTimeout(function() {
                     __doPostBack('<%= profileImageUpload.ClientID %>', '');
-                }, 2000);
-            };
+                }, 500);
+                };
 
-         reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(input.files[0]);
+            }
         }
-    }
-   </script>
+    </script>
 
 
 
@@ -175,47 +189,41 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
+<asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+<asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container profile-container">
+<asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
+</asp:Content>
+<asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
+        <div class="container profile-container">
         <div class="card">
             <div class="card-body">
                 <div class="text-center mb-4">
                     <h3 class="card-title">Admin Profile</h3>
                     <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
                 </div>
-
+                
                 <div class="row">
-                    <div class="col-md-4 text-center">
-                        <div id="Div1" runat="server">
-                            <asp:Image
-                                ID="imgPhoto"
-                                runat="server"
-                                ClientIDMode="Static"
-                                Height="210px"
-                                ImageUrl="https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png"
-                                AlternateText="User Pic"
-                                CssClass="image11"
-                                Style="cursor: pointer;" />
-                        </div>
-
-                        <asp:FileUpload
-                            ID="profileImageUpload"
-                            runat="server"
-                            Style="display: none;"
-                            ClientIDMode="Static"
-                            onchange="previewAndUpload(this);"
-                            AutoPostBack="true" />
-
-                        <asp:Label
-                            ID="lblInstruction"
-                            runat="server"
-                            Text="Click image to upload new photo"
-                            CssClass="text-muted d-block mt-2" />
-                    </div>
+<div class="col-md-4 text-center">
+    <div id="profileImageContainer" runat="server">
+        <asp:Image ID="imgPhoto" runat="server" 
+            ClientIDMode="Static"
+            Height="210px" 
+            AlternateText="Profile Picture"
+            CssClass="image11"
+            Style="cursor: pointer;" />
+    </div>
+    
+    <asp:FileUpload ID="profileImageUpload" runat="server" 
+        Style="display: none;"
+        ClientIDMode="Static"
+        onchange="previewAndUpload(this);" />
+    
+    <asp:Label ID="lblInstruction" runat="server" 
+        Text="Click image to upload new photo" 
+        CssClass="text-muted d-block mt-2" />
+</div>
 
                     <div class="col-md-8">
                         <div class="profile-details">
@@ -225,24 +233,41 @@
                                     <asp:TextBox ID="txtname" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
-
+                            
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Email</label>
                                 <div class="col-sm-9">
                                     <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
-
+                            
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Phone</label>
                                 <div class="col-sm-9">
                                     <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
-
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label form-label">Gender</label>
+                                <div class="col-sm-9">
+                                    <asp:TextBox ID="txtGender" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label form-label">Age</label>
+                                <div class="col-sm-9">
+                                    <asp:TextBox ID="txtAge" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label form-label">Marital_Status</label>
+                                <div class="col-sm-9">
+                                    <asp:TextBox ID="txtmarite" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                </div>
+                            </div>
                             <div class="form-group row mt-4">
                                 <div class="col-sm-9 offset-sm-3">
-                                    <asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
+                                    <asp:Button ID="btnUpdate" runat="server" Text="Update Profile" 
                                         CssClass="btn btn-update text-white" OnClick="btnUpdate_Click" />
                                 </div>
                             </div>
@@ -252,7 +277,9 @@
             </div>
         </div>
     </div>
-
 </asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
+<asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
+    <!-- Remove one of these - keep only one jQuery version -->
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </asp:Content>

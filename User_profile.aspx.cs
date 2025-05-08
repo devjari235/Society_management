@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Society_management
 {
-    public partial class Admin_profile : System.Web.UI.Page
+    public partial class User_profile : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
@@ -25,7 +23,7 @@ namespace Society_management
             //{
             //    UpdateProfilePicture();
             //}
-            if (profileImageUpload.HasFile)
+            else if (Request.Files.Count > 0 && profileImageUpload.HasFile)
             {
                 UpdateProfilePicture();
             }
@@ -33,28 +31,36 @@ namespace Society_management
         string name;
         string email;
         string ph;
+        string gen;
+        string age;
+        string marite;
         string img;
 
         public void BindDetails()
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "SELECT name, email, phone_no, Profile_picture FROM tblAdmin WHERE admin_id = @a_id";
+            string Query = "SELECT User_name, Phone_no,Email,Gender,Age,Marital_Status,Photo FROM tblUser WHERE User_id = @id";
             SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
             SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read())
             {
-                name = reader["name"].ToString();
-                email = reader["email"].ToString();
-                ph = reader["phone_no"].ToString();
-                img = reader["Profile_picture"].ToString();
+                name = reader["User_name"].ToString();
+                email = reader["Email"].ToString();
+                ph = reader["Phone_no"].ToString();
+                gen = reader["Gender"].ToString();
+                age = reader["Age"].ToString() ;
+                marite = reader["Marital_Status"].ToString();
+                img = reader["Photo"].ToString();
 
                 txtname.Text = name;
                 txtemail.Text = email;
                 txtphone.Text = ph;
-
+                txtAge.Text = age;
+                txtmarite.Text = marite;
+                txtGender.Text = gen;
                 if (!string.IsNullOrEmpty(img))
                 {
                     imgPhoto.ImageUrl = img;
@@ -73,12 +79,15 @@ namespace Society_management
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set name=@name, email=@mail, phone_no=@ph where admin_id=@id";
+            string Query = "Update tblUser set User_name=@name, Email=@mail, Phone_no=@ph,Gender=@gen,Age=@age,Marital_Status=@marite where  User_id = @id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@name", txtname.Text);
             cmd.Parameters.AddWithValue("@mail", txtemail.Text);
             cmd.Parameters.AddWithValue("@ph", txtphone.Text);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            cmd.Parameters.AddWithValue("@gen", txtGender.Text);
+            cmd.Parameters.AddWithValue("@age", txtAge.Text);
+            cmd.Parameters.AddWithValue("@marite", txtmarite.Text);
+            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
             cmd.ExecuteNonQuery();
             con.Close();
 
@@ -91,7 +100,7 @@ namespace Society_management
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'OK'
             }).then(function() {
-                window.location = 'Admin_profile.aspx';
+                window.location = 'User_profile.aspx';
             });
         </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
@@ -104,10 +113,10 @@ namespace Society_management
             profileImageUpload.SaveAs(Server.MapPath("~/Profile/" + filename));
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set Profile_picture=@img where admin_id=@id";
+            string Query = "Update tblUser set Photo=@img where  User_id = @id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@img", "~/Profile/" + filename);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
             cmd.ExecuteNonQuery();
             con.Close();
 
