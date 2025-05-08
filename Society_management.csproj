@@ -107,6 +107,7 @@
     <Content Include="Documents.aspx" />
     <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
+    <Content Include="Family_member.aspx" />
     <Content Include="Flat.aspx" />
     <Content Include="fontawesome\css\all.css" />
     <Content Include="fontawesome\css\all.min.css" />
@@ -2225,6 +2226,7 @@
     <Content Include="Images\U_bg.jpg" />
     <Content Include="LiveNotice.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="MyFlat.aspx" />
     <Content Include="NoticeBoard.aspx" />
     <Content Include="NoticeDashboard.aspx" />
     <Content Include="Notification.aspx" />
@@ -2313,6 +2315,13 @@
     <Compile Include="ExpireNotice.aspx.designer.cs">
       <DependentUpon>ExpireNotice.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Family_member.aspx.cs">
+      <DependentUpon>Family_member.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Family_member.aspx.designer.cs">
+      <DependentUpon>Family_member.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Flat.aspx.cs">
       <DependentUpon>Flat.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2347,6 +2356,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyFlat.aspx.cs">
+      <DependentUpon>MyFlat.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyFlat.aspx.designer.cs">
+      <DependentUpon>MyFlat.aspx</DependentUpon>
     </Compile>
     <Compile Include="NoticeBoard.aspx.cs">
       <DependentUpon>NoticeBoard.aspx</DependentUpon>
