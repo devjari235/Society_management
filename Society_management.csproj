@@ -92,7 +92,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
-    <Content Include="Admin_profile.aspx" />
     <Content Include="A_registration.aspx" />
     <Content Include="Block.aspx" />
     <Content Include="bootstrap\css\bootstrap.min.css" />
@@ -2233,7 +2232,6 @@
     <Content Include="Terms.aspx" />
     <Content Include="UserDashboard.aspx" />
     <Content Include="User_pass_change.aspx" />
-    <Content Include="User_profile.aspx" />
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
     <Content Include="View_Allnotice.aspx" />
@@ -2256,13 +2254,6 @@
     </Compile>
     <Compile Include="AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin_profile.aspx.cs">
-      <DependentUpon>Admin_profile.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin_profile.aspx.designer.cs">
-      <DependentUpon>Admin_profile.aspx</DependentUpon>
     </Compile>
     <Compile Include="A_registration.aspx.cs">
       <DependentUpon>A_registration.aspx</DependentUpon>
@@ -2411,13 +2402,6 @@
     </Compile>
     <Compile Include="User_pass_change.aspx.designer.cs">
       <DependentUpon>User_pass_change.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_profile.aspx.cs">
-      <DependentUpon>User_profile.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_profile.aspx.designer.cs">
-      <DependentUpon>User_profile.aspx</DependentUpon>
     </Compile>
     <Compile Include="U_login.aspx.cs">
       <DependentUpon>U_login.aspx</DependentUpon>
