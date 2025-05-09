@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_Allnotice.aspx.cs" Inherits="Society_management.View_Allnotice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
+   <%-- <style>
 
 
     .card {
@@ -83,8 +83,13 @@
 
 
 
-</style>
+</style>--%>
 
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('.table').prepend($('<thead></thead>').append($('.table').find('tr:first'))).dataTable();
+         });
+     </script>
 
     <style>
  /* Page Title Buttons Container */
@@ -232,7 +237,63 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="notice-scroller-container">
+        <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </asp:Panel>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowCommand="gvDisplay_RowCommand">
+                    <Columns>
+                        
+                        <asp:TemplateField HeaderText="Title">
+                            <ItemTemplate>
+                              <asp:Label Text='<%#Eval("Title") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Posted Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Expiry Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Importance">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Importance") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Status") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                               <asp:Button ID="btnView" runat="server" Text="View" CommandName="ViewNotice" CommandArgument='<%# Eval("Notice_id") %>' Style="background-color:aquamarine; color:black" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+  <%--  <div class="notice-scroller-container">
         <asp:Repeater ID="rptAllNotices" runat="server">
             <ItemTemplate>
                 <div class='<%# "swiper-slide notice-card " + 
@@ -240,7 +301,7 @@
                     
                     <div class="notice-title"><%# Eval("Title") %></div>
 
-                    <%-- Importance Badge --%>
+                    
                     <span class='<%# "badge me-2 " + 
                         (Eval("Importance").ToString().ToLower() == "urgent" ? "bg-danger" : 
                          Eval("Importance").ToString().ToLower() == "important" ? "bg-warning text-dark" : 
@@ -248,7 +309,6 @@
                         <%# Eval("Importance") %>
                     </span>
 
-                    <%-- Status Badge --%>
                     <span class='<%# "badge " + 
                         (Eval("Status").ToString().ToLower() == "live" ? "bg-success" : "bg-secondary") %>'>
                         <%# Eval("Status") %>
@@ -265,7 +325,8 @@
                 </div>
             </ItemTemplate>
         </asp:Repeater>
-    </div>
+    </div>--%>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
+    
 </asp:Content>

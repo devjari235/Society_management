@@ -164,18 +164,18 @@
     </button>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-      <div class="swiper-container-wrapper">
-         <!-- Arrows -->
-         <div class="swiper-button-prev"></div>
+    <div class="swiper-container-wrapper">
+        <!-- Arrows -->
+        <div class="swiper-button-prev"></div>
 
-         <!-- Swiper -->
-         <div class="swiper mySwiper">
-             <div class="swiper-wrapper">
-                 <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
-                     <ItemTemplate>
-                          
-                         <div class="swiper-slide">
-                            <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" style="all:unset; display:block;">
+        <!-- Swiper -->
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
+                    <ItemTemplate>
+
+                        <div class="swiper-slide">
+                            <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" Style="all: unset; display: block;">
                              <div class="notice-title"><%# Eval("Title") %></div>
                              <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
                              <span class="badge bg-success"><%# Eval("Status") %></span>
@@ -186,17 +186,19 @@
                                             Text="📎 View Attachment" Target="_blank"
                                             CssClass="btn btn-sm btn-outline-secondary mt-2"
                                             Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                                 </asp:LinkButton>
-                         </div>
-                              
-                     </ItemTemplate>
-                 </asp:Repeater>
-             </div>
-             <div class="swiper-pagination"></div>
-         </div>
+                            </asp:LinkButton>
 
-         <div class="swiper-button-next"></div>
-     </div>
+                        </div>
+                    </ItemTemplate>
+
+                </asp:Repeater>
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="swiper-button-next"></div>
+    </div>
 
 
 

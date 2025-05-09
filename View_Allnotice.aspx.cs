@@ -17,6 +17,7 @@ namespace Society_management
             if (!IsPostBack)
             {
                 BindAllNotices();
+               
             }
         }
         private void BindAllNotices()
@@ -36,10 +37,18 @@ namespace Society_management
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                rptAllNotices.DataSource = dt;
-                rptAllNotices.DataBind();
+                gvDisplay.DataSource = dt;
+                gvDisplay.DataBind();
             }
         }
 
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewNotice")
+            {
+                int noticeId = Convert.ToInt32(e.CommandArgument);
+                Response.Redirect("Admin_noticeDetails.aspx?id=" + noticeId);
+            }
+        }
     }
 }

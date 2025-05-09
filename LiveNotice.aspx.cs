@@ -48,8 +48,8 @@ namespace Society_management
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                rptNotices.DataSource = dt;
-                rptNotices.DataBind();
+                gvDisplay.DataSource = dt;
+                gvDisplay.DataBind();
             }
         }
 
@@ -64,5 +64,13 @@ namespace Society_management
             }
         }
 
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewNotice")
+            {
+                int noticeId = Convert.ToInt32(e.CommandArgument);
+                Response.Redirect("Admin_noticeDetails.aspx?id=" + noticeId);
+            }
+        }
     }
 }
