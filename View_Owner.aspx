@@ -32,7 +32,7 @@ $(document).ready(function () {
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <div class="table-responsive">
-                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowCommand="gvDisplay_RowCommand">
      <Columns>
          
          <asp:TemplateField HeaderText="Block Name">
@@ -75,6 +75,11 @@ $(document).ready(function () {
                  <asp:Label Text='<%#Eval("Allotment_Date") %>' runat="server"></asp:Label>
              </ItemTemplate>
          </asp:TemplateField>
+         <asp:TemplateField HeaderText="Action">
+    <ItemTemplate>
+       <asp:Button ID="btnView" runat="server" Text="View Member" CommandName="ViewNotice" CommandArgument='<%# Eval("Owner_id") %>' Style="background-color:aquamarine; color:black" />
+    </ItemTemplate>
+</asp:TemplateField>
      </Columns>
  </asp:GridView>
             </div>
