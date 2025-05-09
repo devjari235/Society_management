@@ -20,23 +20,23 @@ namespace Society_management
                 LoadDetails(id);
             }
         }
-
+        string email;
         int id;
         public void OwnerID()
         {
             SqlConnection con = new SqlConnection(connStr);
             con.Open();
-            string Query = "Select Owner_id from tblUser where User_id=@u_id";
+            string Query = "Select Owner_id,Email from tblUser where User_id=@u_id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@u_id", Session["U_id"].ToString());
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 id = Convert.ToInt32(reader["Owner_id"]);
+                email = reader["Email"].ToString();
             }
-
+            
         }
-
 
         private void LoadDetails(int ownerId)
         {

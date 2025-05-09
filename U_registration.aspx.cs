@@ -132,7 +132,10 @@ namespace Society_management
                             cmd.Parameters.AddWithValue("@gen", ddlGender.SelectedValue);
                             cmd.Parameters.AddWithValue("@age", txtAge.Text.Trim());
                             cmd.Parameters.AddWithValue("@mstatus", ddlMarital.SelectedValue);
-                            cmd.Parameters.AddWithValue("@photo", "~/Profile/" + filename);
+                            if (!string.IsNullOrEmpty(filename))
+                                cmd.Parameters.AddWithValue("@photo", "~/Profile/" + filename);
+                            else
+                                cmd.Parameters.AddWithValue("@photo", DBNull.Value);
                             cmd.Parameters.AddWithValue("@user", ID);
 
                             conn.Open();

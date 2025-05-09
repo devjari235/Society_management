@@ -65,6 +65,10 @@ namespace Society_management
                 {
                     imgPhoto.ImageUrl = img;
                 }
+                else if(img== "~/Profile/")
+                {
+                    imgPhoto.ImageUrl = "~/Profile/Default.png";
+                }
                 else
                 {
                     imgPhoto.ImageUrl = "~/Profile/Default.png";

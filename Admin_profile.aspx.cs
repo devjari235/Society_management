@@ -61,7 +61,7 @@ namespace Society_management
                 }
                 else
                 {
-                    imgPhoto.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+                    imgPhoto.ImageUrl = "~/Profile/Default.png";
                 }
             }
 

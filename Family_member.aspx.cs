@@ -57,7 +57,7 @@ namespace Society_management
                 cmd2.Parameters.AddWithValue("@Owner_id", ownerId);
                 currentCount = Convert.ToInt32(cmd2.ExecuteScalar());
 
-                if (currentCount < totalAllowed)
+                if (currentCount < (totalAllowed - 1))
                 {
                     // 3. Insert family member
                     SqlCommand cmd3 = new SqlCommand(@"INSERT INTO tblFamilyMember 

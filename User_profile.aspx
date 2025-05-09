@@ -216,6 +216,7 @@
             Height="210px" 
             AlternateText="Profile Picture"
             CssClass="image11"
+            ImageUrl= "~/Profile/Default.png"
             Style="cursor: pointer;" />
     </div>
     
