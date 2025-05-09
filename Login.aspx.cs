@@ -34,15 +34,15 @@ namespace Society_management
             if (i == 0)
             {
                 string script = @"
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Invalid User or Password',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'Try Again'
-        });
-    </script>";
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Invalid User or Password',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'Try Again'
+                        });
+                    </script>";
 
                 ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
 

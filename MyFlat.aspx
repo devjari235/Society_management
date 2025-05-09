@@ -177,7 +177,7 @@
                 <h3>Flat Details</h3>
                 <table class="details-table">
                     <tr>
-                        <td>Name</td>
+                        <td>Owner Name</td>
                         <td><asp:Label ID="lblName" runat="server" /></td>
                         <td>Mobile Number</td>
                         <td><asp:Label ID="lblContact" runat="server" /></td>

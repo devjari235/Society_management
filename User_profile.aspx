@@ -101,12 +101,15 @@
         }
         .card{
 
-            width:120%;
+            width:130%;
+            height:10%;
             display:flex;
             right:125px;
-            top:0px;
             justify-content:center;
             text-align:center;
+        }
+        .form-group{
+            margin-top:-5px;
         }
     </style>
         <script>

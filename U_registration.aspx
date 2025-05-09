@@ -6,7 +6,11 @@
     <title>Member Registration - Society Management</title>
     <!-- Bootstrap CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-    
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
      body {
     margin: 0;
@@ -94,7 +98,7 @@ h2 {
 }
 
     </style>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function validateForm() {
             var password = document.getElementById('<%= txtPassword.ClientID %>').value;
@@ -124,17 +128,17 @@ h2 {
             
             <div class="mb-3">
                 <label class="form-label">Full Name</label>
-                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" required></asp:TextBox>
+                <asp:TextBox ID="txtName" runat="server" CssClass="form-control" required AutoCompleteType="Disabled"></asp:TextBox>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Phone Number</label>
-                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" TextMode="Phone" required></asp:TextBox>
+                <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" TextMode="Phone" required AutoCompleteType="Disabled"></asp:TextBox>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Email</label>
-                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" required></asp:TextBox>
+                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" required AutoCompleteType="Disabled"></asp:TextBox>
             </div>
 
             <div class="mb-3">
@@ -149,7 +153,7 @@ h2 {
 
             <div class="mb-3">
                 <label class="form-label">Age</label>
-                <asp:TextBox ID="txtAge" runat="server" CssClass="form-control" TextMode="Number" required></asp:TextBox>
+                <asp:TextBox ID="txtAge" runat="server" CssClass="form-control" TextMode="Number" required AutoCompleteType="Disabled"></asp:TextBox>
             </div>
 
             <div class="mb-3">
@@ -177,8 +181,6 @@ h2 {
         </div>
     </form>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 

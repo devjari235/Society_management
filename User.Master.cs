@@ -42,7 +42,7 @@ namespace Society_management
                 }
                 else
                 {
-                    image.ImageUrl = "https://static0.howtogeekimages.com/wordpress/wp-content/uploads/2023/08/tiktok-no-profile-picture.png";
+                    image.ImageUrl = "~/Profile/Default.png";
                 }
             }
             lblUserName.Text = name;
