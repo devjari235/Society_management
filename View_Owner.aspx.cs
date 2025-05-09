@@ -27,7 +27,7 @@ namespace Society_management
             SqlConnection con = new SqlConnection(strcon);
             //string query = "select * from tblImage where A_id=@aid";
             // string query = "select b.Block_name,f.Flate_no,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number,o.Total_member,o.Allotment_Date from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblOwner o on b.Block_id=o.Block_id on f.Flate_id=o.Flate_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
-            string query = "SELECT b.Block_name,f.Flate_no,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number, o.Total_member,  o.Allotment_Date FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN  tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id;";
+            string query = "SELECT b.Block_name,f.Flate_no,o.Owner_id,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number, o.Total_member,  o.Allotment_Date FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN  tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id;";
             con.Open();
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
@@ -39,5 +39,13 @@ namespace Society_management
             con.Close();
         }
 
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewNotice")
+            {
+                int noticeId = Convert.ToInt32(e.CommandArgument);
+                Response.Redirect("Owner_Membr.aspx?id=" + noticeId);
+            }
+        }
     }
 }
