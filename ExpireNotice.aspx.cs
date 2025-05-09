@@ -38,10 +38,18 @@ namespace Society_management
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                rptExpired.DataSource = dt;
-                rptExpired.DataBind();
+                gvDisplay.DataSource = dt;
+                gvDisplay.DataBind();
             }
         }
 
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewNotice")
+            {
+                int noticeId = Convert.ToInt32(e.CommandArgument);
+                Response.Redirect("Admin_noticeDetails.aspx?id=" + noticeId);
+            }
+        }
     }
 }

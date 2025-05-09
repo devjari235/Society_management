@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AdminDashboard.aspx" />
+    <Content Include="Admin_noticeDetails.aspx" />
     <Content Include="Admin_profile.aspx" />
     <Content Include="A_registration.aspx" />
     <Content Include="Block.aspx" />
@@ -2260,6 +2261,13 @@
     </Compile>
     <Compile Include="AdminDashboard.aspx.designer.cs">
       <DependentUpon>AdminDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin_noticeDetails.aspx.cs">
+      <DependentUpon>Admin_noticeDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin_noticeDetails.aspx.designer.cs">
+      <DependentUpon>Admin_noticeDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin_profile.aspx.cs">
       <DependentUpon>Admin_profile.aspx</DependentUpon>

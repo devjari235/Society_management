@@ -9,7 +9,13 @@
 <!-- Bootstrap Bundle (includes Popper.js for dropdowns) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <style>
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('.table').prepend($('<thead></thead>').append($('.table').find('tr:first'))).dataTable();
+         });
+     </script>
+
+  <%--  <style>
         body {
             background-color: #f4f4f4;
             font-family: 'Segoe UI', sans-serif;
@@ -103,8 +109,9 @@
         .swiper-button-prev {
             left: 8.5%;
         }
-    </style>
+    </style>--%>
 
+   
 
         <style>
  /* Page Title Buttons Container */
@@ -218,7 +225,61 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="swiper-container-wrapper">
+
+ <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </asp:Panel>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowCommand="gvDisplay_RowCommand">
+                    <Columns>
+                        
+                        <asp:TemplateField HeaderText="Title">
+                            <ItemTemplate>
+                              <asp:Label Text='<%#Eval("Title") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Posted Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Expiry Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Importance">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Importance") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Status") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                               <asp:Button ID="btnView" runat="server" Text="View" CommandName="ViewNotice" CommandArgument='<%# Eval("Notice_id") %>' Style="background-color:aquamarine; color:black" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+   <%-- <div class="swiper-container-wrapper">
             <!-- Arrows -->
             <div class="swiper-button-prev"></div>
 
@@ -246,13 +307,13 @@
             </div>
 
             <div class="swiper-button-next"></div>
-        </div>
+        </div>--%>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
+    <%--<script>
         new Swiper(".mySwiper", {
             loop: true,
             slidesPerView: 1,
@@ -273,6 +334,6 @@
                 disableOnInteraction: false
             }
         });
-    </script>
+    </script>--%>
 
 </asp:Content>

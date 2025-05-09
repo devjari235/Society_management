@@ -1,8 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="ExpireNotice.aspx.cs" Inherits="Society_management.ExpireNotice" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-     <style>
-   
+    
+     <script type="text/javascript">
+         $(document).ready(function () {
+             $('.table').prepend($('<thead></thead>').append($('.table').find('tr:first'))).dataTable();
+         });
+     </script>
 
+    <%-- <style>
     .card {
         background: #ffffff;
         border: 1px solid #dee2e6;
@@ -55,7 +60,7 @@
         border-left: 5px solid #dc3545;
     }
 
-</style>
+</style>--%>
 
         <style>
  /* Page Title Buttons Container */
@@ -203,7 +208,60 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="notice-scroller-container">
+            <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </asp:Panel>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowCommand="gvDisplay_RowCommand" >
+                    <Columns>
+                        
+                        <asp:TemplateField HeaderText="Title">
+                            <ItemTemplate>
+                              <asp:Label Text='<%#Eval("Title") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Posted Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Expiry Date">
+                            <ItemTemplate>
+                                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Importance">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Importance") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Status">
+                            <ItemTemplate>
+                                <asp:Label Text='<%#Eval("Status") %>' runat="server"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                               <asp:Button ID="btnView" runat="server" Text="View" CommandName="ViewNotice" CommandArgument='<%# Eval("Notice_id") %>' Style="background-color:aquamarine; color:black" />
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+  <%--  <div class="notice-scroller-container">
     <asp:Repeater ID="rptExpired" runat="server">
                 <ItemTemplate>
                     <div class="card mb-3 border-danger">
@@ -222,7 +280,7 @@
                     </div>
                 </ItemTemplate>
             </asp:Repeater>
-        </div>
+        </div>--%>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
