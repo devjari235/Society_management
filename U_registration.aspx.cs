@@ -74,7 +74,10 @@ namespace Society_management
                             cmdInsert.Parameters.AddWithValue("@gen", gender);
                             cmdInsert.Parameters.AddWithValue("@age", age);
                             cmdInsert.Parameters.AddWithValue("@mstatus", ddlMarital.SelectedValue);
-                            cmdInsert.Parameters.AddWithValue("@photo", "~/Profile/" + filename);
+                            if (!string.IsNullOrEmpty(filename))
+                                cmd.Parameters.AddWithValue("@photo", "~/Profile/" + filename);
+                            else
+                                cmd.Parameters.AddWithValue("@photo", DBNull.Value);
                             cmdInsert.Parameters.AddWithValue("@owner", ownerID);
 
                             conn.Open();
