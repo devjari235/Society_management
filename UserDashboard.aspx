@@ -1,7 +1,119 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User.Master" AutoEventWireup="true" CodeBehind="UserDashboard.aspx.cs" Inherits="Society_management.UserDashboard" %>
-
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+</asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+
+        <!-- Bootstrap & Swiper CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
+    <!-- jQuery (required for Bootstrap 5 dropdown toggle) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap Bundle (includes Popper.js for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container-title {
+            text-align: center;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+
+        /* Outer wrapper prevents overflow of slides */
+        .swiper-container-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            padding: 0 60px; /* spacing for arrows */
+        }
+
+        .swiper {
+            width: 100%;
+            max-width: 900px;
+            overflow: hidden; /* Hide next/prev cards */
+        }
+
+        .swiper-slide {
+            background: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            color: #212529;
+            height: auto;
+        }
+
+        .notice-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+        }
+
+        .text-muted {
+            font-size: 0.85rem;
+        }
+
+        .swiper-pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .swiper-pagination-bullet {
+            background: #adb5bd;
+            opacity: 1;
+            margin: 0 4px;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            color: #0d6efd;
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .swiper-button-next {
+            right: 8.5%;
+        }
+
+        .swiper-button-prev {
+            left: 8.5%;
+        }
+        .swiper-slide:hover{
+            cursor:pointer;
+        }
+      
+    </style>
+
+
+    <%--<style>
         .quick-action-card {
             transition: all 0.3s ease;
             cursor: pointer;
@@ -37,7 +149,8 @@
         .recent-activity-item.notice {
             border-left-color: #ffc107;
         }
-    </style>
+    </style>--%>
+
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
    
@@ -51,8 +164,44 @@
     </button>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
+      <div class="swiper-container-wrapper">
+         <!-- Arrows -->
+         <div class="swiper-button-prev"></div>
+
+         <!-- Swiper -->
+         <div class="swiper mySwiper">
+             <div class="swiper-wrapper">
+                 <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
+                     <ItemTemplate>
+                          
+                         <div class="swiper-slide">
+                            <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" style="all:unset; display:block;">
+                             <div class="notice-title"><%# Eval("Title") %></div>
+                             <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
+                             <span class="badge bg-success"><%# Eval("Status") %></span>
+                             <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
+                             <b><p>Posted By: <%# Eval("name") %></p></b>
+                             <p><%# Eval("Description") %></p>
+                             <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
+                                            Text="📎 View Attachment" Target="_blank"
+                                            CssClass="btn btn-sm btn-outline-secondary mt-2"
+                                            Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
+                                 </asp:LinkButton>
+                         </div>
+                              
+                     </ItemTemplate>
+                 </asp:Repeater>
+             </div>
+             <div class="swiper-pagination"></div>
+         </div>
+
+         <div class="swiper-button-next"></div>
+     </div>
+
+
+
     <%--!-- Stats Cards Row -->--%>
-    <div class="row mb-4">
+   <%-- <div class="row mb-4">
         <div class="col-md-3 mb-3">
             <div class="card stat-card">
                 <div class="card-body">
@@ -134,10 +283,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
     
     <!-- Quick Actions Row -->
-    <div class="row mb-4">
+   <%-- <div class="row mb-4">
         <div class="col-12 mb-3">
             <h5 class="mb-3">Quick Actions</h5>
         </div>
@@ -181,10 +330,10 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>--%>
     
     <!-- Recent Activity and Notices Row -->
-    <div class="row">
+   <%-- <div class="row">
         <!-- Recent Activity Column -->
         <div class="col-md-8 mb-4">
             <div class="card">
@@ -255,7 +404,7 @@
             </div>
         </div>
     </div>
-    
+    --%>
     <!-- Toast Container for Notifications -->
     <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999"></div>
 </asp:Content>
@@ -273,23 +422,34 @@
             loadDashboardData();
         });
         
-        function loadDashboardData() {
-            // You can implement AJAX calls here to refresh dashboard data
-            // Example:
-            /*
-            $.ajax({
-                url: 'DashboardService.asmx/GetDashboardStats',
-                type: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                success: function(response) {
-                    // Update dashboard elements with new data
-                },
-                error: function(xhr, status, error) {
-                    showToast('danger', 'Error loading dashboard data');
-                }
-            });
-            */
-        }
+       
      </script>
+
+    <!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    new Swiper(".mySwiper", {
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 30,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+            renderBullet: function (index, className) {
+                return '<span class="' + className + '">' + (index + 1) + "</span>";
+            }
+        },
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev"
+        },
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false
+        }
+    });
+</script>
+
+
 </asp:Content>
