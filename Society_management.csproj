@@ -2229,6 +2229,7 @@
     <Content Include="MyFlat.aspx" />
     <Content Include="NoticeBoard.aspx" />
     <Content Include="NoticeDashboard.aspx" />
+    <Content Include="NoticeDetails.aspx" />
     <Content Include="Notification.aspx" />
     <Content Include="Owner.aspx" />
     <Content Include="R_Society.aspx" />
@@ -2378,6 +2379,13 @@
     </Compile>
     <Compile Include="NoticeDashboard.aspx.designer.cs">
       <DependentUpon>NoticeDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="NoticeDetails.aspx.cs">
+      <DependentUpon>NoticeDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="NoticeDetails.aspx.designer.cs">
+      <DependentUpon>NoticeDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Notification.aspx.cs">
       <DependentUpon>Notification.aspx</DependentUpon>
