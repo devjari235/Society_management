@@ -39,6 +39,12 @@ namespace Society_management
                     string inputEmail = txtEmail.Text.Trim();
                     string inputPhone = txtPhone.Text.Trim();
                     string inputName = txtName.Text.Trim();
+                    if (IsUserAlreadyRegistered(inputEmail, inputPhone))
+                    {
+                        reader.Close();
+                        ShowAlreadyRegisteredAlert();
+                        return false;
+                    }
 
                     if (inputEmail.Equals(dbEmail, StringComparison.OrdinalIgnoreCase) &&
                         inputPhone.Equals(dbPhone) &&
@@ -77,6 +83,7 @@ namespace Society_management
 
                         Response.Redirect("U_login.aspx");
                         return true;
+
                     }
                 }
 
@@ -157,6 +164,13 @@ namespace Society_management
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
+            string inputEmail = txtEmail.Text.Trim();
+            string inputPhone = txtPhone.Text.Trim();
+            if (IsUserAlreadyRegistered(inputEmail, inputPhone))
+            {
+                ShowAlreadyRegisteredAlert();
+                return;
+            }
             bool registered = RegisterFromOwner() || RegisterFromMember();
 
             if (!registered)
@@ -174,5 +188,39 @@ namespace Society_management
                 ClientScript.RegisterStartupScript(this.GetType(), "RegisterError", script);
             }
         }
+        private bool IsUserAlreadyRegistered(string email, string phone)
+        {
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                string query = "SELECT COUNT(*) FROM tblUser WHERE Email = @Email OR Phone_no = @Phone";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@Email", email);
+                cmd.Parameters.AddWithValue("@Phone", phone);
+
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+        private void ShowAlreadyRegisteredAlert()
+        {
+            string script = @"
+            <script>
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already Registered',
+                    text: 'You are already registered. Please login.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Go to Login'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'U_login.aspx';
+                    }
+                });
+            </script>";
+            ClientScript.RegisterStartupScript(this.GetType(), "AlreadyRegistered", script);
+        }
+
+
     }
 }
