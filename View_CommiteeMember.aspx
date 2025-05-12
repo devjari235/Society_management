@@ -49,7 +49,7 @@ $(document).ready(function () {
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div class="create-notice-container">
         <a href="CommiteeMember.aspx" class="btn-create-notice">
-            <i class="fas fa-plus-circle"></i> Create Notice
+            <i class="fas fa-plus-circle"></i> Create Committee
         </a>
     </div>
 </asp:Content>
