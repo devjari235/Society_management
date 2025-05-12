@@ -32,6 +32,13 @@
         width: 80%;
         background-color: #fff;
     }
+    #imgPhoto{
+        height:150px;
+        width:150px;
+        border-radius:50%;
+        display:flex;
+        justify-content:center;
+    }
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -42,11 +49,11 @@
         <div class="Card">
     <h2>Committee Member Details</h2>
     <asp:Panel ID="pnlNotice" runat="server" Visible="false">
-         <asp:Image ID="imgPhoto" runat="server" 
-     ClientIDMode="Static"
-     Height="210px" 
-     AlternateText="Profile Picture"
-     CssClass="image11"/>
+        <center>
+        <div  CssClass="image11">
+        <asp:Image ID="imgPhoto" runat="server" ClientIDMode="Static"/>
+            </div>
+            </center>
         <table>
             <tr><th>Committee Member Name:</th><td><asp:Label ID="lblname" runat="server" /></td></tr>
             <tr><th>Designation</th><td><asp:Label ID="lbldes" runat="server" /></td></tr>

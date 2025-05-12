@@ -28,6 +28,7 @@ namespace Society_management
                     if (int.TryParse(Request.QueryString["id"], out noticeId))
                     {
                         LoadNoticeDetails(noticeId);
+                        bindImage(noticeId);
                     }
                    
                 }
@@ -55,8 +56,7 @@ namespace Society_management
     c.Flat_no,
     c.Email,
     c.Phone_no,
-    u.User_name,
-    u.Photo
+    u.User_name
 FROM tblCommitteeMember c
 JOIN tblUser u ON u.User_id = c.User_id
 JOIN tblOwner o ON o.Owner_id = u.Owner_id
@@ -85,21 +85,39 @@ WHERE c.Committee_id = @id";
                     pnlNotice.Visible = true;
                 }
             
-
-                if (dr.Read())
+            }
+        }
+        public void bindImage(int id)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            SqlConnection conn = new SqlConnection(connStr);
+            conn.Open();
+            string query = @"SELECT 
+                            u.Photo
+                            FROM tblCommitteeMember c
+                            JOIN tblUser u ON u.User_id = c.User_id
+                            JOIN tblOwner o ON o.Owner_id = u.Owner_id
+                            JOIN tblBlock b ON b.Block_id = o.Block_id
+                            JOIN tblSociety s ON s.Society_id = b.Society_id
+                            JOIN tblAdmin a ON s.admin_id = a.admin_id
+                            WHERE c.Committee_id = @id";
+            SqlCommand cmd=new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                img = reader["Photo"].ToString();
+                if (!string.IsNullOrEmpty(img))
                 {
-                    img = dr["Photo"].ToString();
-                    Response.Write(img);
-                    if (!string.IsNullOrEmpty(img))
-                    {
-                        imgPhoto.ImageUrl = img;
-                    }
-                    else
-                    {
-                        imgPhoto.ImageUrl = "~/Profile/Default.png";
-                    }
+                    imgPhoto.ImageUrl = img;
+                }
+                else
+                {
+                    imgPhoto.ImageUrl = "~/Profile/Default.png";
                 }
             }
+            conn.Close();
+
         }
     }
 }
