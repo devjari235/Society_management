@@ -19,6 +19,20 @@
         font-weight: 900;
         font-size: 14px;
     }
+    .custom-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.custom-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+   #btnUpdate{
+       margin-top:10px;
+   }
 
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -65,17 +79,22 @@
                                 ControlToValidate="txtCpass" ControlToCompare="txtnewpass" 
                                 ErrorMessage="Passwords do not match" Display="Dynamic"></asp:CompareValidator>
                         </div>
-
+                        <div class="text-start mt-2">
+                            <a href="EmailSend.aspx" class="custom-link"><b>Try another way</b></a>
+                            <br />
+                            <br />
+                        </div>
                         <div class="d-grid gap-2">
                             <asp:Button class="btn btn-primary btn-lg" ID="btnUpdate" runat="server" Text="Update Password" OnClick="btnUpdate_Click" />
-                            <asp:HyperLink ID="hlCancel" runat="server" CssClass="btn btn-outline-secondary btn-lg" NavigateUrl="~/Dashboard.aspx">Cancel</asp:HyperLink>
+                            <asp:HyperLink ID="hlCancel" runat="server" CssClass="btn btn-outline-secondary btn-lg" NavigateUrl="AdminDashboard.aspx">Cancel</asp:HyperLink>
                         </div>
-
+                        
                         <div class="mt-3 text-center">
                             <asp:Label ID="lblMessage" runat="server" CssClass="text-danger" Visible="false"></asp:Label>
                             <asp:Label ID="lblSuccess" runat="server" CssClass="text-success" Visible="false"></asp:Label>
                         </div>
                     </div>
+                    
                 </div>
             </div>
         </div>
