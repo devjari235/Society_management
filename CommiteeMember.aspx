@@ -74,11 +74,49 @@
         margin-bottom: 15px;
     }
 }
+.gradient-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color:darkred;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    background: linear-gradient(to right, #FF7E5F, #FEB47B);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin: 5px 0;
+}
+
+.gradient-btn:hover {
+    color:black;
+    text-decoration:none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+.gradient-btn:active {
+    transform: translateY(0);
+}
+
+.gradient-btn i {
+    margin-right: 8px;
+}
     </style>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+   <div>
+       <a href="View_CommiteeMember.aspx" class="gradient-btn"><b><i class="bi bi-eye-fill"></i> View Committee Member</b></a>
+    </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container mt-4">

@@ -23,7 +23,6 @@ namespace Society_management
             }
         }
 
-            string connectionString = "MyDb";
 
 
         public void BindUsers()
@@ -32,7 +31,7 @@ namespace Society_management
             con.Open();
             string Query = @"SELECT User_name, User_id 
                             FROM tblUser 
-                            WHERE User_id NOT IN (SELECT User_id FROM tblCommitteeMember) 
+                            WHERE User_id NOT IN (SELECT User_id FROM tblCommitteeMember where Status!='Past') 
                             ORDER BY User_name";
             SqlDataAdapter sda = new SqlDataAdapter(Query, con);
             DataTable dt = new DataTable();
@@ -102,9 +101,9 @@ namespace Society_management
             string status;
             DateTime today = DateTime.Today;
             if (today >= fromDate && today <= toDate)
-                status = "Live";
+                status = "Current";
             else
-                status = "Expired";
+                status = "Past";
 
             // Connection string from Web.config
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
@@ -117,8 +116,8 @@ namespace Society_management
                 string updateStatusQuery = @"
             UPDATE tblCommitteeMember
             SET Status = CASE 
-                WHEN CAST(GETDATE() AS DATE)BETWEEN From_Date AND To_date THEN 'Live'
-                WHEN CAST(GETDATE() AS DATE) > To_date THEN 'Expired'
+                WHEN CAST(GETDATE() AS DATE)BETWEEN From_Date AND To_date THEN 'Current'
+                WHEN CAST(GETDATE() AS DATE) > To_date THEN 'Past'
                 ELSE Status
             END";
 
@@ -151,6 +150,16 @@ namespace Society_management
                 }
 
                 conn.Close();
+                string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Committee Member Add successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'CommiteeMember.aspx';
+            });";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
             }
 
         }
