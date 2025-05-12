@@ -103,6 +103,10 @@
 .gradient-btn i {
     margin-right: 8px;
 }
+ .create-notice-container{
+     display:flex;
+     justify-content:flex-end;
+ }
     </style>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -114,7 +118,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-   <div>
+   <div class="create-notice-container">
        <a href="View_CommiteeMember.aspx" class="gradient-btn"><b><i class="bi bi-eye-fill"></i> View Committee Member</b></a>
     </div>
 </asp:Content>
