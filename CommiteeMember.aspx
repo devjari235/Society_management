@@ -121,6 +121,7 @@
                             <label for="ddlRole" class="form-label">Role</label>
                             <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-select" required="required">
                                 <asp:ListItem Value="">-- Select Role --</asp:ListItem>
+                                <asp:ListItem>Manage All</asp:ListItem>
                                 <asp:ListItem>Maintenance Handling</asp:ListItem>
                                 <asp:ListItem>Security Management</asp:ListItem>
                                 <asp:ListItem>Event Planning</asp:ListItem>
@@ -129,7 +130,6 @@
                                 <asp:ListItem>Communication &amp; Notices</asp:ListItem>
                                 <asp:ListItem>Cleaning &amp; Sanitation</asp:ListItem>
                                 <asp:ListItem>Facility Management </asp:ListItem>
-                                <asp:ListItem>Manage All</asp:ListItem>
                             </asp:DropDownList>
                         </div>
                     </div>

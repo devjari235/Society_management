@@ -30,7 +30,10 @@ namespace Society_management
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Select User_name,User_id from tblUser Order by User_name";
+            string Query = @"SELECT User_name, User_id 
+                            FROM tblUser 
+                            WHERE User_id NOT IN (SELECT User_id FROM tblCommitteeMember) 
+                            ORDER BY User_name";
             SqlDataAdapter sda = new SqlDataAdapter(Query, con);
             DataTable dt = new DataTable();
             sda.Fill(dt);
