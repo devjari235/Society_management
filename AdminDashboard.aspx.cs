@@ -41,7 +41,8 @@ namespace Society_management
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string query = "SELECT COUNT(*) \r\nFROM tblBlock b \r\nJOIN tblFlat f ON b.Block_id = f.Block_id \r\nJOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id \r\nJOIN tblSociety s ON s.Society_id = b.Society_id \r\nWHERE s.admin_id = @id";
+            // string query = "SELECT COUNT(*) \r\nFROM tblBlock b \r\nJOIN tblFlat f ON b.Block_id = f.Block_id \r\nJOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id \r\nJOIN tblSociety s ON s.Society_id = b.Society_id \r\nWHERE s.admin_id = @id";
+            string query = "SELECT COUNT(*)\r\nFROM tblBlock b\r\nJOIN tblFlat f ON b.Block_id = f.Block_id\r\nJOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nJOIN tblUser u ON o.Owner_id = u.Owner_id WHERE s.admin_id = @id;\r\n";
             SqlCommand cmd=new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
             return Convert.ToInt32(cmd.ExecuteScalar());

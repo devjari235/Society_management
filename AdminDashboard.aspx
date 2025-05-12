@@ -88,7 +88,7 @@
                         <div class="card-icon">
                             <i class="fas fa-users"></i>
                         </div>
-                        <div class="card-title">TOTAL RESIDENTS</div>
+                        <div class="card-title">TOTAL MEMBERS</div>
                         <div class="card-value"><asp:Label ID="lblTotalResidents" runat="server" Text="0" /></div>
                         <a href="View_Owner.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
