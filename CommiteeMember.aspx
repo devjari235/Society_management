@@ -87,12 +87,11 @@
                     <h2 class="text-center">Committee Member Registration</h2>
                 </div>
                 <div class="card-body">
-                    <asp:HiddenField ID="hdnMemberId" runat="server" />
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="ddlUser" class="form-label">User</label>
-                            <asp:DropDownList ID="ddlUser" runat="server" CssClass="form-select" DataTextField="UserName" DataValueField="User_id" required="required"></asp:DropDownList>
+                            <label for="ddlUser" class="form-label">Comimitee Member Name</label>
+                            <asp:DropDownList ID="ddlUser" runat="server" CssClass="form-select" DataTextField="UserName" DataValueField="User_id" required="required" AutoPostBack="True" OnSelectedIndexChanged="ddlUser_SelectedIndexChanged"></asp:DropDownList>
                         </div>
                         <div class="col-md-6">
                             <label for="txtDesignation" class="form-label">Designation</label>
@@ -112,11 +111,11 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="txtBlockName" class="form-label">Block Name</label>
-                            <asp:TextBox ID="txtBlockName" runat="server" CssClass="form-control" required="required"></asp:TextBox>
+                            <asp:TextBox ID="txtBlockName" runat="server" CssClass="form-control" required="required" Enabled="False" ReadOnly="True"></asp:TextBox>
                         </div>
                         <div class="col-md-4">
                             <label for="txtFlatNo" class="form-label">Flat No</label>
-                            <asp:TextBox ID="txtFlatNo" runat="server" CssClass="form-control" required="required"></asp:TextBox>
+                            <asp:TextBox ID="txtFlatNo" runat="server" CssClass="form-control" required="required" Enabled="False" ReadOnly="True"></asp:TextBox>
                         </div>
                         <div class="col-md-4">
                             <label for="ddlRole" class="form-label">Role</label>
@@ -127,9 +126,7 @@
                                 <asp:ListItem>Event Planning</asp:ListItem>
                                 <asp:ListItem>Finance &amp; Accounting</asp:ListItem>
                                 <asp:ListItem>Parking Allocation</asp:ListItem>
-                                <asp:ListItem>Communication &amp; Notices
-
-</asp:ListItem>
+                                <asp:ListItem>Communication &amp; Notices</asp:ListItem>
                                 <asp:ListItem>Cleaning &amp; Sanitation</asp:ListItem>
                                 <asp:ListItem>Facility Management </asp:ListItem>
                                 <asp:ListItem>Manage All</asp:ListItem>
@@ -140,11 +137,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="txtEmail" class="form-label">Email</label>
-                            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" required="required"></asp:TextBox>
+                            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" required="required" Enabled="False" ReadOnly="True"></asp:TextBox>
                         </div>
                         <div class="col-md-6">
                             <label for="txtContactNo" class="form-label">Contact No</label>
-                            <asp:TextBox ID="txtContactNo" runat="server" CssClass="form-control" required="required"></asp:TextBox>
+                            <asp:TextBox ID="txtContactNo" runat="server" CssClass="form-control" required="required" Enabled="False" ReadOnly="True"></asp:TextBox>
                         </div>
                     </div>
                     
