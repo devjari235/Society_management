@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Net.Mail;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Xml.Linq;
 
 namespace Society_management
 {
     public partial class Committee_Details : System.Web.UI.Page
     {
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
+           
             if (!IsPostBack)
             {
                 if (Request.QueryString["id"] != null)
@@ -27,7 +33,7 @@ namespace Society_management
                 }
             }
         }
-
+        string img;
         private void LoadNoticeDetails(int id)
         {
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
@@ -49,7 +55,8 @@ namespace Society_management
     c.Flat_no,
     c.Email,
     c.Phone_no,
-    u.User_name 
+    u.User_name,
+    u.Photo
 FROM tblCommitteeMember c
 JOIN tblUser u ON u.User_id = c.User_id
 JOIN tblOwner o ON o.Owner_id = u.Owner_id
@@ -77,8 +84,22 @@ WHERE c.Committee_id = @id";
                     lblStatus.Text = dr["Status"].ToString();
                     pnlNotice.Visible = true;
                 }
+            
+
+                if (dr.Read())
+                {
+                    img = dr["Photo"].ToString();
+                    Response.Write(img);
+                    if (!string.IsNullOrEmpty(img))
+                    {
+                        imgPhoto.ImageUrl = img;
+                    }
+                    else
+                    {
+                        imgPhoto.ImageUrl = "~/Profile/Default.png";
+                    }
+                }
             }
         }
-
     }
 }

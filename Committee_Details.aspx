@@ -40,8 +40,13 @@
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
         <div class="Card">
-    <h2>Notice Details</h2>
+    <h2>Committee Member Details</h2>
     <asp:Panel ID="pnlNotice" runat="server" Visible="false">
+         <asp:Image ID="imgPhoto" runat="server" 
+     ClientIDMode="Static"
+     Height="210px" 
+     AlternateText="Profile Picture"
+     CssClass="image11"/>
         <table>
             <tr><th>Committee Member Name:</th><td><asp:Label ID="lblname" runat="server" /></td></tr>
             <tr><th>Designation</th><td><asp:Label ID="lbldes" runat="server" /></td></tr>
