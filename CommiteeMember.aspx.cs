@@ -49,30 +49,5 @@ namespace Society_management
             {
                
             }
-
-            protected void gvCommitteeMembers_SelectedIndexChanged(object sender, EventArgs e)
-            {
-               
-            }
-
-            protected void btnDelete_Click(object sender, EventArgs e)
-            {
-               
-            }
-
-            protected void btnCancel_Click(object sender, EventArgs e)
-            {
-                
-            }
-
-            
-
-            protected void gvCommitteeMembers_PageIndexChanging(object sender, System.Web.UI.WebControls.GridViewPageEventArgs e)
-            {
-                
-                
-            }
-
-            
         }
     }
