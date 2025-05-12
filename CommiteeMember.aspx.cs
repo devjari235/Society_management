@@ -85,7 +85,71 @@ namespace Society_management
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-               
+            string user = ddlUser.SelectedValue;
+            string blockName = txtBlockName.Text;
+            string flatNo = txtFlatNo.Text;
+            string email = txtEmail.Text;
+            string phoneNo = txtContactNo.Text;
+            string designation = ddlDesignation.SelectedItem.Text;
+            DateTime fromDate = Convert.ToDateTime(txtFromDate.Text).Date;
+            DateTime toDate = Convert.ToDateTime(txtToDate.Text).Date;
+            string role = ddlRole.SelectedValue;
+
+            // Determine current status based on date
+            string status;
+            DateTime today = DateTime.Today;
+            if (today >= fromDate && today <= toDate)
+                status = "Live";
+            else
+                status = "Expired";
+
+            // Connection string from Web.config
+            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                conn.Open();
+
+                // First: Optional - Update all statuses based on current date
+                string updateStatusQuery = @"
+            UPDATE tblCommitteeMember
+            SET Status = CASE 
+                WHEN CAST(GETDATE() AS DATE)BETWEEN From_Date AND To_date THEN 'Live'
+                WHEN CAST(GETDATE() AS DATE) > To_date THEN 'Expired'
+                ELSE Status
+            END";
+
+                using (SqlCommand updateCmd = new SqlCommand(updateStatusQuery, conn))
+                {
+                    updateCmd.ExecuteNonQuery();
+                }
+
+                // Second: Insert the new committee member
+                string insertQuery = @"
+            INSERT INTO tblCommitteeMember 
+            (User_id, Block_name, Flat_no, Email, Phone_no, Designation, From_Date, To_date, Role, Status) 
+            VALUES 
+            (@User_id, @Block_name, @Flat_no, @Email, @Phone_no, @Designation, @From_Date, @To_date, @Role, @Status)";
+
+                using (SqlCommand insertCmd = new SqlCommand(insertQuery, conn))
+                {
+                    insertCmd.Parameters.AddWithValue("@User_id", user);
+                    insertCmd.Parameters.AddWithValue("@Block_name", blockName);
+                    insertCmd.Parameters.AddWithValue("@Flat_no", flatNo);
+                    insertCmd.Parameters.AddWithValue("@Email", email);
+                    insertCmd.Parameters.AddWithValue("@Phone_no", phoneNo);
+                    insertCmd.Parameters.AddWithValue("@Designation", designation);
+                    insertCmd.Parameters.AddWithValue("@From_Date", fromDate);
+                    insertCmd.Parameters.AddWithValue("@To_date", toDate);
+                    insertCmd.Parameters.AddWithValue("@Role", role);
+                    insertCmd.Parameters.AddWithValue("@Status", status);
+
+                    insertCmd.ExecuteNonQuery();
+                }
+
+                conn.Close();
+            }
+
         }
 
         protected void ddlUser_SelectedIndexChanged(object sender, EventArgs e)
