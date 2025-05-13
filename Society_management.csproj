@@ -111,7 +111,6 @@
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
     <Content Include="EmailSend.aspx" />
-    <Content Include="EmailSendUser.aspx" />
     <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Family_member.aspx" />
@@ -2359,13 +2358,6 @@
     </Compile>
     <Compile Include="EmailSend.aspx.designer.cs">
       <DependentUpon>EmailSend.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="EmailSendUser.aspx.cs">
-      <DependentUpon>EmailSendUser.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="EmailSendUser.aspx.designer.cs">
-      <DependentUpon>EmailSendUser.aspx</DependentUpon>
     </Compile>
     <Compile Include="Events.aspx.cs">
       <DependentUpon>Events.aspx</DependentUpon>

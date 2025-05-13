@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -14,11 +15,13 @@ namespace Society_management
         {
 
         }
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string Query = "Update tblAdmin set Password=@pass where admin_id=@id";
+            string Query = "Update tblUser set Password=@pass where User_id=@id";
             SqlCommand cmd = new SqlCommand(Query, con);
             cmd.Parameters.AddWithValue("@pass", txtnewpass.Text);
             cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
@@ -32,7 +35,7 @@ namespace Society_management
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: 'OK'
                 }).then(function() {
-                window.location = 'Login.aspx';
+                window.location = 'U_login.aspx';
             });
             </script>";
             ClientScript.RegisterStartupScript(this.GetType(), "UpdateSuccess", successScript);
