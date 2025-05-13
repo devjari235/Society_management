@@ -285,7 +285,7 @@
                                     <asp:TextBox ID="txtmarite" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                          <%--  <div class="form-group row">
                                 <asp:Label id="lblDesi" class="col-sm-3 col-form-label form-label" runat="server">Designation</asp:Label>
                                 <div class="col-sm-9">
                                     <asp:TextBox ID="txtDesi" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
@@ -294,6 +294,18 @@
                             <div class="form-group row">
                                 <asp:Label id="lblRole" class="col-sm-3 col-form-label form-label" runat="server">Role</asp:Label>
                                 
+                                <div class="col-sm-9">
+                                    <asp:TextBox ID="txtRole" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                </div>
+                            </div>--%>
+                            <div class="form-group row">
+                                <asp:Label ID="lblDesi" runat="server" Text="Designation" class="col-sm-3 col-form-label form-label"></asp:Label>
+                                 <div class="col-sm-9">
+                                     <asp:TextBox ID="txtDesi" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                 </div>
+                            </div>
+                            <div class="form-group row">
+                                <asp:Label ID="lblRole" runat="server" Text="Role" class="col-sm-3 col-form-label form-label"></asp:Label>
                                 <div class="col-sm-9">
                                     <asp:TextBox ID="txtRole" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
