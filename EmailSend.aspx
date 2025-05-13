@@ -106,7 +106,7 @@
         
         <div class="form-group">
             <asp:Label ID="lblEmail" runat="server" Text="Email Address:" AssociatedControlID="txtEmail"></asp:Label>
-            <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" placeholder="Enter your email address"></asp:TextBox>
+            <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" placeholder="Enter your email address" AutoCompleteType="Disabled"></asp:TextBox>
         </div>
 
         <asp:Button ID="btnSendOtp" runat="server" Text="Send OTP" OnClick="btnSendOtp_Click" CssClass="btn" />
