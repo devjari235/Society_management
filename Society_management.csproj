@@ -2241,6 +2241,7 @@
     <Content Include="R_Society.aspx" />
     <Content Include="Terms.aspx" />
     <Content Include="UserDashboard.aspx" />
+    <Content Include="User_CommitteeDetails.aspx" />
     <Content Include="User_pass_change.aspx" />
     <Content Include="User_profile.aspx" />
     <Content Include="U_login.aspx" />
@@ -2479,6 +2480,13 @@
     </Compile>
     <Compile Include="UserDashboard.aspx.designer.cs">
       <DependentUpon>UserDashboard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User_CommitteeDetails.aspx.cs">
+      <DependentUpon>User_CommitteeDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User_CommitteeDetails.aspx.designer.cs">
+      <DependentUpon>User_CommitteeDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="User_pass_change.aspx.cs">
       <DependentUpon>User_pass_change.aspx</DependentUpon>

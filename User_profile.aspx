@@ -120,6 +120,9 @@
         .card {
             width: 110%;
         }
+        .form-group{
+            margin-top:-5px;
+        }
     </style>
     <script>
         function previewFile() {

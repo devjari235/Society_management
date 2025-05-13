@@ -274,6 +274,12 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="User_CommitteeDetails.aspx">
+                                    <i class="fas fa-users"></i>
+                                    <span class="nav-link-text">Committee Member</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="MyComplaints.aspx">
                                     <i class="fas fa-exclamation-circle me-2"></i>
                                     <span class="nav-link-text">My Complaints</span>
