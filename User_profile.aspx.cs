@@ -19,6 +19,7 @@ namespace Society_management
         protected void Page_Load(object sender, EventArgs e)
         {
             int userId = Convert.ToInt32(Session["U_id"]);
+            Response.Write(IsCommitteeMember(userId));
             if (!IsPostBack)
             {
                 BindDetails();
