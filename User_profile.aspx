@@ -99,15 +99,7 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        .card{
-
-            width:130%;
-            height:10%;
-            display:flex;
-            right:125px;
-            justify-content:center;
-            text-align:center;
-        }
+       w
         .form-group{
             margin-top:-5px;
         }
