@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -13,11 +14,17 @@ namespace Society_management
     public partial class User_profile : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            int userId = Convert.ToInt32(Session["U_id"]);
+            Response.Write(IsCommitteeMember(userId));
             if (!IsPostBack)
             {
                 BindDetails();
+                bindRole();
+                IsCommitteeMember(userId);
             }
             //if (Request.Form["__EVENTTARGET"] == profileImageUpload.ClientID && profileImageUpload.HasFile)
             //{
@@ -133,6 +140,55 @@ namespace Society_management
                 });
             </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
+        }
+        public bool IsCommitteeMember(int userId)
+        {
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                string query = "SELECT COUNT(*) FROM tblCommitteeMember WHERE User_id = @UserId AND Status = 'Current'";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
+        string Desi;
+        string Role;
+        public void bindRole()
+        {
+            int userId = Convert.ToInt32(Session["U_id"]);
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Select c.Designation,c.Role from tblCommitteeMember c join tblUser u on c.User_id=u.User_id where u.User_id=@id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+            if (reader.Read())
+            {
+                Desi = reader["Designation"].ToString();
+                Role = reader["Role"].ToString();
+            }
+            if (IsCommitteeMember(userId) == true)
+            {
+                txtDesi.Text = Desi;
+                txtDesi.ReadOnly = true;
+                txtDesi.Visible = true;
+                lblDesi.Visible=true;
+                txtRole.Text = Role;
+                txtRole.ReadOnly = true;
+                txtRole.Visible = true;
+                lblRole.Visible=true;
+            }
+            else
+            {
+                txtDesi.Visible = false;
+                txtRole.Visible = false;
+                lblDesi.Visible = false;
+                lblRole.Visible = false;
+            }
         }
     }
 
