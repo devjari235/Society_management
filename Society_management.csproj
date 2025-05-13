@@ -101,6 +101,7 @@
     <Content Include="bootstrap\js\jquery-3.5.1.slim.min.js" />
     <Content Include="bootstrap\js\popper.min.js" />
     <Content Include="ChangePassOtp.aspx" />
+    <Content Include="ChangePassOtpUser.aspx" />
     <Content Include="ChangePassword.aspx" />
     <Content Include="CommiteeMember.aspx" />
     <Content Include="Committee_Details.aspx" />
@@ -110,6 +111,7 @@
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
     <Content Include="EmailSend.aspx" />
+    <Content Include="EmailSendUser.aspx" />
     <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Family_member.aspx" />
@@ -2247,6 +2249,7 @@
     <Content Include="U_login.aspx" />
     <Content Include="U_registration.aspx" />
     <Content Include="VerifyOtp.aspx" />
+    <Content Include="VerifyOtpUser.aspx" />
     <Content Include="View_Allnotice.aspx" />
     <Content Include="View_CommiteeMember.aspx" />
     <Content Include="View_Document.aspx" />
@@ -2305,6 +2308,13 @@
     <Compile Include="ChangePassOtp.aspx.designer.cs">
       <DependentUpon>ChangePassOtp.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ChangePassOtpUser.aspx.cs">
+      <DependentUpon>ChangePassOtpUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ChangePassOtpUser.aspx.designer.cs">
+      <DependentUpon>ChangePassOtpUser.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ChangePassword.aspx.cs">
       <DependentUpon>ChangePassword.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2346,6 +2356,13 @@
     </Compile>
     <Compile Include="EmailSend.aspx.designer.cs">
       <DependentUpon>EmailSend.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EmailSendUser.aspx.cs">
+      <DependentUpon>EmailSendUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EmailSendUser.aspx.designer.cs">
+      <DependentUpon>EmailSendUser.aspx</DependentUpon>
     </Compile>
     <Compile Include="Events.aspx.cs">
       <DependentUpon>Events.aspx</DependentUpon>
@@ -2522,6 +2539,13 @@
     </Compile>
     <Compile Include="VerifyOtp.aspx.designer.cs">
       <DependentUpon>VerifyOtp.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VerifyOtpUser.aspx.cs">
+      <DependentUpon>VerifyOtpUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VerifyOtpUser.aspx.designer.cs">
+      <DependentUpon>VerifyOtpUser.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_Allnotice.aspx.cs">
       <DependentUpon>View_Allnotice.aspx</DependentUpon>

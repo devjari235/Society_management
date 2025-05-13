@@ -42,7 +42,7 @@ namespace Society_management
 
         protected void btnSendOtp_Click(object sender, EventArgs e)
         {
-            BindEmail(); // 🔁 Re-bind email for this postback
+            BindEmail();
 
             string toEmail = txtEmail.Text.Trim();
             string otp = new Random().Next(100000, 999999).ToString();

@@ -1,12 +1,11 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ChangePassOtp.aspx.cs" Inherits="Society_management.ChangePassOtp" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ChangePassOtpUser.aspx.cs" Inherits="Society_management.ChangePassOtpUser" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <title></title>
-    <style>
+        <style>
     .asp-validation {
     color: firebrick;
     font-size: 14px;
@@ -30,13 +29,14 @@
     }
 
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
 </head>
 <body>
-<form method="post" runat="server"> 
-    <div class="container" style="margin-top: 7%; margin-bottom: 5%">
+    <form id="form1" runat="server">
+            <div class="container" style="margin-top: 7%; margin-bottom: 5%">
      <div class="row justify-content-center">
          <div class="col-md-8 col-lg-6">
              <div class="card shadow">
@@ -84,6 +84,6 @@
          </div>
      </div>
  </div>
-</form>
+    </form>
 </body>
 </html>

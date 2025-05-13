@@ -21,7 +21,17 @@
         font-weight: 900;
         font-size: 14px;
     }
+        .custom-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
 
+.custom-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
@@ -69,6 +79,11 @@
                                 ControlToValidate="txtCpass" ControlToCompare="txtnewpass" 
                                 ErrorMessage="Passwords do not match" Display="Dynamic"></asp:CompareValidator>
                         </div>
+                         <div class="text-start mt-2">
+                             <a href="U_EmailSend.aspx" class="custom-link"><b>Try another way</b></a>
+                             <br />
+                             <br />
+                         </div>
 
                         <div class="d-grid gap-2">
                             <asp:Button class="btn btn-primary btn-lg" ID="btnUpdate" runat="server" Text="Update Password" OnClick="btnUpdate_Click" />
