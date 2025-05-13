@@ -1,12 +1,12 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_CommiteeMember.aspx.cs" Inherits="Society_management.View_CommiteeMember" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Past_Committee.aspx.cs" Inherits="Society_management.Past_Committee" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <script type="text/javascript">
+            <script type="text/javascript">
 
 $(document).ready(function () {
     $(".table").prepend($("<thead></thead>").append($(this).find("tr:first"))).dataTable();
 }) 
 
-        </script>
+            </script>
             <style>
  /* Page Title Buttons Container */
 .page-title-buttons {
@@ -53,7 +53,7 @@ $(document).ready(function () {
 }
 
 .btn-Dashboard {
-    background: linear-gradient(135deg, #0575E6 0%, #021B79 100%);
+    background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
 }
 
 .btn-Expire{
@@ -93,25 +93,23 @@ $(document).ready(function () {
     }
 }
     </style>
-       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<link href="fontawesome\css\all.css" rel="stylesheet" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-    <div class="page-title-buttons">
-          <div class="button-group-left">
-      <a href="Past_Committee.aspx" class="dashboard-btn btn-Dashboard">
-          <i class="bi bi-hourglass-bottom"></i>Past Committee
-      </a>
-              </div>
-        <a href="CommiteeMember.aspx" class="dashboard-btn btn-create">
-            <i class="fas fa-plus-circle"></i> Create Committee
-        </a>
-    </div>
+     <div class="page-title-buttons">
+       <div class="button-group-left">
+   <a href="View_CommiteeMember.aspx" class="dashboard-btn btn-Dashboard">
+        <i class="fas fa-arrow-left"></i>Back to Details
+   </a>
+           </div>
+     <a href="CommiteeMember.aspx" class="dashboard-btn btn-create">
+         <i class="fas fa-plus-circle"></i> Create Committee
+     </a>
+ </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-        <div class="container">
+            <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
