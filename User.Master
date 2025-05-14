@@ -279,6 +279,12 @@
                                     <span class="nav-link-text">Committee Member</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="3">
+                                    <i class="bi bi-envelope-fill"></i>
+                                    <span class="nav-link-text">Notice Board</span>
+                                </a>
+                            </li>
                             <%--<li class="nav-item">
                                 <a class="nav-link" href="MyComplaints.aspx">
                                     <i class="fas fa-exclamation-circle me-2"></i>
