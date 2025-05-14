@@ -181,9 +181,9 @@
                     </asp:CheckBoxList>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Send Via(Optonal)</label>
                     <asp:CheckBoxList ID="cblemail" runat="server" RepeatDirection="Horizontal" CssClass="custom-checkbox-list">
-                        <asp:ListItem>email</asp:ListItem>
+                        <asp:ListItem>Email</asp:ListItem>
                     </asp:CheckBoxList>
                 </div>
                 <div class="row">

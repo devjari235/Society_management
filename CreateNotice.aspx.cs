@@ -35,12 +35,25 @@ namespace Society_management
                 }
 
                 // Save notice to database
-                //int noticeId = SaveNoticeToDatabase();
+                int noticeId = SaveNoticeToDatabase();
 
-                // Send emails to selected groups
-                SendEmailsToSelectedGroups();
+                // Check if email sending is requested
+                bool sendEmail = cblemail.Items.Cast<ListItem>().Any(item => item.Value == "Email" && item.Selected);
+                bool sendInApp = cblemail.Items.Cast<ListItem>().Any(item => item.Value == "On App" && item.Selected);
 
-                ShowSuccess("Notice posted successfully and emails are being sent!");
+                if (sendEmail)
+                {
+                    // Send emails to selected groups
+                    SendEmailsToSelectedGroups();
+                }
+
+                if (sendInApp)
+                {
+                    // Add code here for in-app notifications if needed
+                    System.Diagnostics.Trace.WriteLine("In-app notification would be sent here");
+                }
+
+                ShowSuccess("Notice posted successfully!" + (sendEmail ? " Emails are being sent." : ""));
             }
             catch (Exception ex)
             {
@@ -48,53 +61,49 @@ namespace Society_management
             }
         }
 
-        //private int SaveNoticeToDatabase()
-        //{
-        //    using (SqlConnection conn = new SqlConnection(strcon))
-        //    {
-        //        string query = @"
-        //        INSERT INTO tblNotices 
-        //        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id)
-        //        VALUES
-        //        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId);
-        //        SELECT SCOPE_IDENTITY();";
-
-        //        using (SqlCommand cmd = new SqlCommand(query, conn))
-        //        {
-        //            cmd.Parameters.AddWithValue("@Title", txtTitle.Text.Trim());
-        //            cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
-        //            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.Parse(txtExpiry.Text));
-        //            cmd.Parameters.AddWithValue("@FilePath",(object)fuNoticeFile ?? DBNull.Value);
-        //            cmd.Parameters.AddWithValue("@NoticeType", ddlNoticeType.SelectedValue);
-        //            cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
-        //            cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
-        //            cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
-
-        //            conn.Open();
-        //            return Convert.ToInt32(cmd.ExecuteScalar());
-        //        }
-        //    }
-        //}
-
-        private string GetFilePath()
+        private int SaveNoticeToDatabase()
         {
+            string filePath = null;
+
             if (fuNoticeFile.HasFile)
             {
                 string fileName = Path.GetFileName(fuNoticeFile.FileName);
-                string directoryPath = Server.MapPath("~/Notice/");
+                string relativePath = "~/Notice/" + fileName;
+                string absolutePath = Server.MapPath(relativePath);
 
-                // Create directory if it doesn't exist
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
+                // Save file (assumes the ~/Notice/ folder already exists)
+                fuNoticeFile.SaveAs(absolutePath);
 
-                string savePath = Path.Combine(directoryPath, fileName);
-                fuNoticeFile.SaveAs(savePath);
-                return "~/Notice/" + fileName;
+                filePath = relativePath;
             }
-            return null;
+
+            using (SqlConnection conn = new SqlConnection(strcon))
+            {
+                string query = @"
+        INSERT INTO tblNotices 
+        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id)
+        VALUES
+        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId);
+        SELECT SCOPE_IDENTITY();";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Title", txtTitle.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
+                    cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.Parse(txtExpiry.Text));
+                    cmd.Parameters.AddWithValue("@FilePath", (object)filePath ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@NoticeType", ddlNoticeType.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
+                    cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
+                    cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
+
+                    conn.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
         }
+
+
 
         private string GetStatus(DateTime expiryDate)
         {
@@ -147,8 +156,7 @@ namespace Society_management
                         {
                             while (reader.Read())
                             {
-                                // Handle both Email and Email_id fields
-                                string email = reader[0]?.ToString(); // Using index 0 since we're selecting single column
+                                string email = reader[0]?.ToString();
                                 if (!string.IsNullOrWhiteSpace(email) && IsValidEmail(email))
                                 {
                                     emails.Add(email.Trim());
@@ -170,7 +178,7 @@ namespace Society_management
                 case "Owners":
                     return "SELECT Email_id FROM tblOwner WHERE Email_id IS NOT NULL";
                 case "All Members":
-                    return "SELECT Email FROM tblUser WHERE Email IS NOT NULL ";
+                    return "SELECT Email FROM tblUser WHERE Email IS NOT NULL";
                 default:
                     return "";
             }
@@ -178,8 +186,7 @@ namespace Society_management
 
         private void SendEmailBatch(List<string> emails)
         {
-            // Send in batches to avoid SMTP limits
-            const int batchSize = 50; // Gmail allows 100 recipients per message
+            const int batchSize = 50;
             int batchCount = (int)Math.Ceiling((double)emails.Count / batchSize);
 
             for (int i = 0; i < batchCount; i++)
@@ -193,7 +200,6 @@ namespace Society_management
                 catch (Exception ex)
                 {
                     System.Diagnostics.Trace.WriteLine($"Failed to send batch {i + 1}: {ex.Message}");
-                    // Continue with next batch even if one fails
                 }
             }
         }
@@ -207,7 +213,12 @@ namespace Society_management
                 mail.Body = CreateEmailBody();
                 mail.IsBodyHtml = true;
 
-                // Add all recipients as BCC
+                if (fuNoticeFile.HasFile && fuNoticeFile.PostedFile.ContentLength > 0)
+                {
+                    string fileName = Path.GetFileName(fuNoticeFile.FileName);
+                    mail.Attachments.Add(new Attachment(fuNoticeFile.PostedFile.InputStream, fileName));
+                }
+
                 foreach (string email in recipients)
                 {
                     mail.Bcc.Add(email);
@@ -222,7 +233,7 @@ namespace Society_management
                         "npimgmeajgyouqvm"
                     );
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.Timeout = 30000; // 30 seconds timeout
+                    smtp.Timeout = 30000;
 
                     smtp.Send(mail);
                 }
@@ -231,12 +242,17 @@ namespace Society_management
 
         private string CreateEmailBody()
         {
+            string attachmentInfo = fuNoticeFile.HasFile ?
+                $"<p><strong>Attachment:</strong> {Server.HtmlEncode(fuNoticeFile.FileName)}</p>" :
+                string.Empty;
+
             return $@"
             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;'>
                 <h2 style='color: #4e73df;'>{Server.HtmlEncode(txtTitle.Text)}</h2>
                 <p><strong>Notice Type:</strong> {Server.HtmlEncode(ddlNoticeType.SelectedValue)}</p>
                 <p><strong>Importance:</strong> {Server.HtmlEncode(ddlImportance.SelectedValue)}</p>
                 <p><strong>Expiry Date:</strong> {DateTime.Parse(txtExpiry.Text):dd MMM yyyy}</p>
+                {attachmentInfo}
                 <hr style='border-top: 1px solid #e0e0e0; margin: 15px 0;'>
                 <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px;'>
                     {Server.HtmlEncode(txtDescription.Text).Replace("\n", "<br />")}
