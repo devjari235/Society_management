@@ -71,7 +71,7 @@
                     </div>
                      <div class="d-grid gap-2">
                          <asp:Button class="btn btn-primary btn-lg" ID="btnUpdate" runat="server" Text="Update Password" OnClick="btnUpdate_Click" />
-                         <asp:HyperLink ID="hlCancel" runat="server" CssClass="btn btn-outline-secondary btn-lg" NavigateUrl="AdminDashboard.aspx">Cancel</asp:HyperLink>
+                         <asp:HyperLink ID="hlCancel" runat="server" CssClass="btn btn-outline-secondary btn-lg" NavigateUrl="UserDashboard.aspx">Cancel</asp:HyperLink>
                      </div>
 
                      <div class="mt-3 text-center">

@@ -112,6 +112,38 @@
         .btn-primary:hover {
             background-color: #2e59d9;
         }
+        .custom-checkbox-list {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+.custom-checkbox-list input[type="checkbox"] {
+    margin-right: 5px;
+/*    vertical-align: middle;*/
+}
+
+.custom-checkbox-list label {
+    margin-right: 15px;
+/*    vertical-align: middle;*/
+    cursor: pointer;
+}
+
+/* Optional: Style for hover effect */
+.custom-checkbox-list label:hover {
+    color: #0066cc;
+}
+
+/* Optional: Style for selected items */
+.custom-checkbox-list input[type="checkbox"]:checked + label {
+    font-weight: bold;
+    color: #0066cc;
+}
+
+/* Optional: Style to add some spacing between items */
+.custom-checkbox-list .item {
+    padding: 3px 0;
+}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
@@ -140,7 +172,14 @@
                     <label class="form-label">Description</label>
                     <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="4" CssClass="form-control" placeholder="Enter notice description" />
                 </div>
-
+                <div class="mb-3">
+                    <label class="form-label">Broad cast group</label>
+                    <asp:CheckBoxList ID="cblBroadcast" runat="server" RepeatDirection="Horizontal" CssClass="custom-checkbox-list">
+                        <asp:ListItem>Committee Member</asp:ListItem>
+                        <asp:ListItem>Owners</asp:ListItem>
+                        <asp:ListItem>All Members</asp:ListItem>
+                    </asp:CheckBoxList>
+                </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Notice Type</label>

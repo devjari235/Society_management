@@ -57,10 +57,10 @@ namespace Society_management
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587)
                     {
                         EnableSsl = true,
-                        Credentials = new NetworkCredential("harshgilitwala22@gmail.com", "owsnmljtqalqapyt")
+                        Credentials = new NetworkCredential("infolivesta@gmail.com", "npimgmeajgyouqvm")
                     };
 
-                    MailMessage mail = new MailMessage("harshgilitwala22@gmail.com", toEmail, "Your SocietyConnect OTP",
+                    MailMessage mail = new MailMessage("infolivesta@gmail.com", toEmail, "Your SocietyConnect OTP",
                         "Dear resident, your SocietyConnect verification code is: " + otp + ". Do not share this code with anyone.");
                     smtp.Send(mail);
 
