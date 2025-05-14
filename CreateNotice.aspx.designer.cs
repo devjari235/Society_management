@@ -42,6 +42,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.CheckBoxList cblBroadcast;
 
         /// <summary>
+        /// cblemail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cblemail;
+
+        /// <summary>
         /// ddlNoticeType control.
         /// </summary>
         /// <remarks>

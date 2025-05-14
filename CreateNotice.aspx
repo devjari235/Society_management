@@ -180,6 +180,12 @@
                         <asp:ListItem>All Members</asp:ListItem>
                     </asp:CheckBoxList>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <asp:CheckBoxList ID="cblemail" runat="server" RepeatDirection="Horizontal" CssClass="custom-checkbox-list">
+                        <asp:ListItem>email</asp:ListItem>
+                    </asp:CheckBoxList>
+                </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Notice Type</label>
