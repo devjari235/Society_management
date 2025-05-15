@@ -42,7 +42,7 @@ namespace Society_management
                         // Add this to debug
                         if (ds.Tables[0].Rows.Count == 0)
                         {
-                            Label1.Text = "No committee member data found.";
+                            Label1.Text = "No current committee member.";
                             Panel1.Visible = true;
                         }
 
