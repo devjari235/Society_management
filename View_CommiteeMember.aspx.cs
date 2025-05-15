@@ -41,6 +41,12 @@ namespace Society_management
             SqlDataAdapter ad = new SqlDataAdapter(cmd);
             DataSet ds = new DataSet();
             ad.Fill(ds);
+            // Add this to debug
+            if (ds.Tables[0].Rows.Count == 0)
+            {
+                Label1.Text = "No current committee member.";
+                Panel1.Visible = true;
+            }
             gvDisplay.DataSource = ds;
             gvDisplay.DataBind();
             con.Close();
