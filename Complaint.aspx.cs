@@ -24,36 +24,48 @@ namespace Society_management
             {
                 try
                 {
-                    SqlConnection con=new SqlConnection(strcon);
+                    SqlConnection con = new SqlConnection(strcon);
                     con.Open();
-                    string Query = "Insert into (Complaint_type, Priority, Description, image, User_id)tblComplaint values(@type,@prio,@desc,@image,@id)";
-                    SqlCommand cmd =new SqlCommand(Query, con);
-                    cmd.Parameters.AddWithValue("@type",ddlComplaintType.SelectedValue);
-                    cmd.Parameters.AddWithValue("@prio",ddlPriority.SelectedValue);
-                    cmd.Parameters.AddWithValue("@desc",txtDescription.Text);
-                    cmd.Parameters.AddWithValue("@image", "~/Uploads/");
-                    cmd.Parameters.AddWithValue(",@id", Session["U_id"].ToString());
+
+                    // Handle file upload if applicable
+                    string imagePath = null;
+                    if (fileUpload.HasFile)
+                    {
+                        string fileName = Path.GetFileName(fileUpload.FileName);
+                        imagePath = "~/Uploads/" + fileName;
+                        fileUpload.SaveAs(Server.MapPath(imagePath));
+                    }
+
+                    string Query = "INSERT INTO tblComplaint (Complaint_type, Priority, Description, image, User_id) VALUES (@type, @prio, @desc, @image, @id)";
+                    SqlCommand cmd = new SqlCommand(Query, con);
+                    cmd.Parameters.AddWithValue("@type", ddlComplaintType.SelectedValue);
+                    cmd.Parameters.AddWithValue("@prio", ddlPriority.SelectedValue);
+                    cmd.Parameters.AddWithValue("@desc", txtDescription.Text);
+                    cmd.Parameters.AddWithValue("@image", (object)imagePath ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
                     cmd.ExecuteNonQuery();
+
                     con.Close();
+
                     string script = @"
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Flat Add successfully!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(function() {
-                        window.location = 'Complaint.aspx';
-                    });";
+            Swal.fire({
+                title: 'Success!',
+                text: 'Complaint submitted successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'Complaint.aspx';
+            });";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
                 }
                 catch (Exception ex)
                 {
-                    // Log error and show error message
                     ScriptManager.RegisterStartupScript(this, GetType(), "showError",
-                        "alert('Error submitting complaint: " + ex.Message + "');", true);
+                        "alert('Error submitting complaint: " + ex.Message.Replace("'", "\\'") + "');", true);
                 }
             }
         }
+
 
         private void SaveUploadedFiles(string complaintId)
         {
