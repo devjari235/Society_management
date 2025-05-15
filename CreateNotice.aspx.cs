@@ -35,7 +35,7 @@ namespace Society_management
                 }
 
                 // Save notice to database
-                int noticeId = SaveNoticeToDatabase();
+                //int noticeId = SaveNoticeToDatabase();
 
                 // Check if email sending is requested
                 bool sendEmail = cblemail.Items.Cast<ListItem>().Any(item => item.Value == "Email" && item.Selected);
@@ -61,47 +61,47 @@ namespace Society_management
             }
         }
 
-        private int SaveNoticeToDatabase()
-        {
-            string filePath = null;
+        //private int SaveNoticeToDatabase()
+        //{
+        //    string filePath = null;
 
-            if (fuNoticeFile.HasFile)
-            {
-                string fileName = Path.GetFileName(fuNoticeFile.FileName);
-                string relativePath = "~/Notice/" + fileName;
-                string absolutePath = Server.MapPath(relativePath);
+        //    if (fuNoticeFile.HasFile)
+        //    {
+        //        string fileName = Path.GetFileName(fuNoticeFile.FileName);
+        //        string relativePath = "~/Notice/" + fileName;
+        //        string absolutePath = Server.MapPath(relativePath);
 
-                // Save file (assumes the ~/Notice/ folder already exists)
-                fuNoticeFile.SaveAs(absolutePath);
+        //        // Save file (assumes the ~/Notice/ folder already exists)
+        //        fuNoticeFile.SaveAs(absolutePath);
 
-                filePath = relativePath;
-            }
+        //        filePath = relativePath;
+        //    }
 
-            using (SqlConnection conn = new SqlConnection(strcon))
-            {
-                string query = @"
-        INSERT INTO tblNotices 
-        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id)
-        VALUES
-        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId);
-        SELECT SCOPE_IDENTITY();";
+        //    using (SqlConnection conn = new SqlConnection(strcon))
+        //    {
+        //        string query = @"
+        //INSERT INTO tblNotices 
+        //(Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id)
+        //VALUES
+        //(@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId);
+        //SELECT SCOPE_IDENTITY();";
 
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@Title", txtTitle.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
-                    cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.Parse(txtExpiry.Text));
-                    cmd.Parameters.AddWithValue("@FilePath", (object)filePath ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@NoticeType", ddlNoticeType.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
-                    cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
-                    cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
+        //        using (SqlCommand cmd = new SqlCommand(query, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@Title", txtTitle.Text.Trim());
+        //            cmd.Parameters.AddWithValue("@Description", txtDescription.Text.Trim());
+        //            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.Parse(txtExpiry.Text));
+        //            cmd.Parameters.AddWithValue("@FilePath", (object)filePath ?? DBNull.Value);
+        //            cmd.Parameters.AddWithValue("@NoticeType", ddlNoticeType.SelectedValue);
+        //            cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
+        //            cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
+        //            cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
 
-                    conn.Open();
-                    return Convert.ToInt32(cmd.ExecuteScalar());
-                }
-            }
-        }
+        //            conn.Open();
+        //            return Convert.ToInt32(cmd.ExecuteScalar());
+        //        }
+        //    }
+        //}
 
 
 
