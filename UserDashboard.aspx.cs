@@ -184,7 +184,7 @@ namespace Society_management
                                WHERE Expiry_date < GETDATE() AND Status != 'Expired'";
                 SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
                 updateCmd.ExecuteNonQuery();
-                DataTable allnotice = new DataTable();
+                DataSet allnotice = new DataSet();
                 if (IsCommitteeMember(userId) == true)
                 {
                     // Step 1: Update expired notices
@@ -193,10 +193,10 @@ namespace Society_management
                     SqlCommand cmd = new SqlCommand(selectQuery, conn);
                     //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
 
-                    allnotice.Merge(dt);
+                    allnotice.Merge(ds);
                 }
                 if (IsOwner() == true)
                 {
@@ -204,10 +204,10 @@ namespace Society_management
                     SqlCommand cmd = new SqlCommand(selectQuery, conn);
                     //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
 
-                    allnotice.Merge(dt);
+                    allnotice.Merge(ds);
                 }
                 if (IsUser() == true) 
                 {
@@ -215,14 +215,19 @@ namespace Society_management
                     SqlCommand cmd = new SqlCommand(selectQuery, conn);
                     //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    allnotice.Merge(dt);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    allnotice.Merge(ds);
 
 
                 }
                 rptNotices.DataSource = allnotice;
                 rptNotices.DataBind();
+                if (allnotice.Tables[0].Rows.Count == 0)
+                {
+                    Label1.Text = "No Notice Available";
+                    Panel1.Visible = true;
+                }
 
             }
         }
