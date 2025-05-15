@@ -8,10 +8,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Society Management - Loginnagement - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+    function togglePassword() {
+        var passwordInput = document.getElementById("txtPassword");
+        var icon = document.getElementById("toggleIcon");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        } else {
+            passwordInput.type = "password";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        }
+    }
+    </script>
+
   <style>
     :root {
       --primary-color: #4a6bff;
@@ -256,7 +276,9 @@
         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" CssClass="asp-validation"
           ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Please Enter Your Password" SetFocusOnError="True" />
         <label for="txtPassword">Password</label>
-        <i class="fas fa-lock"></i>
+          <span  onclick="togglePassword()" style="cursor: pointer;">
+              <i class="bi bi-eye-slash" id="toggleIcon"></i>
+              </span>
       </div>
 
       <div class="forget">
