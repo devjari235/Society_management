@@ -144,10 +144,18 @@
     padding: 3px 0;
 }
 .validation-error {
-            color: #dc3545;
-            font-size: 0.875em;
-            margin-top: 0.25rem;
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 3px;
+  display: block;
+  font-weight: 500;
+  transition: all 0.3s ease;
         }
+.validation-error::before{
+ content: "⚠ ";
+ font-size: 0.85rem;
+ margin-right: 4px;
+}
         .is-invalid {
             border-color: #dc3545 !important;
         }
