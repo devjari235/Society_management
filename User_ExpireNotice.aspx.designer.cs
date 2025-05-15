@@ -11,34 +11,34 @@ namespace Society_management
 {
 
 
-    public partial class User_NoticeDashboard
+    public partial class User_ExpireNotice
     {
 
         /// <summary>
-        /// lblTotalNotice control.
+        /// Panel1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalNotice;
+        protected global::System.Web.UI.WebControls.Panel Panel1;
 
         /// <summary>
-        /// lblTotalLive control.
+        /// Label1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalLive;
+        protected global::System.Web.UI.WebControls.Label Label1;
 
         /// <summary>
-        /// lblTotalExpire control.
+        /// gvDisplay control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalExpire;
+        protected global::System.Web.UI.WebControls.GridView gvDisplay;
     }
 }
