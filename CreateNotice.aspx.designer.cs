@@ -24,6 +24,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtTitle;
 
         /// <summary>
+        /// rfvTitle control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvTitle;
+
+        /// <summary>
         /// txtDescription control.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDescription;
+
+        /// <summary>
+        /// rfvDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDescription;
 
         /// <summary>
         /// cblBroadcast control.
@@ -42,6 +60,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.CheckBoxList cblBroadcast;
 
         /// <summary>
+        /// cvBroadcast control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvBroadcast;
+
+        /// <summary>
         /// cblemail control.
         /// </summary>
         /// <remarks>
@@ -49,6 +76,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList cblemail;
+
+        /// <summary>
+        /// cvSendVia control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvSendVia;
 
         /// <summary>
         /// ddlNoticeType control.
@@ -60,6 +96,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlNoticeType;
 
         /// <summary>
+        /// rfvNoticeType control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNoticeType;
+
+        /// <summary>
         /// ddlImportance control.
         /// </summary>
         /// <remarks>
@@ -69,6 +114,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlImportance;
 
         /// <summary>
+        /// rfvImportance control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvImportance;
+
+        /// <summary>
         /// txtExpiry control.
         /// </summary>
         /// <remarks>
@@ -76,6 +130,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtExpiry;
+
+        /// <summary>
+        /// rfvExpiry control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvExpiry;
 
         /// <summary>
         /// fuNoticeFile control.

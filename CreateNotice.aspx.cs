@@ -20,6 +20,8 @@ namespace Society_management
             if (!IsPostBack)
             {
                 // Initialize controls if needed
+                //txtExpiry.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
+
             }
         }
 
@@ -70,20 +72,27 @@ namespace Society_management
                 string fileName = Path.GetFileName(fuNoticeFile.FileName);
                 string relativePath = "~/Notice/" + fileName;
                 string absolutePath = Server.MapPath(relativePath);
-
-                // Save file (assumes the ~/Notice/ folder already exists)
                 fuNoticeFile.SaveAs(absolutePath);
 
                 filePath = relativePath;
             }
+            string broadcast = string.Join(",",
+         cblBroadcast.Items.Cast<ListItem>()
+                           .Where(li => li.Selected)
+                           .Select(li => li.Text));
 
+            // Get selected send methods
+            string send = string.Join(",",
+                cblemail.Items.Cast<ListItem>()
+                              .Where(li => li.Selected)
+                              .Select(li => li.Text));
             using (SqlConnection conn = new SqlConnection(strcon))
             {
                 string query = @"
         INSERT INTO tblNotices 
-        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id)
+        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id, Broadcast_By,Send_via)
         VALUES
-        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId);
+        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId,@broad,@send);
         SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -96,7 +105,8 @@ namespace Society_management
                     cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
                     cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
                     cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
-
+                    cmd.Parameters.AddWithValue("@broad",broadcast);
+                    cmd.Parameters.AddWithValue("@send",send);
                     conn.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }

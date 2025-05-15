@@ -140,11 +140,71 @@
     color: #0066cc;
 }
 
-/* Optional: Style to add some spacing between items */
 .custom-checkbox-list .item {
     padding: 3px 0;
 }
+.validation-error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
     </style>
+        <script type="text/javascript">
+            function validateBroadcastGroups(sender, args) {
+                var checkBoxList = document.getElementById('<%= cblBroadcast.ClientID %>');
+                var checkboxes = checkBoxList.getElementsByTagName('input');
+                var isValid = false;
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].checked) {
+                        isValid = true;
+                        break;
+                    }
+                }
+
+                args.IsValid = isValid;
+            }
+
+            function validateSendVia(sender, args) {
+                var checkBoxList = document.getElementById('<%= cblemail.ClientID %>');
+            var checkboxes = checkBoxList.getElementsByTagName('input');
+            var isValid = false;
+            
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    isValid = true;
+                    break;
+                }
+            }
+            
+            args.IsValid = isValid;
+        }
+        
+        // Add validation styles on submit
+        function pageLoad() {
+            var btnPost = document.getElementById('<%= btnPost.ClientID %>');
+            if (btnPost) {
+                btnPost.onclick = function () {
+                    Page_ClientValidate();
+                    if (!Page_IsValid) {
+                        // Add 'is-invalid' class to invalid controls
+                        var validators = document.querySelectorAll('.validation-error');
+                        validators.forEach(function (validator) {
+                            var control = document.getElementById(validator.controltovalidate);
+                            if (control && !control.classList.contains('is-invalid')) {
+                                control.classList.add('is-invalid');
+                            }
+                        });
+                        return false;
+                    }
+                    return true;
+                };
+            }
+            }
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -166,11 +226,14 @@
                 <div class="mb-3">
                     <label class="form-label">Title</label>
                     <asp:TextBox ID="txtTitle" runat="server" CssClass="form-control" placeholder="Enter notice title" AutoCompleteType="Disabled" />
+                    <asp:RequiredFieldValidator ID="rfvTitle" runat="server" ControlToValidate="txtTitle"
+                    ErrorMessage="Title is required" CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
                 </div>
-
                 <div class="mb-3">
                     <label class="form-label">Description</label>
                     <asp:TextBox ID="txtDescription" runat="server" TextMode="MultiLine" Rows="4" CssClass="form-control" placeholder="Enter notice description" />
+                    <asp:RequiredFieldValidator ID="rfvDescription" runat="server" ControlToValidate="txtDescription"
+                    ErrorMessage="Description is required" CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Broad cast group</label>
@@ -179,12 +242,21 @@
                         <asp:ListItem>Owners</asp:ListItem>
                         <asp:ListItem>All Members</asp:ListItem>
                     </asp:CheckBoxList>
+                    <asp:CustomValidator ID="cvBroadcast" runat="server" 
+                    ErrorMessage="Please select at least one broadcast group" 
+                    CssClass="validation-error" Display="Dynamic"
+                    ClientValidationFunction="validateBroadcastGroups"></asp:CustomValidator>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Send Via(Optonal)</label>
+                    <label class="form-label">Send Via</label>
                     <asp:CheckBoxList ID="cblemail" runat="server" RepeatDirection="Horizontal" CssClass="custom-checkbox-list">
                         <asp:ListItem>Email</asp:ListItem>
+                        <asp:ListItem>On App</asp:ListItem>
                     </asp:CheckBoxList>
+                    <asp:CustomValidator ID="cvSendVia" runat="server" 
+                    ErrorMessage="Please select at least one delivery method" 
+                    CssClass="validation-error" Display="Dynamic"
+                    ClientValidationFunction="validateSendVia"></asp:CustomValidator>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -194,6 +266,8 @@
                             <asp:ListItem Text="Emergency" Value="Emergency" />
                             <asp:ListItem Text="Event" Value="Event" />
                         </asp:DropDownList>
+                        <asp:RequiredFieldValidator ID="rfvNoticeType" runat="server" ControlToValidate="ddlNoticeType"
+                        InitialValue="" ErrorMessage="Notice type is required" CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Importance</label>
@@ -202,17 +276,23 @@
                             <asp:ListItem Text="Important" Value="Important" />
                             <asp:ListItem Text="Urgent" Value="Urgent" />
                         </asp:DropDownList>
+                        <asp:RequiredFieldValidator ID="rfvImportance" runat="server" ControlToValidate="ddlImportance"
+                        InitialValue="" ErrorMessage="Importance level is required" CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Expiry Date</label>
                     <asp:TextBox ID="txtExpiry" runat="server" TextMode="Date" CssClass="form-control" />
+                    <asp:RequiredFieldValidator ID="rfvExpiry" runat="server" ControlToValidate="txtExpiry"
+                    ErrorMessage="Expiry date is required" CssClass="validation-error" Display="Dynamic"></asp:RequiredFieldValidator>
+
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label">Upload File (Optional)</label>
                     <asp:FileUpload ID="fuNoticeFile" runat="server" CssClass="form-control" />
+
                 </div>
 
                 <div class="d-grid">
