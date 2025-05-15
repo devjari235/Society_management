@@ -174,10 +174,19 @@
         <!-- Swiper -->
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
+               <div class="row">
+    <div class="col-sm-12 col-md-12">
+        <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+        </asp:Panel>
+    </div>
+</div>
                 <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
+
                     <ItemTemplate>
 
                         <div class="swiper-slide">
+                            
                             <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" Style="all: unset; display: block;">
                              <div class="notice-title"><%# Eval("Title") %></div>
                              <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
