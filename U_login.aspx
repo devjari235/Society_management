@@ -6,13 +6,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Society Management - Login</title>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function togglePassword() {
+            var passwordInput = document.getElementById("txtPassword");
+            var icon = document.getElementById("toggleIcon");
 
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+            }
+        }
+    </script>
   <style>
     :root {
       --primary-color: #000000;
@@ -252,6 +268,7 @@
       <div class="input-field">
         <asp:TextBox ID="txtEmail" runat="server" CssClass="textbox" placeholder=" " AutoCompleteType="Disabled"></asp:TextBox>
         <label for="txtEmail" style="color:white">Email Or Mobile Number</label>
+
         <i class="fas fa-envelope"></i>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ControlToValidate="txtEmail" Display="Dynamic" ErrorMessage="Please Enter Valid Email ID or Phone Number" CssClass="asp-validation" SetFocusOnError="True" />
       </div>
@@ -260,7 +277,9 @@
       <div class="input-field">
         <asp:TextBox ID="txtPassword" runat="server" CssClass="textbox" TextMode="Password" placeholder=" "></asp:TextBox>
         <label for="txtPassword" style="color:white">Password</label>
-        <i class="fas fa-lock"></i>
+        <span  onclick="togglePassword()" style="cursor: pointer;">
+            <i class="bi bi-eye-slash" id="toggleIcon"></i>
+            </span>
         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ControlToValidate="txtPassword" Display="Dynamic" ErrorMessage="Enter Your Login Password" CssClass="asp-validation" SetFocusOnError="True" />
       </div>
 
