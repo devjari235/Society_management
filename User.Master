@@ -215,7 +215,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="Complaints.aspx">View Complaints</a></li>
-                                <li><a class="dropdown-item" href="NewComplaint.aspx">New Complaint</a></li>
+                                <li><a class="dropdown-item" href="Complaint.aspx">New Complaint</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -284,19 +284,19 @@
                                     <span class="nav-link-text">Committee Member</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+                            <li id="liNoticeBoard" runat="server" class="nav-item" >
                                 <a class="nav-link" href="User_NoticeDashboard.aspx">
                                     <i class="bi bi-envelope-fill"></i>
                                     <span class="nav-link-text">Notice Board</span>
                                 </a>
                             </li>
-                            <%--<li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="MyComplaints.aspx">
                                     <i class="fas fa-exclamation-circle me-2"></i>
                                     <span class="nav-link-text">My Complaints</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
+<%--                            <li class="nav-item">
                                 <a class="nav-link" href="MyPayments.aspx">
                                     <i class="fas fa-rupee-sign me-2"></i>
                                     <span class="nav-link-text">My Payments</span>

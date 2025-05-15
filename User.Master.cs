@@ -16,6 +16,11 @@ namespace Society_management
         protected void Page_Load(object sender, EventArgs e)
         {
             Details();
+            if (!IsPostBack)
+            {
+                IsCommitteeMember();
+                visibleForCommitteeMember();
+            }
         }
         string name;
         string img;
@@ -49,5 +54,30 @@ namespace Society_management
             reader.Close();
             con.Close();
         }
+        public bool IsCommitteeMember()
+        {
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                int userId = Convert.ToInt32(Session["U_id"]);
+                string query = "SELECT COUNT(*) FROM tblCommitteeMember WHERE User_id = @UserId AND Status = 'Current' AND (Designation='President' or Designation='Vice-President' or Designation='Secretary')";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                con.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+        public void visibleForCommitteeMember()
+        {
+            if (IsCommitteeMember()==true) 
+            {
+               liNoticeBoard.Visible = true;
+            }
+            else
+            {
+                liNoticeBoard.Visible = false;
+            }
+        }
+
     }
 }
