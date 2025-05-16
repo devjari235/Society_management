@@ -221,12 +221,18 @@ namespace Society_management
 
 
                 }
-                rptNotices.DataSource = allnotice;
-                rptNotices.DataBind();
-                if (allnotice.Tables[0].Rows.Count == 0)
+
+                if (allnotice.Tables.Count > 0 && allnotice.Tables[0].Rows.Count > 0)
                 {
-                    Label1.Text = "No Notice Available";
-                    Panel1.Visible = true;
+                    rptNotices.DataSource = allnotice;
+                    rptNotices.DataBind();
+                    pnlNoNotice.Visible = false;
+                }
+                else
+                {
+                    rptNotices.DataSource = null;
+                    rptNotices.DataBind();
+                    pnlNoNotice.Visible = true;
                 }
 
             }
