@@ -3,7 +3,7 @@
     EnableEventValidation="false" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-        <!-- Bootstrap & Swiper CSS -->
+             <!-- Bootstrap & Swiper CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <!-- jQuery (required for Bootstrap 5 dropdown toggle) -->
@@ -11,10 +11,23 @@
 
 <!-- Bootstrap Bundle (includes Popper.js for dropdowns) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('.table').DataTable({
+    <!-- Add DataTables CSS & JS in your HeadContent -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $table = $('.table');
+
+        // Ensure thead exists
+        if ($table.find('thead').length === 0) {
+            var $thead = $('<thead></thead>').append($table.find('tr:first'));
+            $table.prepend($thead);
+        }
+
+        // Initialize only if not already done
+        if (!$.fn.DataTable.isDataTable($table)) {
+            $table.DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -25,18 +38,20 @@
                 "serverSide": false,
                 "processing": false
             });
+        }
 
-            // Row click handler using data attribute on <tr>
-            $('.table tbody').on('click', 'tr.clickable-row', function () {
-                var noticeId = $(this).attr('data-notice-id');
-                if (noticeId) {
-                    window.location.href = 'Admin_noticeDetails.aspx?id=' + noticeId;
-                }
-            });
+        // Row click handler
+        $table.find('tbody').on('click', 'tr.clickable-row', function () {
+            var noticeId = $(this).attr('data-notice-id');
+            if (noticeId) {
+                window.location.href = 'Admin_noticeDetails.aspx?id=' + noticeId;
+            }
         });
-    </script>
+    });
+</script>
 
-        <style>
+
+    <style>
 /* GridView Button-Row Style */
 .grid-view-custom {
     border-collapse: separate;
@@ -210,11 +225,19 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="table-responsive">
-                    <asp:GridView ID="gvDisplay" runat="server"
+    <div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            </asp:Panel>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+                       <div class="table-responsive">
+                                   <asp:GridView ID="gvDisplay" runat="server"
     AutoGenerateColumns="False"
     DataKeyNames="Notice_id"
     CssClass="table table-striped table-bordered grid-view-custom"
@@ -251,8 +274,10 @@
         </asp:TemplateField>
     </Columns>
 </asp:GridView>
-                </div>
             </div>
+
         </div>
     </div>
+</div>
+
 </asp:Content>
