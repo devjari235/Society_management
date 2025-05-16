@@ -2256,6 +2256,7 @@
     <Content Include="VerifyOtpUser.aspx" />
     <Content Include="View_Allnotice.aspx" />
     <Content Include="View_CommiteeMember.aspx" />
+    <Content Include="View_Complaints.aspx" />
     <Content Include="View_Document.aspx" />
     <Content Include="View_family.aspx" />
     <Content Include="View_flat.aspx" />
@@ -2592,6 +2593,13 @@
     </Compile>
     <Compile Include="View_CommiteeMember.aspx.designer.cs">
       <DependentUpon>View_CommiteeMember.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_Complaints.aspx.cs">
+      <DependentUpon>View_Complaints.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_Complaints.aspx.designer.cs">
+      <DependentUpon>View_Complaints.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_Document.aspx.cs">
       <DependentUpon>View_Document.aspx</DependentUpon>

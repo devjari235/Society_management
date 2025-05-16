@@ -129,7 +129,7 @@
                         </div>
                         <div class="card-title">ACTIVE COMPLAINTS</div>
                         <div class="card-value"><asp:Label ID="lblActiveComplaints" runat="server" Text="0" /></div>
-                        <a href="Complaints.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <a href="View_Complaints.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>

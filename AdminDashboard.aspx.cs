@@ -19,6 +19,7 @@ namespace Society_management
                 SocietyID();
                 lblTotalResidents.Text = GetTotalResident().ToString();
                 lblTotalFlats.Text = GetTotalFlats().ToString();
+                lblActiveComplaints.Text=GetTotalActiveComplaint().ToString();
             }
 
         }
@@ -53,6 +54,16 @@ namespace Society_management
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
             string query = "select COUNT(*) from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            return Convert.ToInt32(cmd.ExecuteScalar());
+
+        }
+        public int GetTotalActiveComplaint()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string query = "SELECT COUNT(*) \r\nFROM tblComplaint c\r\nJOIN tblUser u ON c.User_id = u.User_id\r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n";
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
             return Convert.ToInt32(cmd.ExecuteScalar());
