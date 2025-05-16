@@ -1,332 +1,152 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_Allnotice.aspx.cs" Inherits="Society_management.View_Allnotice" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" 
+    CodeBehind="View_Allnotice.aspx.cs" Inherits="Society_management.View_Allnotice" 
+    EnableEventValidation="false" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-   <%-- <style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css" />
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('.table').DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "serverSide": false,
+                "processing": false
+            });
 
-
-    .card {
-        background: #ffffff;
-        border: 1px solid #dee2e6;
-        border-radius: 10px;
-        
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        color: #212529;
-    }
-
-    .card h5 {
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        font-size: 0.95rem;
-        line-height: 1.5;
-    }
-
-    .card small {
-        display: inline-block;
-        margin-top: 10px;
-        font-size: 0.8rem;
-        color: #6c757d;
-    }
-
-    .badge {
-        font-size: 0.75rem;
-        padding: 5px 10px;
-        border-radius: 5px;
-        font-weight: 500;
-    }
-
-    .badge-live {
-        background-color: #198754;
-        color: white;
-    }
-
-    .badge-expired {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .mb-3 {
-        margin-bottom: 1.5rem !important;
-    }
-
-.notice-card {
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    color: #212529;
-    height: auto;
-    border-left: 6px solid transparent; /* default to transparent */
-}
-
-.notice-live {
-    border-left-color: #198754; /* green */
-}
-
-.notice-expired {
-    border-left-color: #dc3545; /* red */
-}
-
-.swiper-slide {
-/*    background: #ffffff;
-    border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    color: #212529;
-    height: auto;
-    border-left: 6px solid transparent;*/
-    margin-bottom: 20px; /* <-- add space between cards */
-}
-
-
-
-</style>--%>
-
-     <script type="text/javascript">
-         $(document).ready(function () {
-             $('.table').prepend($('<thead></thead>').append($('.table').find('tr:first'))).dataTable();
-         });
-     </script>
+            // Row click handler using data attribute on <tr>
+            $('.table tbody').on('click', 'tr.clickable-row', function () {
+                var noticeId = $(this).attr('data-notice-id');
+                if (noticeId) {
+                    window.location.href = 'Admin_noticeDetails.aspx?id=' + noticeId;
+                }
+            });
+        });
+    </script>
 
     <style>
- /* Page Title Buttons Container */
-.page-title-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    
+/* GridView Button-Row Style */
+.grid-view-custom {
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Adds spacing between rows */
 }
 
-/* Left-aligned button group */
-.button-group-left {
-    display: flex;
-    gap: 10px;
-}
-
-/* Base Button Style */
-.dashboard-btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.grid-view-custom tbody tr {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px; /* Rounded corners */
     transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    cursor: pointer;
-    text-decoration: none;
-    color: white;
-    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.dashboard-btn i {
-    margin-right: 8px;
-    font-size: 1rem;
-}
-
-/* Individual Button Colors */
-.btn-create {
-    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-    margin-left: auto; /* Pushes Create button to the right */
-}
-
-.btn-Dashboard {
-     background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
-}
-
-.btn-Live {
-    background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
-}
-.btn-Expire{
-    background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
-}
-
-/* Hover Effects */
-.dashboard-btn:hover {
+/* Button-like hover effect */
+.grid-view-custom tbody tr:hover {
+    background-color: #f8f9fa !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    color: #FFD700;
-    text-decoration:none;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    cursor: pointer;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .page-title-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .button-group-left {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .btn-create {
-        width: 100%;
-        margin-left: 0;
-        order: -1; /* Moves Create button to top on mobile */
-    }
-    
-    .dashboard-btn {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-    }
+/* Active/Selected row */
+.grid-view-custom tbody tr:active,
+.grid-view-custom tbody tr.highlight {
+    background-color: #e9ecef !important;
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
-.notice-scroller-container {
-        max-height: 600px; /* Adjust height as needed */
-        overflow-y: auto;
-        padding-right: 10px; /* Prevents content from touching scrollbar */
-    }
 
-    /* Custom scrollbar styling */
-    .notice-scroller-container::-webkit-scrollbar {
-        width: 8px;
-    }
+/* Cell styling for button effect */
+.grid-view-custom tbody td {
+    padding: 12px 15px;
+    border-top: none !important;
+    border-bottom: none !important;
+}
 
-    .notice-scroller-container::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
+/* First and last cell rounded corners */
+.grid-view-custom tbody td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-left: none;
+}
 
-    .notice-scroller-container::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
-    }
+.grid-view-custom tbody td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-right: none;
+}
 
-    .notice-scroller-container::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
+/* Status Badge with Black Background */
+.status-badge {
+    border-radius: 50px;
+    text-transform: uppercase;
+}
 
-    /* Adjust card spacing for scroller */
-    .swiper-slide {
-        margin-bottom: 20px;
-    }
-
-    /* Remove any fixed heights from cards if they exist */
-    .notice-card {
-        height: auto !important;
-    }
+/* Header Styling */
+.grid-view-custom thead th {
+    background-color: transparent;
+    color: #495057;
+    font-weight: 600;
+    border-bottom: 2px solid #dee2e6;
+    padding: 12px 15px;
+}
     </style>
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
-</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-    <div class="page-title-buttons">
-        <div class="button-group-left">
-            <a href="NoticeDashboard.aspx" class="dashboard-btn btn-Dashboard">
-                <i class="fas fa-arrow-left"></i>Notice Dashboard
-            </a>
-            <a href="LiveNotice.aspx" class="dashboard-btn btn-Live">
-                <i class="fas fa-broadcast-tower"></i> Live Notice
-            </a>
-            <a href="ExpireNotice.aspx" class="dashboard-btn btn-Expire">
-                <i class="far fa-calendar-times"></i> Expire Notice
-            </a>
-        </div>
-        
-        <a href="CreateNotice.aspx" class="dashboard-btn btn-create">
-            <i class="fas fa-plus-circle"></i> Create Notice
-        </a>
-    </div>
-</asp:Content>
+
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-        <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
-                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowCommand="gvDisplay_RowCommand">
-                    <Columns>
-                        
-                        <asp:TemplateField HeaderText="Title">
-                            <ItemTemplate>
-                              <asp:Label Text='<%#Eval("Title") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Posted Date">
-                            <ItemTemplate>
-                                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Expiry Date">
-                            <ItemTemplate>
-                                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Importance">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Importance") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Status">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Status") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Action">
-                            <ItemTemplate>
-                               <asp:Button ID="btnView" runat="server" Text="View" CommandName="ViewNotice" CommandArgument='<%# Eval("Notice_id") %>' Style="background-color:aquamarine; color:black" />
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-
-
-  <%--  <div class="notice-scroller-container">
-        <asp:Repeater ID="rptAllNotices" runat="server">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <asp:GridView ID="gvDisplay" runat="server"
+    AutoGenerateColumns="False"
+    DataKeyNames="Notice_id"
+    CssClass="table table-striped table-bordered grid-view-custom"
+    OnRowDataBound="gvDisplay_RowDataBound" 
+    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
+    <Columns>
+        <asp:TemplateField HeaderText="Title">
             <ItemTemplate>
-                <div class='<%# "swiper-slide notice-card " + 
-                    (Eval("Status").ToString().ToLower() == "live" ? "notice-live" : "notice-expired") %>'>
-                    
-                    <div class="notice-title"><%# Eval("Title") %></div>
-
-                    
-                    <span class='<%# "badge me-2 " + 
-                        (Eval("Importance").ToString().ToLower() == "urgent" ? "bg-danger" : 
-                         Eval("Importance").ToString().ToLower() == "important" ? "bg-warning text-dark" : 
-                         "bg-primary") %>'>
-                        <%# Eval("Importance") %>
-                    </span>
-
-                    <span class='<%# "badge " + 
-                        (Eval("Status").ToString().ToLower() == "live" ? "bg-success" : "bg-secondary") %>'>
-                        <%# Eval("Status") %>
-                    </span>
-
-                <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
-                <b><p>Posted By: <%# Eval("name") %></p></b>
-                <p><%# Eval("Description") %></p>
-
-                    <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>'
-                        Text="📎 View Attachment" Target="_blank"
-                        CssClass="btn btn-sm btn-outline-secondary mt-2"
-                        Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                </div>
+                <asp:Label Text='<%# Eval("Title") %>' runat="server" />
             </ItemTemplate>
-        </asp:Repeater>
-    </div>--%>
-</asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-    
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Posted Date">
+            <ItemTemplate>
+                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server" />
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Expiry Date">
+            <ItemTemplate>
+                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server" />
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Importance">
+            <ItemTemplate>
+                <asp:Label Text='<%# Eval("Importance") %>' runat="server"
+                    CssClass='<%# GetImportanceClass(Eval("Importance").ToString()) %>' />
+            </ItemTemplate>
+        </asp:TemplateField>
+        <asp:TemplateField HeaderText="Status">
+            <ItemTemplate>
+                <span class='<%# GetStatusClass(Eval("Status").ToString()) %>'>
+                    <%# Eval("Status") %>
+                </span>
+            </ItemTemplate>
+        </asp:TemplateField>
+    </Columns>
+</asp:GridView>
+                </div>
+            </div>
+        </div>
+    </div>
 </asp:Content>
