@@ -2245,11 +2245,6 @@
     <Content Include="Terms.aspx" />
     <Content Include="UserDashboard.aspx" />
     <Content Include="User_CommitteeDetails.aspx" />
-    <Content Include="User_CreateNotice.aspx" />
-    <Content Include="User_ExpireNotice.aspx" />
-    <Content Include="User_LiveNotice.aspx" />
-    <Content Include="User_NoticeDashboard.aspx" />
-    <Content Include="User_noticeDetails.aspx" />
     <Content Include="User_pass_change.aspx" />
     <Content Include="User_Past_Committee.aspx" />
     <Content Include="User_profile.aspx" />
@@ -2520,41 +2515,6 @@
     </Compile>
     <Compile Include="User_CommitteeDetails.aspx.designer.cs">
       <DependentUpon>User_CommitteeDetails.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_CreateNotice.aspx.cs">
-      <DependentUpon>User_CreateNotice.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_CreateNotice.aspx.designer.cs">
-      <DependentUpon>User_CreateNotice.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_ExpireNotice.aspx.cs">
-      <DependentUpon>User_ExpireNotice.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_ExpireNotice.aspx.designer.cs">
-      <DependentUpon>User_ExpireNotice.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_LiveNotice.aspx.cs">
-      <DependentUpon>User_LiveNotice.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_LiveNotice.aspx.designer.cs">
-      <DependentUpon>User_LiveNotice.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_NoticeDashboard.aspx.cs">
-      <DependentUpon>User_NoticeDashboard.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_NoticeDashboard.aspx.designer.cs">
-      <DependentUpon>User_NoticeDashboard.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User_noticeDetails.aspx.cs">
-      <DependentUpon>User_noticeDetails.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User_noticeDetails.aspx.designer.cs">
-      <DependentUpon>User_noticeDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="User_pass_change.aspx.cs">
       <DependentUpon>User_pass_change.aspx</DependentUpon>

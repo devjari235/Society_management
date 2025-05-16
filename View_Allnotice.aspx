@@ -220,18 +220,18 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div class="page-title-buttons">
         <div class="button-group-left">
-            <a href="User_NoticeDashboard.aspx" class="dashboard-btn btn-Dashboard">
+            <a href="NoticeDashboard.aspx" class="dashboard-btn btn-Dashboard">
                 <i class="fas fa-arrow-left"></i>Notice Dashboard
             </a>
-            <a href="User_LiveNotice.aspx" class="dashboard-btn btn-Live">
+            <a href="LiveNotice.aspx" class="dashboard-btn btn-Live">
                 <i class="fas fa-broadcast-tower"></i> Live Notice
             </a>
-            <a href="User_ExpireNotice.aspx" class="dashboard-btn btn-Expire">
+            <a href="ExpireNotice.aspx" class="dashboard-btn btn-Expire">
                 <i class="far fa-calendar-times"></i> Expire Notice
             </a>
         </div>
         
-        <a href="User_CreateNotice.aspx" class="dashboard-btn btn-create">
+        <a href="CreateNotice.aspx" class="dashboard-btn btn-create">
             <i class="fas fa-plus-circle"></i> Create Notice
         </a>
     </div>

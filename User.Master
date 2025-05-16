@@ -285,7 +285,7 @@
                                 </a>
                             </li>
                             <li id="liNoticeBoard" runat="server" class="nav-item" >
-                                <a class="nav-link" href="User_NoticeDashboard.aspx">
+                                <a class="nav-link" href="#">
                                     <i class="bi bi-envelope-fill"></i>
                                     <span class="nav-link-text">Notice Board</span>
                                 </a>
