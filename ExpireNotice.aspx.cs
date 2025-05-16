@@ -43,11 +43,42 @@ namespace Society_management
             }
         }
 
-        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.CommandName == "ViewNotice")
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int noticeId = Convert.ToInt32(e.CommandArgument);
+                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                e.Row.ToolTip = "Click to select this row.";
+            }
+        }
+
+        public string GetStatusClass(string status)
+        {
+            return status.ToLower() == "live" ? "status-badge status-live" : "status-badge status-expired";
+        }
+
+        public string GetImportanceClass(string importance)
+        {
+            switch (importance.ToLower())
+            {
+                case "urgent":
+                    return "importance-high";
+                case "important":
+                    return "importance-medium";
+                default:
+                    return "importance-low";
+            }
+        }
+
+        protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = gvDisplay.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                // Get the Notice_id from DataKeys
+                string noticeId = gvDisplay.DataKeys[selectedIndex].Value.ToString();
+
+                // Redirect to details page with the id
                 Response.Redirect("Admin_noticeDetails.aspx?id=" + noticeId);
             }
         }
