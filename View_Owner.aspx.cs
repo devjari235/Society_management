@@ -39,12 +39,25 @@ namespace Society_management
             con.Close();
         }
 
-        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.CommandName == "ViewNotice")
+            if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                int noticeId = Convert.ToInt32(e.CommandArgument);
-                Response.Redirect("Owner_Membr.aspx?id=" + noticeId);
+                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                e.Row.ToolTip = "Click to select this row.";
+            }
+        }
+
+        protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = gvDisplay.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                // Get the Notice_id from DataKeys
+                string OwnerId = gvDisplay.DataKeys[selectedIndex].Value.ToString();
+
+                // Redirect to details page with the id
+                Response.Redirect("Owner_Membr.aspx?id=" + OwnerId);
             }
         }
     }

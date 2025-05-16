@@ -8,15 +8,22 @@
 
 <!-- Bootstrap Bundle (includes Popper.js for dropdowns) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script type="text/javascript">
-         $(document).ready(function () {
-             $('.table').prepend($('<thead></thead>').append($('.table').find('tr:first'))).dataTable();
-         });
-     </script>
-    
-    <script type="text/javascript">
-        $(document).ready(function () {
-            var table = $('.table').DataTable({
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $table = $('.table');
+
+        // Ensure thead exists
+        if ($table.find('thead').length === 0) {
+            var $thead = $('<thead></thead>').append($table.find('tr:first'));
+            $table.prepend($thead);
+        }
+
+        // Initialize only if not already done
+        if (!$.fn.DataTable.isDataTable($table)) {
+            $table.DataTable({
                 "paging": true,
                 "lengthChange": true,
                 "searching": true,
@@ -27,16 +34,17 @@
                 "serverSide": false,
                 "processing": false
             });
+        }
 
-            // Row click handler using data attribute on <tr>
-            $('.table tbody').on('click', 'tr.clickable-row', function () {
-                var noticeId = $(this).attr('data-notice-id');
-                if (noticeId) {
-                    window.location.href = 'Admin_noticeDetails.aspx?id=' + noticeId;
-                }
-            });
+        // Row click handler
+        $table.find('tbody').on('click', 'tr.clickable-row', function () {
+            var noticeId = $(this).attr('data-notice-id');
+            if (noticeId) {
+                window.location.href = 'Admin_noticeDetails.aspx?id=' + noticeId;
+            }
         });
-    </script>
+    });
+</script>
 
     <style>
 /* GridView Button-Row Style */
