@@ -112,6 +112,7 @@
         .swiper-slide:hover{
             cursor:pointer;
         }
+
       
     </style>
 
@@ -174,19 +175,9 @@
         <!-- Swiper -->
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-               <div class="row">
-    <div class="col-sm-12 col-md-12">
-        <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-        </asp:Panel>
-    </div>
-</div>
                 <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
-
                     <ItemTemplate>
-
                         <div class="swiper-slide">
-                            
                             <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" Style="all: unset; display: block;">
                              <div class="notice-title"><%# Eval("Title") %></div>
                              <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
@@ -204,6 +195,17 @@
                     </ItemTemplate>
 
                 </asp:Repeater>
+              <asp:Panel ID="pnlNoNotice" runat="server" Visible="false">
+                <div class="swiper-slide d-flex align-items-center justify-content-center" style="height: 300px; width:250%;">
+                    <div class="text-center p-4">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Notices" style="width: 80px;" />
+                        <h5 class="mt-3 fw-bold text-secondary">No Notice Available</h5>
+                        <p class="text-muted">Stay tuned! New notices will appear here soon.</p>
+                    </div>
+                </div>
+            </asp:Panel>
+
+
 
             </div>
             <div class="swiper-pagination"></div>
