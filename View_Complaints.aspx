@@ -175,6 +175,20 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+    <div class="button-group-left">
+        <a href="Pending_Complaints.aspx" class="dashboard-btn btn-Dashboard">
+            <i class="fas fa-arrow-left"></i>Pending Complaints
+        </a>
+         <a href="Active_Complaints.aspx" class="dashboard-btn btn-Live">
+             <i class="fas fa-broadcast-tower"></i> Active Complaints
+         </a>
+        <a href="Progress_Complaints.aspx" class="dashboard-btn btn-Expire">
+            <i class="far fa-calendar-times"></i> In Progress Complaints
+        </a>
+            <a href="Resolved_Complaints.aspx" class="dashboard-btn btn-create">
+        <i class="fas fa-plus-circle"></i> Resolved Complaints
+    </a>
+  </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
      <div class="container">
