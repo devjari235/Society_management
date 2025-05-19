@@ -91,6 +91,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Active_Complaints.aspx" />
     <Content Include="AdminDashboard.aspx" />
     <Content Include="Admin_noticeDetails.aspx" />
     <Content Include="Admin_profile.aspx" />
@@ -2265,6 +2266,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Active_Complaints.aspx.cs">
+      <DependentUpon>Active_Complaints.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Active_Complaints.aspx.designer.cs">
+      <DependentUpon>Active_Complaints.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Adashboard.Master.cs">
       <DependentUpon>Adashboard.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
