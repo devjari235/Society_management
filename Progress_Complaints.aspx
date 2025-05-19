@@ -1,6 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Active_Complaints.aspx.cs" Inherits="Society_management.Active_Complaints" EnableEventValidation="false" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Progress_Complaints.aspx.cs" Inherits="Society_management.Progress_Complaints"  EnableEventValidation="false"  %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-                    <!-- Bootstrap & Swiper CSS -->
+                        <!-- Bootstrap & Swiper CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
     <!-- jQuery (required for Bootstrap 5 dropdown toggle) -->
@@ -113,7 +113,7 @@
     padding: 12px 15px;
 }
     </style>
-            <style>
+                <style>
 .btn-Dashboard {
      background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
 }
@@ -201,23 +201,23 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-      <div class="button-group-left">
+                  <div class="button-group-left">
       <a href="View_Complaints.aspx" class="dashboard-btn btn-Dashboard">
           <i class="fas fa-arrow-left"></i> Back to Details
       </a>
-          <a href="Pending_Complaints.aspx" class="dashboard-btn btn-Live">
-              <i class="bi-hourglass-split "></i>Pending Complaints
+          <a href="Active_Complaints.aspx" class="dashboard-btn btn-Live">
+              <i class="bi-check-circle"></i> Active Complaints
           </a>
-      <a href="Progress_Complaints.aspx" class="dashboard-btn btn-Expire">
-          <i class="bi-gear-fill"></i> In Progress Complaints
+      <a href="Pending_Complaints.aspx" class="dashboard-btn btn-Expire">
+         <i class="bi-hourglass-split "></i>Pending Complaints
       </a>
           <a href="Resolved_Complaints.aspx" class="dashboard-btn btn-create">
-      <i class="bi-check-circle-fill"></i> Resolved Complaints
+        <i class="bi-check-circle-fill"></i> Resolved Complaints
   </a>
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="container">
+         <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12">
             <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">

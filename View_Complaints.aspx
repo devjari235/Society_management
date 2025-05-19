@@ -169,6 +169,90 @@
     font-weight: bold;
 }
     </style>
+        <style>
+.btn-Dashboard {
+     background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
+}
+.btn-create {
+    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+}
+.btn-Live {
+    background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
+}
+.btn-Dashboard {
+    background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
+}
+.btn-Expire{
+    background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+}
+.page-title-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    
+}
+
+/* Left-aligned button group */
+.button-group-left {
+    display: flex;
+    gap: 10px;
+}
+
+/* Base Button Style */
+.dashboard-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    border: none;
+}
+
+.dashboard-btn i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: #FFD700;
+    text-decoration:none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .page-title-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .button-group-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .btn-create {
+        width: 100%;
+        margin-left: 0;
+        order: -1; /* Moves Create button to top on mobile */
+    }
+    
+    .dashboard-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </asp:Content>
@@ -177,16 +261,16 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div class="button-group-left">
         <a href="Pending_Complaints.aspx" class="dashboard-btn btn-Dashboard">
-            <i class="fas fa-arrow-left"></i>Pending Complaints
+            <i class="bi-hourglass-split "></i>Pending Complaints
         </a>
          <a href="Active_Complaints.aspx" class="dashboard-btn btn-Live">
-             <i class="fas fa-broadcast-tower"></i> Active Complaints
+             <i class="bi-check-circle"></i> Active Complaints
          </a>
         <a href="Progress_Complaints.aspx" class="dashboard-btn btn-Expire">
-            <i class="far fa-calendar-times"></i> In Progress Complaints
+            <i class="bi-gear-fill"></i> In Progress Complaints
         </a>
             <a href="Resolved_Complaints.aspx" class="dashboard-btn btn-create">
-        <i class="fas fa-plus-circle"></i> Resolved Complaints
+        <i class="bi-check-circle-fill"></i> Resolved Complaints
     </a>
   </div>
 </asp:Content>

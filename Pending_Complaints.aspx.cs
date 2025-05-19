@@ -7,20 +7,19 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Drawing;
 
 namespace Society_management
 {
-    public partial class Active_Complaints : System.Web.UI.Page
+    public partial class Pending_Complaints : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                BindActive();
+                BindPending();
             }
         }
-        private void BindActive()
+        private void BindPending()
         {
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
@@ -35,7 +34,7 @@ namespace Society_management
                 //               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
                 //               ORDER BY Posted_date DESC";
 
-                string selectQuery = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n and c.Status='Active'";
+                string selectQuery = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n and c.Status='Pending'";
                 SqlCommand cmd = new SqlCommand(selectQuery, conn);
                 cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -44,7 +43,7 @@ namespace Society_management
                 // Add this to debug
                 if (ds.Tables[0].Rows.Count == 0)
                 {
-                    Label1.Text = "No Active Complaints.";
+                    Label1.Text = "No Pending Complaints.";
                     Panel1.Visible = true;
                 }
                 gvDisplay.DataSource = ds;
@@ -63,7 +62,7 @@ namespace Society_management
             }
         }
 
-        
+
 
         protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
         {
