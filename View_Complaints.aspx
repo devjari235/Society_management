@@ -169,6 +169,8 @@
     font-weight: bold;
 }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
@@ -213,7 +215,7 @@
         <asp:TemplateField HeaderText="Status">
             <ItemTemplate>
                 <asp:LinkButton ID="lnkStatus" runat="server" 
-                    Text='<%# Eval("Status") %>' 
+                    Text='<%# Eval("Status") %>'
                     CommandName="UpdateStatus" 
                     CommandArgument='<%# Container.DataItemIndex %>'
                     CssClass="status-link" />

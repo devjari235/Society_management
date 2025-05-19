@@ -12,17 +12,25 @@ namespace Society_management
 {
     public partial class View_Complaints : System.Web.UI.Page
     {
+        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        string Status;
         protected void Page_Load(object sender, EventArgs e)
         {
+           
             if (!IsPostBack) 
             {
                 BindComplain();
+                //if (Status == "Resolved")
+                //{
+                //    ErrorStatus();
+                //}
+
             }
         }
         private void BindComplain()
         {
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
+           
             using (SqlConnection conn = new SqlConnection(connStr))
             {
                 conn.Open();
@@ -62,8 +70,23 @@ namespace Society_management
                     string status = lnkStatus.Text;
                     lnkStatus.CssClass = "status-link status-" + status.Replace(" ", "");
                 }
-                //e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
-                //e.Row.ToolTip = "Click to select this row.";
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    if (i < 3) 
+                    {
+                        // Add click event to cell
+                        e.Row.Cells[i].Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                        e.Row.Cells[i].ToolTip = "Click to select this row";
+                        e.Row.Cells[i].Style["cursor"] = "pointer"; // Show pointer cursor
+                    }
+                    else
+                    {
+                        // Remove any click events from other cells
+                        e.Row.Cells[i].Attributes.Remove("onclick");
+                        e.Row.Cells[i].ToolTip = "";
+                        e.Row.Cells[i].Style["cursor"] = "default"; // Show default cursor
+                    }
+                }
             }
         }
         protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
@@ -91,7 +114,11 @@ namespace Society_management
                 // Get current status
                 LinkButton lnkStatus = (LinkButton)row.FindControl("lnkStatus");
                 string currentStatus = lnkStatus.Text;
-
+                if (currentStatus == "Resolved")
+                {
+                    ErrorStatus(); // Show error message
+                    return; // Exit without updating
+                }
                 // Determine next status
                 string newStatus = GetNextStatus(currentStatus);
 
@@ -100,14 +127,25 @@ namespace Society_management
                 {
                     // Update the UI
                     lnkStatus.Text = newStatus;
-
+                    
                     // Update the CSS class
                     lnkStatus.CssClass = "status-link status-" + newStatus.Replace(" ", "");
 
-                    // Show success message
-                    Panel1.Visible = true;
-                    Label1.Text = "Status updated successfully!";
-                    Panel1.CssClass = "alert alert-success";
+                        string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Status updated successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'View_Complaints.aspx';
+            });";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
+                    
+                    //// Show success message
+                    //Panel1.Visible = true;
+                    //Label1.Text = "Status updated successfully!";
+                    //Panel1.CssClass = "alert alert-success";
                 }
                 else
                 {
@@ -127,11 +165,38 @@ namespace Society_management
                 case "Pending": return "Active";
                 case "Active": return "In Progress";
                 case "In Progress": return "Resolved";
-                case "Resolved": return "Pending"; // or whatever makes sense for your workflow
+                case "Resolved":return "Resolved";
                 default: return "Pending";
             }
         }
+ 
+        public void ErrorStatus()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Select c.Status from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                Status = reader["Status"].ToString();
+                if(Status == "Resolved")
+                {
+                    string script = @"
+        <script>
+            Swal.fire({
+                icon: 'error',
+                text: 'Cannot change status from Resolved',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        </script>";
+                    ClientScript.RegisterStartupScript(this.GetType(), "StatusChangeError", script);
+                }
+            }
 
+        }
         private bool UpdateComplaintStatus(int complaintId, string newStatus)
         {
             // Implement your database update logic here
@@ -139,6 +204,13 @@ namespace Society_management
             string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                con.Open();
+                string updateQuery = @"UPDATE tblComplaint 
+                                    SET Resolve_date=GETDATE() 
+                                    WHERE Status = 'Resolved'";
+                SqlCommand updateCmd = new SqlCommand(updateQuery, con);
+                updateCmd.ExecuteNonQuery();
+                con.Close();
                 string query = "UPDATE tblComplaint SET Status = @Status WHERE Complaint_id = @ComplaintId";
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -148,6 +220,7 @@ namespace Society_management
                     con.Open();
                     int result = cmd.ExecuteNonQuery();
                     return result > 0;
+                   
                 }
             }
         }
