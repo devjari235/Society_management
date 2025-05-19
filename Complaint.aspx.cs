@@ -95,8 +95,8 @@ namespace Society_management
                 DataTable dt = new DataTable();
                 da.Fill(dt);
 
-                gvDisplay.DataSource = dt;
-                gvDisplay.DataBind();
+                //gvDisplay.DataSource = dt;
+                //gvDisplay.DataBind();
             }
         }
         private void SaveUploadedFiles(string complaintId)
