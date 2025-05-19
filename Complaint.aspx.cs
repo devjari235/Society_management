@@ -67,65 +67,6 @@ namespace Society_management
             }
         }
 
-        private void BindNotices()
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                conn.Open();
-
-                // Step 1: Update expired notices
-                string updateQuery = @"UPDATE tblNotices 
-                               SET Status = '' 
-                               WHERE Expiry_date < GETDATE() AND Status != 'Expired'";
-                SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
-                updateCmd.ExecuteNonQuery();
-
-                // Step 2: Fetch notices
-                //string selectQuery = @"SELECT Notice_id, Title, Description, Expiry_date, File_path, Importance, Status 
-                //               FROM tblNotices 
-                //               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
-                //               ORDER BY Posted_date DESC";
-
-                string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE a.admin_id = @id AND (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE())  ORDER BY  n.Posted_date DESC";
-                SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                //gvDisplay.DataSource = dt;
-                //gvDisplay.DataBind();
-            }
-        }
-        private void SaveUploadedFiles(string complaintId)
-        {
-            string uploadFolder = Server.MapPath("~/Uploads/" + complaintId);
-
-            // Create directory if it doesn't exist
-
-
-            // Save each file
-            foreach (HttpPostedFile file in fileUpload.PostedFiles)
-            {
-                // Validate file size (5MB max)
-                if (file.ContentLength > 5 * 1024 * 1024)
-                {
-                    continue; // Skip or handle oversized files
-                }
-
-                // Generate a safe filename
-                string fileName = Path.GetFileName(file.FileName);
-                string filePath = Path.Combine(uploadFolder, fileName);
-
-                // Save the file
-                file.SaveAs(filePath);
-
-
-            }
-        }
-
         private bool ValidateComplaint()
         {
             // Server-side validation

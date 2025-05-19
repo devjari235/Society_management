@@ -106,6 +106,7 @@
     <Content Include="CommiteeMember.aspx" />
     <Content Include="Committee_Details.aspx" />
     <Content Include="Complaint.aspx" />
+    <Content Include="Complaint_Details.aspx" />
     <Content Include="CreateNotice.aspx" />
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
@@ -2347,6 +2348,13 @@
     </Compile>
     <Compile Include="Complaint.aspx.designer.cs">
       <DependentUpon>Complaint.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Complaint_Details.aspx.cs">
+      <DependentUpon>Complaint_Details.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Complaint_Details.aspx.designer.cs">
+      <DependentUpon>Complaint_Details.aspx</DependentUpon>
     </Compile>
     <Compile Include="CreateNotice.aspx.cs">
       <DependentUpon>CreateNotice.aspx</DependentUpon>

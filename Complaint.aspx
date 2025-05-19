@@ -81,6 +81,8 @@
                                 <asp:ListItem Value="Parking">Parking</asp:ListItem>
                                 <asp:ListItem Value="Noise">Noise Complaint</asp:ListItem>
                                 <asp:ListItem Value="Cleanliness">Cleanliness</asp:ListItem>
+                                <asp:ListItem Value="Cleanliness">Water</asp:ListItem>
+                                <asp:ListItem Value="Cleanliness">Electricity</asp:ListItem>
                                 <asp:ListItem Value="Other">Other</asp:ListItem>
                             </asp:DropDownList>
                             <div class="invalid-feedback" id="typeError">Please select a complaint type</div>
