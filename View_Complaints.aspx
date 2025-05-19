@@ -37,6 +37,7 @@
             });
         }
 
+
         // Row click handler
         $table.find('tbody').on('click', 'tr.clickable-row', function () {
             var ComplainId = $(this).attr('data-Complain-Id');
@@ -46,6 +47,28 @@
         });
     });
 </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialize DataTable
+            var $table = $('.table');
+            if (!$.fn.DataTable.isDataTable($table)) {
+                $table.DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true
+                });
+            }
+
+            // Add click handler for status links
+            $table.on('click', '.status-link', function (e) {
+                e.stopPropagation(); // Prevent row click event from firing
+            });
+        });
+    </script>
         <style>
 /* GridView Button-Row Style */
 .grid-view-custom {
@@ -111,6 +134,40 @@
     border-bottom: 2px solid #dee2e6;
     padding: 12px 15px;
 }
+.status-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.status-link:hover {
+    background-color: #f0f0f0;
+    text-decoration: underline;
+}
+
+/* Status-specific colors */
+.status-Pending {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.status-Active {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.status-InProgress {
+    color: #2196f3;
+    font-weight: bold;
+}
+
+.status-Resolved {
+    color: #9e9e9e;
+    font-weight: bold;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -135,7 +192,8 @@
     AutoGenerateColumns="False"
     CssClass="table table-striped table-bordered grid-view-custom"
     OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
+    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+    OnRowCommand="gvDisplay_RowCommand">
     <Columns>
         <asp:TemplateField HeaderText="User Name">
             <ItemTemplate>
@@ -147,14 +205,18 @@
                 <asp:Label Text='<%# Eval("Complaint_type") %>' runat="server" />
             </ItemTemplate>
         </asp:TemplateField>
-         <asp:TemplateField HeaderText="Priority">
+        <asp:TemplateField HeaderText="Priority">
             <ItemTemplate>
                 <asp:Label Text='<%# Eval("Priority") %>' runat="server" />
             </ItemTemplate>
         </asp:TemplateField>
         <asp:TemplateField HeaderText="Status">
             <ItemTemplate>
-                <asp:Label Text='<%# Eval("Status") %>' runat="server" />
+                <asp:LinkButton ID="lnkStatus" runat="server" 
+                    Text='<%# Eval("Status") %>' 
+                    CommandName="UpdateStatus" 
+                    CommandArgument='<%# Container.DataItemIndex %>'
+                    CssClass="status-link" />
             </ItemTemplate>
         </asp:TemplateField>
     </Columns>

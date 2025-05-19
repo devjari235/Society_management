@@ -54,8 +54,16 @@ namespace Society_management
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
-                e.Row.ToolTip = "Click to select this row.";
+                LinkButton lnkStatus = (LinkButton)e.Row.FindControl("lnkStatus");
+
+                // Apply CSS class based on status
+                if (lnkStatus != null)
+                {
+                    string status = lnkStatus.Text;
+                    lnkStatus.CssClass = "status-link status-" + status.Replace(" ", "");
+                }
+                //e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                //e.Row.ToolTip = "Click to select this row.";
             }
         }
         protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
@@ -68,6 +76,79 @@ namespace Society_management
 
                 // Redirect to details page with the id
                 Response.Redirect("Complaint_Details.aspx?id=" + ComplainId);
+            }
+        }
+        protected void gvDisplay_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "UpdateStatus")
+            {
+                int rowIndex = Convert.ToInt32(e.CommandArgument);
+                GridViewRow row = gvDisplay.Rows[rowIndex];
+
+                // Get the complaint ID from DataKeys
+                int complaintId = Convert.ToInt32(gvDisplay.DataKeys[rowIndex].Value);
+
+                // Get current status
+                LinkButton lnkStatus = (LinkButton)row.FindControl("lnkStatus");
+                string currentStatus = lnkStatus.Text;
+
+                // Determine next status
+                string newStatus = GetNextStatus(currentStatus);
+
+                // Update in database (implement this method)
+                if (UpdateComplaintStatus(complaintId, newStatus))
+                {
+                    // Update the UI
+                    lnkStatus.Text = newStatus;
+
+                    // Update the CSS class
+                    lnkStatus.CssClass = "status-link status-" + newStatus.Replace(" ", "");
+
+                    // Show success message
+                    Panel1.Visible = true;
+                    Label1.Text = "Status updated successfully!";
+                    Panel1.CssClass = "alert alert-success";
+                }
+                else
+                {
+                    // Show error message
+                    Panel1.Visible = true;
+                    Label1.Text = "Error updating status. Please try again.";
+                    Panel1.CssClass = "alert alert-danger";
+                }
+            }
+        }
+
+        private string GetNextStatus(string currentStatus)
+        {
+            // Define your status workflow
+            switch (currentStatus)
+            {
+                case "Pending": return "Active";
+                case "Active": return "In Progress";
+                case "In Progress": return "Resolved";
+                case "Resolved": return "Pending"; // or whatever makes sense for your workflow
+                default: return "Pending";
+            }
+        }
+
+        private bool UpdateComplaintStatus(int complaintId, string newStatus)
+        {
+            // Implement your database update logic here
+            // Example:
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE tblComplaint SET Status = @Status WHERE Complaint_id = @ComplaintId";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@Status", newStatus);
+                    cmd.Parameters.AddWithValue("@ComplaintId", complaintId);
+
+                    con.Open();
+                    int result = cmd.ExecuteNonQuery();
+                    return result > 0;
+                }
             }
         }
     }
