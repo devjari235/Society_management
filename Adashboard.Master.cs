@@ -21,14 +21,16 @@ namespace Society_management
             {
                 ShowNotificationCount();
                 Details();
+                MarkNoticesSeen();
             }
+
         }
 
         private void ShowNotificationCount()
         {
             using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
             {
-                string query = "SELECT COUNT(*) FROM tblNoticeBoard WHERE IsSeen = 0 AND Status = 'Active'";
+                string query = "SELECT COUNT(*) FROM tblComplaint WHERE IsSeen = 0";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 conn.Open();
                 int count = Convert.ToInt32(cmd.ExecuteScalar());
@@ -44,6 +46,16 @@ namespace Society_management
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "HideBadge",
                         "document.getElementById('notificationBadge').style.display = 'none';", true);
                 }
+            }
+        }
+        private void MarkNoticesSeen()
+        {
+            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+            {
+                string query = "UPDATE tblComplaint SET IsSeen = 1 WHERE IsSeen = 0";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+                cmd.ExecuteNonQuery();
             }
         }
 
