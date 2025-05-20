@@ -237,7 +237,7 @@
     <div class="row">
         <div class="col-sm-12 col-md-12">
                        <div class="table-responsive">
-                                   <asp:GridView ID="gvDisplay" runat="server"
+    <asp:GridView ID="gvDisplay" runat="server"
     AutoGenerateColumns="False"
     DataKeyNames="Notice_id"
     CssClass="table table-striped table-bordered grid-view-custom"

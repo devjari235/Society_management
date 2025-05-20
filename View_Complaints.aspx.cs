@@ -204,15 +204,18 @@ namespace Society_management
             string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                con.Open();
-                string updateQuery = @"UPDATE tblComplaint 
-                                    SET Resolve_date=GETDATE() 
-                                    WHERE Status = 'Resolved'";
-                SqlCommand updateCmd = new SqlCommand(updateQuery, con);
-                updateCmd.ExecuteNonQuery();
-                con.Close();
-                string query = "UPDATE tblComplaint SET Status = @Status WHERE Complaint_id = @ComplaintId";
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                //con.Open();
+                //string updateQuery = @"UPDATE tblComplaint 
+                //                    SET Resolve_date=GETDATE() 
+                //                    WHERE Status='Resolved'";
+                //SqlCommand updateCmd = new SqlCommand(updateQuery, con);
+                //updateCmd.ExecuteNonQuery();
+                //con.Close();
+                //string query = "UPDATE tblComplaint SET Status = @Status WHERE Complaint_id = @ComplaintId";
+                using (SqlCommand cmd = new SqlCommand(@"UPDATE tblComplaint 
+          SET Status = @Status,
+              Resolve_date = CASE WHEN @Status = 'Resolved' THEN GETDATE() ELSE Resolve_date END
+          WHERE Complaint_id = @ComplaintId", con))
                 {
                     cmd.Parameters.AddWithValue("@Status", newStatus);
                     cmd.Parameters.AddWithValue("@ComplaintId", complaintId);

@@ -113,7 +113,7 @@
 
                     <div class="mb-3">
                         <label for="fileUpload" class="form-label">Upload Supporting Documents (Optional)</label>
-                        <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" multiple />
+                        <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" multiple="" />
                         <div class="form-text">You can upload images or documents (max 5MB each)</div>
                     </div>
 
