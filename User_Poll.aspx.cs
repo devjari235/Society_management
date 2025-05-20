@@ -81,7 +81,7 @@ namespace Society_management
         private bool IsAdmin()
         {
             // In a real app, use proper role-based authentication
-            return Convert.ToBoolean(Session["IsAdmin"] ?? false);
+            return Convert.ToBoolean(Session["A_id"] ?? false);
         }
 
         private bool HasActivePoll()
