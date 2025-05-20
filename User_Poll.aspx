@@ -36,6 +36,7 @@
             height: 100%;
         }
         .result-text {
+
             position: absolute;
             right: 5px;
             top: 0;
@@ -234,7 +235,7 @@ body {
     right: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    color: white;
+    color: black;
     font-size: 0.85rem;
     font-weight: 600;
     text-shadow: 0 0 2px rgba(0,0,0,0.3);
