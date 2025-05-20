@@ -24,8 +24,9 @@ namespace Society_management
                 //{
                 //    ErrorStatus();
                 //}
-
+               
             }
+            
         }
         private void BindComplain()
         {
@@ -224,5 +225,6 @@ namespace Society_management
                 }
             }
         }
+        
     }
 }
