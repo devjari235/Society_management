@@ -35,7 +35,7 @@ namespace Society_management
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                string query = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status,c.Description,c.image,c.Create_date,c.Resolve_date,b.Block_name,f.Flate_no from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblFlat f ON o.Flate_id=f.Flate_id JOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id And c.Complaint_id=@c_id";
+                string query = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status,c.Description,c.image,c.Create_date,c.Resolve_date,b.Block_name,f.Flate_no from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblFlat f ON o.Flate_id=f.Flate_id where c.Complaint_id=@c_id and u.User_id=@id";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@c_id", id);
                 cmd.Parameters.AddWithValue("@id", Session["U_id"]);

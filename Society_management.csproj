@@ -2244,6 +2244,7 @@
     <Content Include="Owner_Membr.aspx" />
     <Content Include="Past_Committee.aspx" />
     <Content Include="Pending_Complaints.aspx" />
+    <Content Include="PollCreate.aspx" />
     <Content Include="Progress_Complaints.aspx" />
     <Content Include="Resolved_Complaints.aspx" />
     <Content Include="R_Society.aspx" />
@@ -2254,6 +2255,7 @@
     <Content Include="User_Complaint_Details.aspx" />
     <Content Include="User_pass_change.aspx" />
     <Content Include="User_Past_Committee.aspx" />
+    <Content Include="User_Poll.aspx" />
     <Content Include="User_profile.aspx" />
     <Content Include="User_ViewAllNotice.aspx" />
     <Content Include="U_EmailSend.aspx" />
@@ -2509,6 +2511,13 @@
     <Compile Include="Pending_Complaints.aspx.designer.cs">
       <DependentUpon>Pending_Complaints.aspx</DependentUpon>
     </Compile>
+    <Compile Include="PollCreate.aspx.cs">
+      <DependentUpon>PollCreate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PollCreate.aspx.designer.cs">
+      <DependentUpon>PollCreate.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Progress_Complaints.aspx.cs">
       <DependentUpon>Progress_Complaints.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2586,6 +2595,13 @@
     </Compile>
     <Compile Include="User_Past_Committee.aspx.designer.cs">
       <DependentUpon>User_Past_Committee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User_Poll.aspx.cs">
+      <DependentUpon>User_Poll.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User_Poll.aspx.designer.cs">
+      <DependentUpon>User_Poll.aspx</DependentUpon>
     </Compile>
     <Compile Include="User_profile.aspx.cs">
       <DependentUpon>User_profile.aspx</DependentUpon>
