@@ -97,7 +97,7 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive = 1 ORDER BY PollId DESC", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive=1 ORDER BY PollId DESC", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
