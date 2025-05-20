@@ -19,10 +19,11 @@ namespace Society_management
         {
             if (!IsPostBack)
             {
-                ShowNotificationCount();
+                
                 Details();
-                MarkNoticesSeen();
+                
             }
+            ShowNotificationCount();
 
         }
 
@@ -48,16 +49,7 @@ namespace Society_management
                 }
             }
         }
-        private void MarkNoticesSeen()
-        {
-            using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
-            {
-                string query = "UPDATE tblComplaint SET IsSeen = 1 WHERE IsSeen = 0";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
+        
 
 
         string img;
