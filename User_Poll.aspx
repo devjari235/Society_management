@@ -77,7 +77,6 @@ body {
     color: var(--text-color);
     background-color: #f5f7fa;
     margin: 0;
-    padding: 20px;
     min-height: 100vh;
 }
 
@@ -319,7 +318,6 @@ body {
 
 /* Messages */
 .message {
-    padding: 0.75rem 1.25rem;
     margin: 1rem 0;
     border-radius: var(--border-radius);
     font-size: 0.95rem;
@@ -340,7 +338,6 @@ body {
 
 /* Status Panels */
 .already-voted, .no-poll {
-    padding: 1.5rem;
     text-align: center;
     border-radius: var(--border-radius);
     margin: 1rem 0;
@@ -362,7 +359,6 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     .poll-container {
-        padding: 1.5rem;
         margin: 1rem auto;
     }
     
@@ -370,20 +366,10 @@ body {
         font-size: 1.3rem;
     }
     
-    .admin-section {
-        padding: 1rem;
-    }
+
 }
 
 @media (max-width: 576px) {
-    body {
-        padding: 15px;
-    }
-    
-    .poll-container {
-        padding: 1.25rem;
-    }
-    
     .poll-question {
         font-size: 1.2rem;
     }

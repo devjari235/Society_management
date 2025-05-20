@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -15,6 +12,10 @@ namespace Society_management
         {
             if (!IsPostBack)
             {
+                if (Session["U_id"] == null)
+                {
+                    Response.Redirect("Login.aspx"); // Redirect to login if not authenticated
+                }
                 LoadPoll();
                 CheckAdmin();
             }
@@ -73,16 +74,14 @@ namespace Society_management
 
         private void CheckAdmin()
         {
-            // In a real application, you would check the user's role
-            // For this example, we'll use a query string parameter
             pnlAdmin.Visible = IsAdmin();
             btnClosePoll.Visible = HasActivePoll();
         }
 
         private bool IsAdmin()
         {
-            // This is a simple check - in a real app, use proper authentication
-            return Request.QueryString["admin"] == "true";
+            // In a real app, use proper role-based authentication
+            return Convert.ToBoolean(Session["IsAdmin"] ?? false);
         }
 
         private bool HasActivePoll()
@@ -124,14 +123,21 @@ namespace Society_management
 
         private bool HasUserVoted(int pollId)
         {
-            // In a real application, you would track users properly
-            // For this example, we'll use a cookie
-            if (Request.Cookies["Voted_" + pollId] != null)
-            {
-                return true;
-            }
+            if (Session["U_id"] == null) return false;
 
-            return false;
+            string userId = Session["U_id"].ToString();
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                SqlCommand cmd = new SqlCommand("SELECT COUNT(*) FROM tblVotes WHERE PollId = @PollId AND User_id = @UserId", conn);
+                cmd.Parameters.AddWithValue("@PollId", pollId);
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
         }
 
         private void DisplayResults(int pollId)
@@ -189,6 +195,12 @@ namespace Society_management
 
         protected void btnVote_Click(object sender, EventArgs e)
         {
+            if (Session["U_id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
             if (rblOptions.SelectedIndex == -1)
             {
                 lblVoteError.Text = "Please select an option to vote.";
@@ -198,35 +210,57 @@ namespace Society_management
 
             int optionId = Convert.ToInt32(rblOptions.SelectedValue);
             int pollId = GetActivePoll().Rows[0].Field<int>("PollId");
+            string userId = Session["U_id"].ToString();
 
-            // Record vote
-            RecordVote(pollId, optionId);
+            if (HasUserVoted(pollId))
+            {
+                lblVoteError.Text = "You have already voted in this poll.";
+                lblVoteError.Visible = true;
+                return;
+            }
 
-            // Set cookie to prevent multiple votes
-            HttpCookie cookie = new HttpCookie("Voted_" + pollId, "true");
-            cookie.Expires = DateTime.Now.AddYears(1);
-            Response.Cookies.Add(cookie);
-
-            // Reload page to show results
-            Response.Redirect(Request.RawUrl);
+            try
+            {
+                RecordVote(pollId, optionId, userId);
+                Response.Redirect(Request.RawUrl);
+            }
+            catch (SqlException ex)
+            {
+                if (ex.Number == 2601 || ex.Number == 2627) // Unique constraint violation
+                {
+                    lblVoteError.Text = "You have already voted in this poll.";
+                }
+                else
+                {
+                    lblVoteError.Text = "An error occurred while recording your vote. Please try again.";
+                }
+                lblVoteError.Visible = true;
+            }
+            catch (Exception)
+            {
+                lblVoteError.Text = "An unexpected error occurred. Please try again.";
+                lblVoteError.Visible = true;
+            }
         }
 
-        private void RecordVote(int pollId, int optionId)
+        private void RecordVote(int pollId, int optionId, string userId)
         {
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO tblVotes (PollId, OptionId, VoteDate, User_id) VALUES (@PollId, @OptionId, @VoteDate, @id)", conn);
+                SqlCommand cmd = new SqlCommand(
+                    "INSERT INTO tblVotes (PollId, OptionId, VoteDate, User_id) " +
+                    "VALUES (@PollId, @OptionId, @VoteDate, @UserId)", conn);
+
                 cmd.Parameters.AddWithValue("@PollId", pollId);
                 cmd.Parameters.AddWithValue("@OptionId", optionId);
                 cmd.Parameters.AddWithValue("@VoteDate", DateTime.Now);
-                cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+                cmd.Parameters.AddWithValue("@UserId", userId);
+
                 cmd.ExecuteNonQuery();
             }
         }
-
-        
     }
 }
