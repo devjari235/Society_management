@@ -38,7 +38,7 @@ namespace Society_management
                 conn.Open();
 
                 // Get all polls
-                SqlCommand cmd = new SqlCommand("SELECT PollId, Question FROM tblPolls ORDER BY PollId DESC", conn);
+                SqlCommand cmd = new SqlCommand("SELECT PollId, Question FROM tblPolls where IsActive=1 ORDER BY PollId DESC", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(pollsTable);
             }
