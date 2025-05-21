@@ -117,7 +117,6 @@
     <Content Include="EditEvent.aspx" />
     <Content Include="EmailSend.aspx" />
     <Content Include="EventDetails.aspx" />
-    <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Family_member.aspx" />
     <Content Include="Flat.aspx" />
@@ -2417,13 +2416,6 @@
     </Compile>
     <Compile Include="EventDetails.aspx.designer.cs">
       <DependentUpon>EventDetails.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Events.aspx.cs">
-      <DependentUpon>Events.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Events.aspx.designer.cs">
-      <DependentUpon>Events.aspx</DependentUpon>
     </Compile>
     <Compile Include="ExpireNotice.aspx.cs">
       <DependentUpon>ExpireNotice.aspx</DependentUpon>
