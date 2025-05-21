@@ -10,6 +10,7 @@ namespace Society_management
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            CloseAllPolls();
             if (!IsPostBack)
             {
                 if (Session["U_id"] == null)
@@ -18,9 +19,8 @@ namespace Society_management
                 }
                 LoadPoll();
                 CheckAdmin();
-               
             }
-            CloseAllPolls();
+            
         }
 
         private void LoadPoll()
@@ -102,8 +102,7 @@ namespace Society_management
                 SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive=1", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-            }
-
+            };
             return dt;
         }
 
@@ -204,7 +203,9 @@ namespace Society_management
                 SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
                 cmd.ExecuteNonQuery();
             }
+
         }
+
         protected void btnVote_Click(object sender, EventArgs e)
         {
             if (Session["U_id"] == null)
