@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
+using System.Data.SqlClient;
 using System.Web.UI.WebControls;
 
 namespace Society_management
@@ -17,93 +14,109 @@ namespace Society_management
         {
             if (!IsPostBack)
             {
-                LoadPollResults();
+                LoadAllPollResults();
+                CloseAllPolls();
             }
         }
-
-        private void LoadPollResults()
+        private void CloseAllPolls()
         {
-            int pollId = 0;
-            string question = "";
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
+                cmd.ExecuteNonQuery();
+            }
+        }
+        private void LoadAllPollResults()
+        {
+            DataTable pollsTable = new DataTable();
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
 
-                // Get active and non-expired poll, latest one
-                SqlCommand cmd = new SqlCommand(@"
-            SELECT *
-            FROM tblPolls 
-            WHERE IsActive = 1 AND (Expried_date IS NULL OR Expried_date > GETDATE())
-            ORDER BY PollId DESC", conn);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        pollId = Convert.ToInt32(reader["PollId"]);
-                        question = reader["Question"].ToString();
-                    }
-                }
+                // Get all polls
+                SqlCommand cmd = new SqlCommand("SELECT PollId, Question FROM tblPolls ORDER BY PollId DESC", conn);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(pollsTable);
             }
 
-            if (pollId > 0)
+            if (pollsTable.Rows.Count > 0)
             {
-                litQuestion.Text = $"<h2>{question}</h2>";
+                // Add options and total votes to each poll
+                pollsTable.Columns.Add("Options", typeof(DataTable));
+                pollsTable.Columns.Add("TotalVotes", typeof(int));
 
-                DataTable dt = new DataTable();
-                dt.Columns.Add("OptionText", typeof(string));
-                dt.Columns.Add("VoteCount", typeof(int));
-                dt.Columns.Add("Percentage", typeof(int));
-
-                int totalVotes = 0;
-
-                using (SqlConnection conn = new SqlConnection(connString))
+                foreach (DataRow pollRow in pollsTable.Rows)
                 {
-                    conn.Open();
+                    int pollId = Convert.ToInt32(pollRow["PollId"]);
 
-                    // Get total votes for the poll
-                    SqlCommand totalCmd = new SqlCommand("SELECT COUNT(*) FROM tblVotes WHERE PollId = @PollId", conn);
-                    totalCmd.Parameters.AddWithValue("@PollId", pollId);
-                    totalVotes = (int)totalCmd.ExecuteScalar();
+                    DataTable optionsTable = new DataTable();
+                    int totalVotes = 0;
 
-                    // Get option-wise vote counts
-                    SqlCommand resultCmd = new SqlCommand(@"
-                SELECT o.OptionText,
-                       COUNT(v.VoteId) AS VoteCount
-                FROM tblPollOptions o
-                LEFT JOIN tblVotes v ON o.OptionId = v.OptionId
-                WHERE o.PollId = @PollId
-                GROUP BY o.OptionText, o.OptionId
-                ORDER BY o.OptionId", conn);
-                    resultCmd.Parameters.AddWithValue("@PollId", pollId);
-
-                    using (SqlDataReader reader = resultCmd.ExecuteReader())
+                    using (SqlConnection conn = new SqlConnection(connString))
                     {
-                        while (reader.Read())
-                        {
-                            string optionText = reader["OptionText"].ToString();
-                            int voteCount = Convert.ToInt32(reader["VoteCount"]);
-                            int percentage = totalVotes > 0 ? (int)((voteCount * 100.0) / totalVotes) : 0;
+                        conn.Open();
 
-                            dt.Rows.Add(optionText, voteCount, percentage);
+                        // Total votes for this poll
+                        SqlCommand totalCmd = new SqlCommand("SELECT COUNT(*) FROM tblVotes WHERE PollId = @PollId", conn);
+                        totalCmd.Parameters.AddWithValue("@PollId", pollId);
+                        totalVotes = (int)totalCmd.ExecuteScalar();
+
+                        // Get option-wise vote counts
+                        SqlCommand optionCmd = new SqlCommand(@"
+                            SELECT o.OptionText,
+                                   COUNT(v.VoteId) AS VoteCount
+                            FROM tblPollOptions o
+                            LEFT JOIN tblVotes v ON o.OptionId = v.OptionId
+                            WHERE o.PollId = @PollId
+                            GROUP BY o.OptionText, o.OptionId
+                            ORDER BY o.OptionId", conn);
+
+                        optionCmd.Parameters.AddWithValue("@PollId", pollId);
+                        SqlDataAdapter da = new SqlDataAdapter(optionCmd);
+                        da.Fill(optionsTable);
+
+                        // Add percentage column
+                        optionsTable.Columns.Add("Percentage", typeof(int));
+
+                        foreach (DataRow optionRow in optionsTable.Rows)
+                        {
+                            int count = Convert.ToInt32(optionRow["VoteCount"]);
+                            int percent = totalVotes > 0 ? (int)((count * 100.0) / totalVotes) : 0;
+                            optionRow["Percentage"] = percent;
                         }
                     }
+
+                    pollRow["Options"] = optionsTable;
+                    pollRow["TotalVotes"] = totalVotes;
                 }
 
-                rptResults.DataSource = dt;
-                rptResults.DataBind();
-
-                litTotalVotes.Text = totalVotes.ToString();
+                // Bind to outer repeater (one poll per slide)
+                rptPolls.DataSource = pollsTable;
+                rptPolls.DataBind();
+                pnlNoPoll.Visible = false;
             }
             else
             {
-                litQuestion.Text = "<h2>No active poll available.</h2>";
-                litTotalVotes.Text = "0";
-                rptResults.DataSource = null;
-                rptResults.DataBind();
+                rptPolls.DataSource = null;
+                rptPolls.DataBind();
+                pnlNoPoll.Visible = true;
             }
         }
 
+        protected void rptPolls_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                Repeater rptOptions = (Repeater)e.Item.FindControl("rptOptions");
+                DataRowView drv = (DataRowView)e.Item.DataItem;
+                DataTable options = drv["Options"] as DataTable;
+                rptOptions.DataSource = options;
+                rptOptions.DataBind();
+            }
+        }
     }
 }

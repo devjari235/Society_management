@@ -15,30 +15,21 @@ namespace Society_management
     {
 
         /// <summary>
-        /// litQuestion control.
+        /// rptPolls control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litQuestion;
+        protected global::System.Web.UI.WebControls.Repeater rptPolls;
 
         /// <summary>
-        /// rptResults control.
+        /// pnlNoPoll control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptResults;
-
-        /// <summary>
-        /// litTotalVotes control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litTotalVotes;
+        protected global::System.Web.UI.WebControls.Panel pnlNoPoll;
     }
 }
