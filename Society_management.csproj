@@ -108,12 +108,15 @@
     <Content Include="Committee_Details.aspx" />
     <Content Include="Complaint.aspx" />
     <Content Include="Complaint_Details.aspx" />
+    <Content Include="CreateEvent.aspx" />
     <Content Include="CreateNotice.aspx" />
     <Content Include="css\Customstylesheet.css" />
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
+    <Content Include="EditEvent.aspx" />
     <Content Include="EmailSend.aspx" />
+    <Content Include="EventDetails.aspx" />
     <Content Include="Events.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Family_member.aspx" />
@@ -2264,6 +2267,7 @@
     <Content Include="U_registration.aspx" />
     <Content Include="VerifyOtp.aspx" />
     <Content Include="VerifyOtpUser.aspx" />
+    <Content Include="ViewEvents.aspx" />
     <Content Include="View_Allnotice.aspx" />
     <Content Include="View_CommiteeMember.aspx" />
     <Content Include="View_Complaints.aspx" />
@@ -2372,6 +2376,13 @@
     <Compile Include="Complaint_Details.aspx.designer.cs">
       <DependentUpon>Complaint_Details.aspx</DependentUpon>
     </Compile>
+    <Compile Include="CreateEvent.aspx.cs">
+      <DependentUpon>CreateEvent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CreateEvent.aspx.designer.cs">
+      <DependentUpon>CreateEvent.aspx</DependentUpon>
+    </Compile>
     <Compile Include="CreateNotice.aspx.cs">
       <DependentUpon>CreateNotice.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2386,12 +2397,26 @@
     <Compile Include="Documents.aspx.designer.cs">
       <DependentUpon>Documents.aspx</DependentUpon>
     </Compile>
+    <Compile Include="EditEvent.aspx.cs">
+      <DependentUpon>EditEvent.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditEvent.aspx.designer.cs">
+      <DependentUpon>EditEvent.aspx</DependentUpon>
+    </Compile>
     <Compile Include="EmailSend.aspx.cs">
       <DependentUpon>EmailSend.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="EmailSend.aspx.designer.cs">
       <DependentUpon>EmailSend.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="EventDetails.aspx.cs">
+      <DependentUpon>EventDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EventDetails.aspx.designer.cs">
+      <DependentUpon>EventDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="Events.aspx.cs">
       <DependentUpon>Events.aspx</DependentUpon>
@@ -2659,6 +2684,13 @@
     </Compile>
     <Compile Include="VerifyOtpUser.aspx.designer.cs">
       <DependentUpon>VerifyOtpUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ViewEvents.aspx.cs">
+      <DependentUpon>ViewEvents.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ViewEvents.aspx.designer.cs">
+      <DependentUpon>ViewEvents.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_Allnotice.aspx.cs">
       <DependentUpon>View_Allnotice.aspx</DependentUpon>
