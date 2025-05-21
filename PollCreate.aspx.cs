@@ -68,7 +68,7 @@ namespace Society_management
             try
             {
                 // First, close any active polls
-                CloseAllPolls();
+               
 
                 // Create new poll
                 int newPollId = CreateNewPoll(txtNewQuestion.Text);
@@ -125,17 +125,7 @@ namespace Society_management
         //    lblAdminSuccess.CssClass = "alert alert-success";
         //}
 
-        private void CloseAllPolls()
-        {
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date = CAST(GETDATE() AS DATE)", conn);
-                cmd.ExecuteNonQuery();
-            }
-        }
 
         private int CreateNewPoll(string question)
         {

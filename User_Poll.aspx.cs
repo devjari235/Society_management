@@ -18,7 +18,9 @@ namespace Society_management
                 }
                 LoadPoll();
                 CheckAdmin();
+               
             }
+            CloseAllPolls();
         }
 
         private void LoadPoll()
@@ -97,7 +99,7 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive=1 ORDER BY PollId DESC", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive=1", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -192,7 +194,17 @@ namespace Society_management
 
             return dt;
         }
+        private void CloseAllPolls()
+        {
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
+                cmd.ExecuteNonQuery();
+            }
+        }
         protected void btnVote_Click(object sender, EventArgs e)
         {
             if (Session["U_id"] == null)
