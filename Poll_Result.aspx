@@ -18,21 +18,45 @@
 <!-- Swiper JS -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-<script>
-    var swiper = new Swiper(".mySwiper", {
-        slidesPerView: 1,
-        spaceBetween: 30,
-        loop: true,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev"
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true
-        }
+<%--<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        new Swiper(".pollSwiper", {
+            slidesPerView: 1,
+            spaceBetween: 30,
+            loop: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev"
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true
+            }
+        });
     });
-</script>
+</script>--%>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            new Swiper(".pollSwiper", {
+                slidesPerView: 1,
+                spaceBetween: 30,
+                loop: true,
+                autoplay: {
+                    delay: 3000, // 3 seconds
+                    disableOnInteraction: false
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true
+                }
+            });
+        });
+    </script>
 
     <style>
         .poll-results {
@@ -82,6 +106,44 @@
         transform: scale(1.05);
     }
     </style>
+    <style>
+    .swiper {
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+    }
+
+    .swiper-wrapper {
+        display: flex;
+    }
+
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        height: auto; /* important for content-based height */
+        min-height: 250px; /* ensure some visible area */
+    }
+
+    .poll-card {
+        width: 100%;
+        max-width: 700px;
+    }
+
+    .progress {
+        height: 20px;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+        color: #007bff;
+    }
+</style>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
@@ -102,8 +164,8 @@
                                     <strong><%# Eval("OptionText") %></strong>
                                     <div class="progress mt-1" style="height: 20px;">
                                         <div class="progress-bar bg-success" role="progressbar"
-                                             style='width:<%# Eval("Percentage") %>%;'
-                                             aria-valuenow='<%# Eval("Percentage") %>' aria-valuemin="0" aria-valuemax="100">
+                                            style='width:<%# Eval("Percentage") %>%;'
+                                            aria-valuenow='<%# Eval("Percentage") %>' aria-valuemin="0" aria-valuemax="100">
                                             <%# Eval("VoteCount") %> votes (<%# Eval("Percentage") %>%)
                                         </div>
                                     </div>
@@ -116,24 +178,23 @@
                 </div>
             </ItemTemplate>
         </asp:Repeater>
-
-        <asp:Panel ID="pnlNoPoll" runat="server" Visible="false">
-            <div class="swiper-slide d-flex align-items-center justify-content-center" style="height: 300px; width:250%;">
-                <div class="text-center p-4">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Polls" style="width: 80px;" />
-                    <h5 class="mt-3 fw-bold text-secondary">No Poll Available</h5>
-                    <p class="text-muted">Stay tuned! New polls will appear here soon.</p>
-                </div>
-            </div>
-        </asp:Panel>
     </div>
+
+    <asp:Panel ID="pnlNoPoll" runat="server" Visible="false">
+        <div class="swiper-slide d-flex align-items-center justify-content-center" style="height: 300px;">
+            <div class="text-center p-4">
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Polls" style="width: 80px;" />
+                <h5 class="mt-3 fw-bold text-secondary">No Poll Available</h5>
+                <p class="text-muted">Stay tuned! New polls will appear here soon.</p>
+            </div>
+        </div>
+    </asp:Panel>
 
     <!-- Navigation -->
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
 </div>
-
 
 
 </asp:Content>
