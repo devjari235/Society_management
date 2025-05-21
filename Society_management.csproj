@@ -2245,6 +2245,7 @@
     <Content Include="Past_Committee.aspx" />
     <Content Include="Pending_Complaints.aspx" />
     <Content Include="PollCreate.aspx" />
+    <Content Include="Poll_Result.aspx" />
     <Content Include="Progress_Complaints.aspx" />
     <Content Include="Resolved_Complaints.aspx" />
     <Content Include="R_Society.aspx" />
@@ -2517,6 +2518,13 @@
     </Compile>
     <Compile Include="PollCreate.aspx.designer.cs">
       <DependentUpon>PollCreate.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Poll_Result.aspx.cs">
+      <DependentUpon>Poll_Result.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Poll_Result.aspx.designer.cs">
+      <DependentUpon>Poll_Result.aspx</DependentUpon>
     </Compile>
     <Compile Include="Progress_Complaints.aspx.cs">
       <DependentUpon>Progress_Complaints.aspx</DependentUpon>

@@ -90,6 +90,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+    <a href="Poll_Result.aspx" class="dashboard-btn btn-Dashboard">
+    <i class="fas fa-arrow-left"></i>Poll Result
+</a>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
             <div class="container">

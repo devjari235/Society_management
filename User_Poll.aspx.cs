@@ -2,7 +2,6 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Society_management
 {
@@ -10,17 +9,16 @@ namespace Society_management
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            CloseAllPolls();
             if (!IsPostBack)
             {
                 if (Session["U_id"] == null)
                 {
-                    Response.Redirect("Login.aspx"); // Redirect to login if not authenticated
+                    Response.Redirect("Login.aspx"); // Not logged in
                 }
+
+                CloseAllPolls();
                 LoadPoll();
-                CheckAdmin();
             }
-            
         }
 
         private void LoadPoll()
@@ -31,40 +29,23 @@ namespace Society_management
                 pnlActivePoll.Visible = true;
                 pnlNoActivePoll.Visible = false;
 
-                litQuestion.Text = dtPoll.Rows[0]["Question"].ToString();
                 int pollId = Convert.ToInt32(dtPoll.Rows[0]["PollId"]);
+                litQuestion.Text = dtPoll.Rows[0]["Question"].ToString();
 
-                // Check if user has already voted
-                bool hasVoted = HasUserVoted(pollId);
-
-                if (hasVoted)
+                if (HasUserVoted(pollId))
                 {
                     pnlVote.Visible = false;
                     pnlAlreadyVoted.Visible = true;
-                    pnlResults.Visible = true;
-                    DisplayResults(pollId);
                 }
                 else
                 {
                     pnlVote.Visible = true;
                     pnlAlreadyVoted.Visible = false;
-                    pnlResults.Visible = false;
 
-                    // Load options
-                    DataTable dtOptions = GetPollOptions(pollId);
-                    rblOptions.DataSource = dtOptions;
+                    rblOptions.DataSource = GetPollOptions(pollId);
                     rblOptions.DataTextField = "OptionText";
                     rblOptions.DataValueField = "OptionId";
                     rblOptions.DataBind();
-                }
-
-                // If admin, show results
-                if (IsAdmin())
-                {
-                    pnlResults.Visible = true;
-                    DisplayResults(pollId);
-                    pnlCurrentPollResults.Visible = true;
-                    DisplayAdminResults(pollId);
                 }
             }
             else
@@ -74,22 +55,16 @@ namespace Society_management
             }
         }
 
-        private void CheckAdmin()
+        private void CloseAllPolls()
         {
-            pnlAdmin.Visible = IsAdmin();
-            btnClosePoll.Visible = HasActivePoll();
-        }
+            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
-        private bool IsAdmin()
-        {
-            // In a real app, use proper role-based authentication
-            return Convert.ToBoolean(Session["A_id"] ?? false);
-        }
-
-        private bool HasActivePoll()
-        {
-            DataTable dt = GetActivePoll();
-            return dt.Rows.Count > 0;
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         private DataTable GetActivePoll()
@@ -99,10 +74,11 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive=1", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive = 1", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-            };
+            }
+
             return dt;
         }
 
@@ -141,71 +117,6 @@ namespace Society_management
             }
         }
 
-        private void DisplayResults(int pollId)
-        {
-            DataTable dtResults = GetPollResults(pollId);
-            rptResults.DataSource = dtResults;
-            rptResults.DataBind();
-
-            int totalVotes = 0;
-            foreach (DataRow row in dtResults.Rows)
-            {
-                totalVotes += Convert.ToInt32(row["VoteCount"]);
-            }
-            litTotalVotes.Text = totalVotes.ToString();
-        }
-
-        private void DisplayAdminResults(int pollId)
-        {
-            DataTable dtResults = GetPollResults(pollId);
-            rptAdminResults.DataSource = dtResults;
-            rptAdminResults.DataBind();
-
-            int totalVotes = 0;
-            foreach (DataRow row in dtResults.Rows)
-            {
-                totalVotes += Convert.ToInt32(row["VoteCount"]);
-            }
-            litAdminTotalVotes.Text = totalVotes.ToString();
-        }
-
-        private DataTable GetPollResults(int pollId)
-        {
-            DataTable dt = new DataTable();
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                string query = @"
-                SELECT po.OptionId, po.OptionText, COUNT(v.VoteId) AS VoteCount,
-                       CAST(COUNT(v.VoteId) * 100.0 / NULLIF((SELECT COUNT(*) FROM tblVotes WHERE PollId = @PollId), 0) AS DECIMAL(5,2)) AS Percentage
-                FROM tblPollOptions po
-                LEFT JOIN tblVotes v ON po.OptionId = v.OptionId AND v.PollId = @PollId
-                WHERE po.PollId = @PollId
-                GROUP BY po.OptionId, po.OptionText
-                ORDER BY po.OptionId";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@PollId", pollId);
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-            }
-
-            return dt;
-        }
-        private void CloseAllPolls()
-        {
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
-                cmd.ExecuteNonQuery();
-            }
-
-        }
-
         protected void btnVote_Click(object sender, EventArgs e)
         {
             if (Session["U_id"] == null)
@@ -237,21 +148,9 @@ namespace Society_management
                 RecordVote(pollId, optionId, userId);
                 Response.Redirect(Request.RawUrl);
             }
-            catch (SqlException ex)
-            {
-                if (ex.Number == 2601 || ex.Number == 2627) // Unique constraint violation
-                {
-                    lblVoteError.Text = "You have already voted in this poll.";
-                }
-                else
-                {
-                    lblVoteError.Text = "An error occurred while recording your vote. Please try again.";
-                }
-                lblVoteError.Visible = true;
-            }
             catch (Exception)
             {
-                lblVoteError.Text = "An unexpected error occurred. Please try again.";
+                lblVoteError.Text = "An error occurred while recording your vote. Please try again.";
                 lblVoteError.Visible = true;
             }
         }
