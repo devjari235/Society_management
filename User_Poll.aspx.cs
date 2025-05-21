@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace Society_management
 {
@@ -13,52 +15,56 @@ namespace Society_management
             {
                 if (Session["U_id"] == null)
                 {
-                    Response.Redirect("Login.aspx"); // Not logged in
+                    Response.Redirect("Login.aspx");
                 }
 
                 CloseAllPolls();
-                LoadPoll();
+                LoadPolls();
             }
         }
-
-        private void LoadPoll()
+        public class PollDisplay
         {
-            DataTable dtPoll = GetActivePoll();
-            if (dtPoll.Rows.Count > 0)
+            public int PollId { get; set; }
+            public string Question { get; set; }
+            public bool HasVoted { get; set; }
+            public DataTable Options { get; set; }
+        }
+        private void LoadPolls()
+        {
+            DataTable polls = GetActivePoll();
+            if (polls.Rows.Count == 0)
             {
-                pnlActivePoll.Visible = true;
-                pnlNoActivePoll.Visible = false;
-
-                int pollId = Convert.ToInt32(dtPoll.Rows[0]["PollId"]);
-                litQuestion.Text = dtPoll.Rows[0]["Question"].ToString();
-
-                if (HasUserVoted(pollId))
-                {
-                    pnlVote.Visible = false;
-                    pnlAlreadyVoted.Visible = true;
-                }
-                else
-                {
-                    pnlVote.Visible = true;
-                    pnlAlreadyVoted.Visible = false;
-
-                    rblOptions.DataSource = GetPollOptions(pollId);
-                    rblOptions.DataTextField = "OptionText";
-                    rblOptions.DataValueField = "OptionId";
-                    rblOptions.DataBind();
-                }
+                pnlNoPoll.Visible = true;
+                rptPolls.Visible = false;
+                return;
             }
-            else
+
+            pnlNoPoll.Visible = false;
+            rptPolls.Visible = true;
+
+            List<PollDisplay> pollDisplays = new List<PollDisplay>();
+
+            foreach (DataRow row in polls.Rows)
             {
-                pnlActivePoll.Visible = false;
-                pnlNoActivePoll.Visible = true;
+                int pollId = Convert.ToInt32(row["PollId"]);
+                bool hasVoted = HasUserVoted(pollId);
+
+                pollDisplays.Add(new PollDisplay
+                {
+                    PollId = pollId,
+                    Question = row["Question"].ToString(),
+                    HasVoted = hasVoted,
+                    Options = hasVoted ? null : GetPollOptions(pollId)
+                });
             }
+
+            rptPolls.DataSource = pollDisplays;
+            rptPolls.DataBind();
         }
 
         private void CloseAllPolls()
         {
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
@@ -74,7 +80,7 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive = 1", conn);
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblPolls WHERE IsActive = 1 ORDER BY PollId DESC", conn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -100,8 +106,6 @@ namespace Society_management
 
         private bool HasUserVoted(int pollId)
         {
-            if (Session["U_id"] == null) return false;
-
             string userId = Session["U_id"].ToString();
             string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
@@ -114,44 +118,6 @@ namespace Society_management
                 conn.Open();
                 int count = (int)cmd.ExecuteScalar();
                 return count > 0;
-            }
-        }
-
-        protected void btnVote_Click(object sender, EventArgs e)
-        {
-            if (Session["U_id"] == null)
-            {
-                Response.Redirect("Login.aspx");
-                return;
-            }
-
-            if (rblOptions.SelectedIndex == -1)
-            {
-                lblVoteError.Text = "Please select an option to vote.";
-                lblVoteError.Visible = true;
-                return;
-            }
-
-            int optionId = Convert.ToInt32(rblOptions.SelectedValue);
-            int pollId = GetActivePoll().Rows[0].Field<int>("PollId");
-            string userId = Session["U_id"].ToString();
-
-            if (HasUserVoted(pollId))
-            {
-                lblVoteError.Text = "You have already voted in this poll.";
-                lblVoteError.Visible = true;
-                return;
-            }
-
-            try
-            {
-                RecordVote(pollId, optionId, userId);
-                Response.Redirect(Request.RawUrl);
-            }
-            catch (Exception)
-            {
-                lblVoteError.Text = "An error occurred while recording your vote. Please try again.";
-                lblVoteError.Visible = true;
             }
         }
 
@@ -174,5 +140,72 @@ namespace Society_management
                 cmd.ExecuteNonQuery();
             }
         }
+
+        protected void rptPolls_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "Vote")
+            {
+                if (Session["U_id"] == null)
+                {
+                    Response.Redirect("Login.aspx");
+                    return;
+                }
+
+                string userId = Session["U_id"].ToString();
+                int pollId = Convert.ToInt32(e.CommandArgument);
+
+                // Find the RadioButtonList control
+                RadioButtonList rbl = (RadioButtonList)e.Item.FindControl("rblOptions");
+
+                if (rbl != null && rbl.SelectedIndex != -1)
+                {
+                    int optionId = Convert.ToInt32(rbl.SelectedValue);
+
+                    // Check if user hasn't already voted
+                    if (!HasUserVoted(pollId))
+                    {
+                        RecordVote(pollId, optionId, userId);
+                        string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Your vote has been recorded successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'User_Poll.aspx';
+            });";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
+                        // Show success message (optional)
+
+                    }
+                    else
+                    {
+                        // User already voted
+                        ScriptManager.RegisterStartupScript(this, GetType(), "showalert",
+                            "alert('You have already voted in this poll.');", true);
+                       
+                    }
+                }
+                else
+                {
+                    string script = @"
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            text:  'Please select an option before voting.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'Try Again'
+                        });
+                    </script>";
+
+                    ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
+                    // No option selected
+                }
+
+                // Refresh the page to show updated results
+                LoadPolls();
+            }
+        }
+        
     }
 }
