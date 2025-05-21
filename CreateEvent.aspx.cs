@@ -80,12 +80,16 @@ namespace Society_management
                     {
                         con.Open();
                         cmd.ExecuteNonQuery();
-
-                        // Show success message
-                        lblMessage.Text = "Event created successfully!";
-                        lblMessage.CssClass = "text-success";
-                        lblMessage.Visible = true;
-
+                        string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Event created successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'CreateEvent.aspx';
+            });";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
                         // Clear form
                         txtEventName.Text = "";
                         txtEventDescription.Text = "";

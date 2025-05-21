@@ -219,7 +219,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="Events.aspx"><i class="fas fa-calendar-alt"></i>Events</a>
+                            <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i>Events</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="Payments.aspx"><i class="fas fa-rupee-sign"></i>Payments</a>

@@ -3,6 +3,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- jQuery (must come first) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js (required for Bootstrap dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <style>
         .event-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -24,7 +33,7 @@
         .page-header {
             margin: 30px 0;
             padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
+
         }
         .no-events {
             text-align: center;
@@ -35,20 +44,20 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server" />
-<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server" />
-
-<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
+<asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
+</asp:Content>
+<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
         <div class="row">
             <div class="col-12">
-                <div class="d-flex justify-content-between align-items-center page-header">
+                <div class="d-flex justify-content-between align-items-center no-border-header">
                     <h1>Upcoming Events</h1>
-                    <asp:HyperLink ID="lnkCreateEvent" runat="server" NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-primary">Create New Event</asp:HyperLink>
+                    <asp:HyperLink ID="lnkCreateEvent" runat="server" NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-primary"><i class="fas fa-plus-circle"></i> Create New Event</asp:HyperLink>
                 </div>
             </div>
         </div>
-
+</asp:Content>
+<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container">
         <div class="row">
             <asp:Repeater ID="rptEvents" runat="server">
                 <ItemTemplate>
