@@ -157,7 +157,7 @@
                                              <div class="row">
                                                  <div>
 
-                                                     <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Status") %>' Font-Bold="True" Font-Size="Medium" CssClass="badge bg-danger"></asp:Label>
+                                                     <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Status") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
                                                  </div>
                                              </div>
                                          </div>
