@@ -206,26 +206,26 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="UserDashboard.aspx"><i class="fas fa-home"></i>Home</a>
+                            <a class="nav-link" href="UserDashboard.aspx"><i class="fas fa-home"></i> Home</a>
                         </li>
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="complaintsDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-exclamation-circle"></i>Complaints
+                                <i class="fas fa-exclamation-circle"></i> Complaints
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="Complaints.aspx">View Complaints</a></li>
-                                <li><a class="dropdown-item" href="Complaint.aspx">New Complaint</a></li>
+                                <li><a class="dropdown-item" href="Complaint.aspx"> New Complaint</a></li>
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i>Events</a>
+                            <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i> Events</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="Payments.aspx"><i class="fas fa-rupee-sign"></i>Payments</a>
+                            <a class="nav-link" href="Payments.aspx"><i class="fas fa-rupee-sign"></i> Payments</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="NoticeBoard.aspx"><i class="fas fa-bullhorn"></i>Notices</a>
+                            <a class="nav-link" href="NoticeBoard.aspx"><i class="fas fa-bullhorn"></i> Notices</a>
                         </li>
                     </ul>
 

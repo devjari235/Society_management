@@ -21,7 +21,7 @@ namespace Society_management
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             string email = txtEmail.Text;
-            string ph=txtEmail.Text;
+            string ph = txtEmail.Text;
             string pass = txtPassword.Text;
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
@@ -50,19 +50,19 @@ namespace Society_management
             else
             {
                 // Session["a"] = txtEmail.Text;
-               
-                SqlDataReader dr=cmd.ExecuteReader();
-                
-                
+
+                SqlDataReader dr = cmd.ExecuteReader();
+
+
                 if (dr.HasRows)
                 {
                     while (dr.Read())
                     {
-                        Session["A_id"]=dr.GetValue(0).ToString();
-                        Session["A_name"]=dr.GetValue(1).ToString();
-                        Session["A_email"]=dr.GetValue(2).ToString();
-                        Session["A_pass"]=dr.GetValue(3).ToString();
-                        Session["A_phone"]=dr.GetValue(4).ToString();
+                        Session["A_id"] = dr.GetValue(0).ToString();
+                        Session["A_name"] = dr.GetValue(1).ToString();
+                        Session["A_email"] = dr.GetValue(2).ToString();
+                        Session["A_pass"] = dr.GetValue(3).ToString();
+                        Session["A_phone"] = dr.GetValue(4).ToString();
                     }
                     Response.Redirect("AdminDashboard.aspx");
                 }

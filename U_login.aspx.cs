@@ -58,7 +58,7 @@ namespace Society_management
                     while (dr.Read())
                     {
                         Session["U_id"] = dr.GetValue(0).ToString();
-                        
+
                     }
                     Response.Redirect("UserDashboard.aspx");
                 }

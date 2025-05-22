@@ -14,7 +14,7 @@ namespace Society_management
     public partial class User_profile : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-        
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -57,7 +57,7 @@ namespace Society_management
                 email = reader["Email"].ToString();
                 ph = reader["Phone_no"].ToString();
                 gen = reader["Gender"].ToString();
-                age = reader["Age"].ToString() ;
+                age = reader["Age"].ToString();
                 marite = reader["Marital_Status"].ToString();
                 img = reader["Photo"].ToString();
 
@@ -175,11 +175,11 @@ namespace Society_management
                 txtDesi.Text = Desi;
                 txtDesi.ReadOnly = true;
                 txtDesi.Visible = true;
-                lblDesi.Visible=true;
+                lblDesi.Visible = true;
                 txtRole.Text = Role;
                 txtRole.ReadOnly = true;
                 txtRole.Visible = true;
-                lblRole.Visible=true;
+                lblRole.Visible = true;
             }
             else
             {
