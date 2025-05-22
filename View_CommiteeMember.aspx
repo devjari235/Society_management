@@ -121,7 +121,6 @@
     justify-content: space-between;
     align-items: center;
     gap: 10px;
-    margin-bottom: 20px;
     flex-wrap: wrap;
     
 }
