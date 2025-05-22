@@ -4,6 +4,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- jQuery (must come first) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js (required for Bootstrap dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .poll-container {
             max-width: 700px;
@@ -91,7 +99,6 @@
         display: flex;
         justify-content: flex-end;
         gap: 15px;
-        margin: 15px 0;
         width: 100%;
     }
 

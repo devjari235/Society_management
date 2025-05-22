@@ -2270,6 +2270,7 @@
     <Content Include="VerifyOtpUser.aspx" />
     <Content Include="ViewEvents.aspx" />
     <Content Include="View_Allnotice.aspx" />
+    <Content Include="View_AllPoll.aspx" />
     <Content Include="View_CommiteeMember.aspx" />
     <Content Include="View_Complaints.aspx" />
     <Content Include="View_Document.aspx" />
@@ -2706,6 +2707,13 @@
     </Compile>
     <Compile Include="View_Allnotice.aspx.designer.cs">
       <DependentUpon>View_Allnotice.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="View_AllPoll.aspx.cs">
+      <DependentUpon>View_AllPoll.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="View_AllPoll.aspx.designer.cs">
+      <DependentUpon>View_AllPoll.aspx</DependentUpon>
     </Compile>
     <Compile Include="View_CommiteeMember.aspx.cs">
       <DependentUpon>View_CommiteeMember.aspx</DependentUpon>

@@ -1,5 +1,13 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Poll_Result.aspx.cs" Inherits="Society_management.Poll_Result" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+        <!-- jQuery (must come first) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper.js (required for Bootstrap dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Optional: Bootstrap CSS for styling (not required for icons to work) -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -142,50 +150,106 @@
     .swiper-button-prev {
         color: #007bff;
     }
-    .create-notice-container{
-    display: flex; 
-    justify-content: flex-end;
+</style>
+                <style>
+ /* Page Title Buttons Container */
+.page-title-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    
 }
 
-    .btn-create-notice {
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            text-decoration:none;
-        }
-        
-        .btn-create-notice:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            color: #FFD700;
-            background: linear-gradient(135deg, #9d3df1 0%, #5b1ae6 100%);
-            text-decoration:none;
-        }
-        
-        .btn-create-notice i {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-</style>
+/* Left-aligned button group */
+.button-group-left {
+    display: flex;
+    gap: 10px;
+}
 
+/* Base Button Style */
+.dashboard-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    border: none;
+}
+
+.dashboard-btn i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+/* Individual Button Colors */
+.btn-create {
+    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+    margin-left: auto; /* Pushes Create button to the right */
+}
+
+.btn-Dashboard {
+    background: linear-gradient(135deg, #0575E6 0%, #021B79 100%);
+}
+
+.btn-Expire{
+    background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+}
+
+/* Hover Effects */
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: #FFD700;
+    text-decoration:none;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .page-title-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .button-group-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .btn-create {
+        width: 100%;
+        margin-left: 0;
+        order: -1; /* Moves Create button to top on mobile */
+    }
+    
+    .dashboard-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-        <div class="create-notice-container">
-            <a href="PollCreate.aspx" class="btn-create-notice">
-                <i class="fas fa-plus-circle"></i> Poll Create
-            </a>
-        </div>
+ <div class="page-title-buttons">
+       <div class="button-group-left">
+   <a href="View_AllPoll.aspx" class="dashboard-btn btn-Dashboard">
+       <i class="bi bi-eye-fill"></i>View All polls
+   </a>
+           </div>
+     <a href="PollCreate.aspx" class="dashboard-btn btn-create">
+         <i class="fas fa-plus-circle"></i> Add Poll
+     </a>
+ </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
 <div class="swiper pollSwiper">
