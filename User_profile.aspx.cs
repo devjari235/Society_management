@@ -13,7 +13,7 @@ namespace Society_management
 {
     public partial class User_profile : System.Web.UI.Page
     {
-        string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        public static string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -96,6 +96,66 @@ namespace Society_management
             cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
             cmd.ExecuteNonQuery();
             con.Close();
+            if (IsOwner(Convert.ToInt32(Session["U_id"])))
+            {
+                using (SqlConnection conn = new SqlConnection(strcon))
+                {
+                    string query = @"
+            UPDATE O
+            SET O.Owner_name = @name, 
+                O.Contact_no = @ph, 
+                O.Email_id = @mail
+            FROM tblOwner O
+            INNER JOIN tblUser U ON O.Owner_id = U.Owner_id
+            WHERE U.User_id = @id";
+
+                    using (SqlCommand cmd1 = new SqlCommand(query, conn))
+                    {
+                        cmd1.Parameters.AddWithValue("@name", txtname.Text);
+                        cmd1.Parameters.AddWithValue("@ph", txtphone.Text);
+                        cmd1.Parameters.AddWithValue("@mail", txtemail.Text);
+                        cmd1.Parameters.AddWithValue("@id", Convert.ToInt32(Session["U_id"]));
+
+                        conn.Open();
+                        cmd1.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                }
+            }
+            else if (IsFamilyMember(Convert.ToInt32(Session["U_id"])))
+            {
+                using (SqlConnection con1 = new SqlConnection(strcon))
+                {
+                    string query = @"UPDATE f
+SET f.Member_name = @name, 
+    f.Phone_no = @ph, 
+    f.Email = @mail, 
+    f.Age = @age, 
+    f.Gender = @gen
+FROM tblFamilyMember f
+INNER JOIN tblUser u 
+    ON f.Owner_id = u.Owner_id
+    AND f.Email = u.Email
+    AND f.Phone_no = u.Phone_no
+    AND f.Member_name = u.User_name
+WHERE u.User_id = @id
+";
+
+                    using (SqlCommand cmd2 = new SqlCommand(query, con1))
+                    {
+                        cmd2.Parameters.AddWithValue("@name", txtname.Text);
+                        cmd2.Parameters.AddWithValue("@ph", txtphone.Text);
+                        cmd2.Parameters.AddWithValue("@mail", txtemail.Text);
+                        cmd2.Parameters.AddWithValue("@age", Convert.ToInt32(txtAge.Text));
+                        cmd2.Parameters.AddWithValue("@gen", txtGender.Text);
+                        cmd2.Parameters.AddWithValue("@id", Convert.ToInt32(Session["U_id"]));
+
+                        con1.Open();
+                        cmd2.ExecuteNonQuery();
+                        con1.Close();
+                    }
+                }
+            }
 
             string successScript = @"
         <script>
@@ -152,6 +212,49 @@ namespace Society_management
                 return count > 0;
             }
         }
+
+        public static bool IsOwner(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(strcon))
+            using (SqlCommand cmd = new SqlCommand(@"
+        SELECT CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM tblUser U
+                INNER JOIN tblOwner O ON U.Owner_id = O.Owner_id
+                WHERE U.User_id = @UserId 
+                AND O.Owner_id NOT IN (
+                    SELECT F.Owner_id FROM tblFamilyMember F
+                )
+            ) THEN 1 ELSE 0 
+        END", conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                conn.Open();
+                return Convert.ToBoolean(cmd.ExecuteScalar());
+            }
+        }
+
+        public static bool IsFamilyMember(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(strcon))
+            using (SqlCommand cmd = new SqlCommand(@"
+        SELECT CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM tblUser U
+                JOIN tblFamilyMember F ON U.Owner_id = F.Owner_id
+                WHERE U.User_id = @UserId
+            ) THEN 1 ELSE 0 
+        END", conn))
+            {
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                conn.Open();
+                return Convert.ToBoolean(cmd.ExecuteScalar());
+            }
+        }
+
+
 
 
         string Desi;
