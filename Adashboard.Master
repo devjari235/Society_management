@@ -275,27 +275,30 @@ footer a:hover {
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="AdminDashboard.aspx"><i class="fas fa-home"></i> Home</a>
+                                <a class="nav-link" href="AdminDashboard.aspx"><i class="fas fa-home"></i>Home</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#resident" id="residentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-users"></i> Residents
+                                    <i class="fas fa-users"></i>Residents
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="residentsDropdown">
                                     <li><a class="dropdown-item" href="/View_Owner.aspx">All Members</a></li>
                                     <li><a class="dropdown-item" href="/Owner.aspx">Add Owner</a></li>
                                 </ul>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-money-bill-wave"></i> Finance
+                            <li class="nav-item">
+                                <a class="nav-link" href="Accounting.aspx"> <i class="fas fa-money-bill-wave"></i> Finance</a>
+                            </li>
+                           <%-- <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="Accounting.aspx" id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-money-bill-wave"></i>Finance
                                 </a>
-                                <ul class="dropdown-menu" aria-labelledby="financeDropdown">
+                                   <ul class="dropdown-menu" aria-labelledby="financeDropdown">
                                     <li><a class="dropdown-item" href="/Finance/Maintenance.aspx">Maintenance</a></li>
                                     <li><a class="dropdown-item" href="/Finance/Expenses.aspx">Expenses</a></li>
                                     <li><a class="dropdown-item" href="/Finance/Reports.aspx">Reports</a></li>
                                 </ul>
-                            </li>
+                            </li>--%>
                             <li class="nav-item">
                                 <a class="nav-link" href="View_Complaints.aspx">
                                     <span class="icon-container">
