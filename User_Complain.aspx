@@ -171,12 +171,51 @@
     100% { opacity: 1; }
 }
     </style>
+       <style>
+           .btn-create-notice {
+            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            text-decoration:none;
+        }
+        
+        .btn-create-notice:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            color: #FFD700;
+            background: linear-gradient(135deg, #9d3df1 0%, #5b1ae6 100%);
+            text-decoration:none;
+        }
+        
+        .btn-create-notice i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        .create-notice-container{
+    display: flex; 
+    justify-content: flex-end;
+}
+       </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
+        <div class="create-notice-container">
+            <a href="Complaint.aspx" class="btn-create-notice">
+                <i class="fas fa-plus-circle"></i> New Complain
+            </a>
+        </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
          <div class="container">
