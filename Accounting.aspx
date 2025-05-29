@@ -244,12 +244,23 @@
             margin-top: 20px;
             margin-bottom: 10px;
         }
+        .form-select{
+            width: 15%;
+        }
     </style>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+            <div>
+            <asp:DropDownList ID="ddlProfitLossPeriod" runat="server" CssClass="form-select form-select-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
+                <asp:ListItem Text="Current Month" Value="1" Selected="True" />
+                <asp:ListItem Text="Last Month" Value="2" />
+                <asp:ListItem Text="Current Year" Value="3" />
+                <asp:ListItem Text="Custom Period" Value="4" />
+            </asp:DropDownList>
+        </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
@@ -351,9 +362,9 @@
                         <div class="tab-pane fade show active" id="income" role="tabpanel">
                             <div class="d-flex justify-content-between mb-3">
                                 <h5>Income Transactions</h5>
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
+                                <%--<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
                                     <i class="fas fa-plus"></i>Add Income
-                                </button>
+                                </button>--%>
                             </div>
                             <div class="table-responsive">
                                 <asp:GridView ID="gvIncome" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover"
@@ -408,9 +419,9 @@
                         <div class="tab-pane fade" id="expense" role="tabpanel">
                             <div class="d-flex justify-content-between mb-3">
                                 <h5>Expense Transactions</h5>
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                                <%--<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
                                     <i class="fas fa-plus"></i>Add Expense
-                                </button>
+                                </button>--%>
                             </div>
                             <div class="table-responsive">
                                 <asp:GridView ID="gvExpense" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover"
@@ -623,14 +634,7 @@
                         <div class="tab-pane fade" id="profitloss" role="tabpanel">
                             <div class="d-flex justify-content-between mb-3">
                                 <h4>Profit & Loss Statement</h4>
-                                <div>
-                                    <asp:DropDownList ID="ddlProfitLossPeriod" runat="server" CssClass="form-select form-select-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
-                                        <asp:ListItem Text="Current Month" Value="1" Selected="True" />
-                                        <asp:ListItem Text="Last Month" Value="2" />
-                                        <asp:ListItem Text="Current Year" Value="3" />
-                                        <asp:ListItem Text="Custom Period" Value="4" />
-                                    </asp:DropDownList>
-                                </div>
+
                             </div>
 
                             <div class="card mb-3">

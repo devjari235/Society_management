@@ -33,6 +33,7 @@ namespace Society_management
                 BindcurrentBallence();
                 BindIncome();
                 BindExpense();
+                
             }
         }
 
@@ -59,7 +60,7 @@ namespace Society_management
                                t.ReceivedFrom, t.PaidTo, t.PaymentMethod 
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
-                               WHERE t.TransactionType = @TransactionType";
+                               WHERE t.TransactionType = @TransactionType and admin_id=@id";
 
                 // Add date filter if specified
                 if (fromDate.HasValue && toDate.HasValue)
@@ -71,6 +72,8 @@ namespace Society_management
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@TransactionType", transactionType);
+                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+
 
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -93,7 +96,7 @@ namespace Society_management
                 string query = @"SELECT c.CategoryName, SUM(t.Amount) AS TotalAmount
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
-                               WHERE t.TransactionType = 'Income'";
+                               WHERE t.TransactionType = 'Income'  and admin_id=@id";
 
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -109,6 +112,7 @@ namespace Society_management
                     cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                     cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                 }
+                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dtIncomeSummary);
@@ -131,7 +135,7 @@ namespace Society_management
                 string query = @"SELECT c.CategoryName, SUM(t.Amount) AS TotalAmount
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
-                               WHERE t.TransactionType = 'Expense'";
+                               WHERE t.TransactionType = 'Expense'  and admin_id=@id";
 
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -146,7 +150,10 @@ namespace Society_management
                 {
                     cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                     cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
+
                 }
+                cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dtExpenseSummary);
@@ -179,13 +186,14 @@ namespace Society_management
 
                     using (SqlConnection con = new SqlConnection(connectionString))
                     {
-                        string query = "INSERT INTO BalanceEntry (User_id, EntryType, Category, Amount) VALUES (@UserID, @EntryType, @Category, @Amount)";
+                        string query = "INSERT INTO BalanceEntry (EntryType, Category, Amount, admin_id) VALUES (@EntryType, @Category, @Amount, @id)";
                         using (SqlCommand cmd = new SqlCommand(query, con))
                         {
-                            cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = 1; // Or dynamic user id
+                            //cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = 1; // Or dynamic user id
                             cmd.Parameters.Add("@EntryType", SqlDbType.NVarChar, 50).Value = entryType;
                             cmd.Parameters.Add("@Category", SqlDbType.NVarChar, 100).Value = category;
                             cmd.Parameters.Add("@Amount", SqlDbType.Decimal).Value = amount;
+                            cmd.Parameters.AddWithValue("@id", Session["A_id"]);
 
                             con.Open();
                             cmd.ExecuteNonQuery();
@@ -224,8 +232,9 @@ namespace Society_management
 
                 // Load Assets
                 SqlCommand cmdAssets = new SqlCommand(
-                    "SELECT EntryID, Category, Amount FROM BalanceEntry WHERE EntryType='Asset' AND User_id=1",
+                    "SELECT EntryID, Category, Amount FROM BalanceEntry WHERE EntryType='Asset' AND admin_id=@id",
                     con);
+                cmdAssets.Parameters.AddWithValue("@id", Session["A_id"]);
                 SqlDataAdapter daAssets = new SqlDataAdapter(cmdAssets);
                 DataTable dtAssets = new DataTable();
                 daAssets.Fill(dtAssets);
@@ -236,8 +245,9 @@ namespace Society_management
 
                 // Load Liabilities - Make sure this matches your actual database schema
                 SqlCommand cmdLiabilities = new SqlCommand(
-                    "SELECT EntryID, Category, Amount FROM BalanceEntry WHERE EntryType='Liability' AND User_id=1",
+                    "SELECT EntryID, Category, Amount FROM BalanceEntry WHERE EntryType='Liability' AND admin_id=@id",
                     con);
+                cmdLiabilities.Parameters.AddWithValue("@id", Session["A_id"]);
                 SqlDataAdapter daLiabilities = new SqlDataAdapter(cmdLiabilities);
                 DataTable dtLiabilities = new DataTable();
                 daLiabilities.Fill(dtLiabilities);
@@ -519,7 +529,7 @@ namespace Society_management
                 cmd.Parameters.AddWithValue("@Description", txtIncomeDescription.Text);
                 cmd.Parameters.AddWithValue("@ReceivedFrom", txtReceivedFrom.Text);
                 cmd.Parameters.AddWithValue("@PaymentMethod", ddlIncomePaymentMethod.SelectedValue);
-                cmd.Parameters.AddWithValue("@CreatedBy", 1);
+                cmd.Parameters.AddWithValue("@CreatedBy", Session["A_id"]);
 
                 con.Open();
                 cmd.ExecuteNonQuery();
@@ -565,7 +575,7 @@ namespace Society_management
                         cmd.Parameters.AddWithValue("@Description", txtExpenseDescription.Text);
                         cmd.Parameters.AddWithValue("@PaidTo", txtPaidTo.Text);
                         cmd.Parameters.AddWithValue("@PaymentMethod", ddlExpensePaymentMethod.SelectedValue);
-                        cmd.Parameters.AddWithValue("@CreatedBy", 2);
+                        cmd.Parameters.AddWithValue("@CreatedBy", Session["A_id"]);
 
                         con.Open();
                         cmd.ExecuteNonQuery();

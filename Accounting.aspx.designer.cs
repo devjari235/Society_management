@@ -15,6 +15,15 @@ namespace Society_management
     {
 
         /// <summary>
+        /// ddlProfitLossPeriod control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlProfitLossPeriod;
+
+        /// <summary>
         /// litTotalIncome control.
         /// </summary>
         /// <remarks>
@@ -229,15 +238,6 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litNetWorth;
-
-        /// <summary>
-        /// ddlProfitLossPeriod control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlProfitLossPeriod;
 
         /// <summary>
         /// rptIncomeCategories control.
