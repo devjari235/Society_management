@@ -94,8 +94,8 @@
 
         <asp:Panel ID="pnlNoEvents" runat="server" CssClass="col-12 no-events" Visible="false">
             <h3>No upcoming events found.</h3>
-            <p>Would you like to <asp:HyperLink ID="lnkCreateFirstEvent" runat="server"
-                NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-link">create the first one</asp:HyperLink>?</p>
+<%--            <p>Would you like to <asp:HyperLink ID="lnkCreateFirstEvent" runat="server"
+                NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-link">create the first one</asp:HyperLink>?</p>--%>
         </asp:Panel>
 
         <asp:Label ID="lblMessage" runat="server" CssClass="alert" Visible="false" style="display: block;"></asp:Label>
