@@ -25,7 +25,8 @@ namespace Society_management
             string pass = txtPassword.Text;
             SqlConnection con = new SqlConnection(strcon);
             con.Open();
-            string query = "select * from tblAdmin where (email=@mail or phone_no=@phone) and (password=@pass)";
+            //string query = "select * from tblAdmin where (email=@mail or phone_no=@phone) and (password=@pass)";
+            string query = "select * from tblAdmin where (email COLLATE SQL_Latin1_General_CP1_CI_AS = @mail or phone_no = @phone) and password COLLATE SQL_Latin1_General_CP1_CS_AS = @pass";
             SqlCommand cmd = new SqlCommand(query, con);
             cmd.Parameters.AddWithValue("mail", email);
             cmd.Parameters.AddWithValue("phone", ph);
