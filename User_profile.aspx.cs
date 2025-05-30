@@ -14,13 +14,15 @@ namespace Society_management
         {
             if (Session["U_id"] == null)
             {
-                Response.Redirect("Login.aspx");
+                Response.Redirect("U_login.aspx");
                 return;
             }
 
             int userId = Convert.ToInt32(Session["U_id"]);
             if (!IsPostBack)
             {
+                int id = GetMemberID(userId);
+                ViewState["memberId"] = id; 
                 BindDetails();
                 bindRole();
                 IsCommitteeMember(userId);
@@ -31,6 +33,35 @@ namespace Society_management
                 UpdateProfilePicture();
             }
         }
+
+        public int GetMemberID(int userId)
+        {
+            int memberId = -1;
+
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                con.Open();
+                string query = @"SELECT TOP 1 fm.Member_id 
+                         FROM tblFamilyMember fm 
+                         JOIN tblUser u ON u.Owner_id = fm.Owner_id 
+                         WHERE u.User_id = @UserId";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        memberId = Convert.ToInt32(reader["Member_id"]);
+                    }
+                }
+            }
+
+            return memberId;
+        }
+
+
 
         string name, email, ph, gen, age, marite, img;
 
@@ -120,6 +151,7 @@ namespace Society_management
             // Update family member table if user is a family member
             if (IsFamilyMember(userId))
             {
+                int id = (int)ViewState["memberId"];
                 using (SqlConnection con1 = new SqlConnection(strcon))
                 {
                     string query = @"UPDATE tblFamilyMember
@@ -128,9 +160,7 @@ namespace Society_management
                                         Email = @mail, 
                                         Age = @age, 
                                         Gender = @gen
-                                    WHERE Member_id = (
-                                        SELECT Member_id FROM tblUser WHERE User_id = @id
-                                    )";
+                                    WHERE Member_id = @id";
 
                     using (SqlCommand cmd2 = new SqlCommand(query, con1))
                     {
@@ -139,7 +169,7 @@ namespace Society_management
                         cmd2.Parameters.AddWithValue("@mail", txtemail.Text);
                         cmd2.Parameters.AddWithValue("@age", Convert.ToInt32(txtAge.Text));
                         cmd2.Parameters.AddWithValue("@gen", txtGender.Text);
-                        cmd2.Parameters.AddWithValue("@id", userId);
+                        cmd2.Parameters.AddWithValue("@id", id);
 
                         con1.Open();
                         cmd2.ExecuteNonQuery();
@@ -187,37 +217,52 @@ namespace Society_management
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
 
-        public bool IsOwner(int userId)
-        {
-            using (SqlConnection conn = new SqlConnection(strcon))
-            {
-                string query = "SELECT COUNT(*) FROM tblUser U INNER JOIN tblOwner O ON U.Owner_id = O.Owner_id WHERE U.User_id = @User_id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@User_id", userId);
-                conn.Open();
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
-            }
-        }
-
-        public bool IsFamilyMember(int userId)
-        {
-            using (SqlConnection conn = new SqlConnection(strcon))
-            {
-                string query = "SELECT COUNT(*) FROM tblUser WHERE User_id = @User_id ";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@User_id", userId);
-                conn.Open();
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
-            }
-        }
-
         public bool IsCommitteeMember(int userId)
         {
             using (SqlConnection conn = new SqlConnection(strcon))
             {
                 string query = "SELECT COUNT(*) FROM tblCommitteeMember WHERE User_id = @User_id AND Status = 'Active'";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@User_id", userId);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+        public bool IsOwner(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(strcon))
+            {
+                string query = @"
+        SELECT COUNT(*) 
+FROM tblUser U
+JOIN tblOwner O ON U.Owner_id = O.Owner_id
+WHERE U.User_id = @User_id";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@User_id", userId);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+
+        public bool IsFamilyMember(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(strcon))
+            {
+                // More flexible matching - checks if user is listed as any family member for the owner
+                string query = @"SELECT COUNT(*) 
+                        FROM tblUser U
+                        INNER JOIN tblFamilyMember FM ON U.Owner_id = FM.Owner_id
+                        WHERE U.User_id = @User_id
+                        AND (
+                            FM.Email = U.Email 
+                            OR FM.Phone_no = U.Phone_no
+                            OR FM.Member_name = U.User_name
+                        )";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@User_id", userId);
                 conn.Open();

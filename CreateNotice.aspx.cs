@@ -21,7 +21,6 @@ namespace Society_management
             {
                 // Initialize controls if needed
                 //txtExpiry.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
-
             }
         }
 
@@ -29,10 +28,31 @@ namespace Society_management
         {
             try
             {
+                string script = @"
+        Swal.fire({
+            title: 'Sending Email...',
+            text: 'Please wait while we send your email.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Email Sent!',
+                        text: 'Your email has been successfully sent.'
+                    });
+                }, 10000);
+            }
+        });";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "emailLoader", script, true);
+            
                 // Validate expiry date
                 if (!DateTime.TryParse(txtExpiry.Text, out DateTime expiryDate))
                 {
                     ShowError("Invalid expiry date format. Please use yyyy-MM-dd.");
+                    ScriptManager.RegisterStartupScript(this, GetType(), "hideLoader", "hideLoader();", true);
                     return;
                 }
 
@@ -45,6 +65,10 @@ namespace Society_management
 
                 if (sendEmail)
                 {
+                    // Register script to update loader message
+                    ScriptManager.RegisterStartupScript(this, GetType(), "updateLoaderMessage",
+                        "document.getElementById('loaderMessage').textContent = 'Sending emails...';", true);
+
                     // Send emails to selected groups
                     SendEmailsToSelectedGroups();
                 }
@@ -55,11 +79,17 @@ namespace Society_management
                     System.Diagnostics.Trace.WriteLine("In-app notification would be sent here");
                 }
 
-                ShowSuccess("Notice posted successfully!" + (sendEmail ? " Emails are being sent." : ""));
+                // Hide loader and show success message
+                ScriptManager.RegisterStartupScript(this, GetType(), "hideLoaderAndShowSuccess",
+                    "hideLoader(); Swal.fire('Success!', 'Notice posted successfully!" + (sendEmail ? " Emails have been sent." : "") + "', 'success').then(() => window.location = 'CreateNotice.aspx');",
+                    true);
             }
             catch (Exception ex)
             {
-                ShowError($"Error: {ex.Message}");
+                // Hide loader and show error
+                ScriptManager.RegisterStartupScript(this, GetType(), "hideLoaderAndShowError",
+                    "hideLoader(); Swal.fire('Error!', '" + ex.Message.Replace("'", "\\'") + "', 'error');",
+                    true);
             }
         }
 
@@ -76,24 +106,26 @@ namespace Society_management
 
                 filePath = relativePath;
             }
+
             string broadcast = string.Join(",",
-         cblBroadcast.Items.Cast<ListItem>()
-                           .Where(li => li.Selected)
-                           .Select(li => li.Text));
+                cblBroadcast.Items.Cast<ListItem>()
+                                  .Where(li => li.Selected)
+                                  .Select(li => li.Text));
 
             // Get selected send methods
             string send = string.Join(",",
                 cblemail.Items.Cast<ListItem>()
                               .Where(li => li.Selected)
                               .Select(li => li.Text));
+
             using (SqlConnection conn = new SqlConnection(strcon))
             {
                 string query = @"
-        INSERT INTO tblNotices 
-        (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id, Broadcast_By,Send_via)
-        VALUES
-        (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId,@broad,@send);
-        SELECT SCOPE_IDENTITY();";
+                    INSERT INTO tblNotices 
+                    (Title, Description, Posted_date, Expiry_date, File_path, Notice_type, Importance, Status, Admin_id, Broadcast_By, Send_via)
+                    VALUES
+                    (@Title, @Description, GETDATE(), @ExpiryDate, @FilePath, @NoticeType, @Importance, @Status, @AdminId, @broad, @send);
+                    SELECT SCOPE_IDENTITY();";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
@@ -105,15 +137,13 @@ namespace Society_management
                     cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
                     cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
                     cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@broad",broadcast);
-                    cmd.Parameters.AddWithValue("@send",send);
+                    cmd.Parameters.AddWithValue("@broad", broadcast);
+                    cmd.Parameters.AddWithValue("@send", send);
                     conn.Open();
                     return Convert.ToInt32(cmd.ExecuteScalar());
                 }
             }
         }
-
-
 
         private string GetStatus(DateTime expiryDate)
         {
@@ -204,6 +234,11 @@ namespace Society_management
                 var batch = emails.Skip(i * batchSize).Take(batchSize).ToList();
                 try
                 {
+                    // Update loader message with progress
+                    string progressMessage = $"Sending emails ({Math.Min((i + 1) * batchSize, emails.Count)} of {emails.Count})...";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "updateLoaderMessage" + i,
+                        $"document.getElementById('loaderMessage').textContent = '{progressMessage}';", true);
+
                     SendSingleEmail(batch);
                     System.Diagnostics.Trace.WriteLine($"Successfully sent batch {i + 1} of {batchCount} with {batch.Count} recipients");
                 }
