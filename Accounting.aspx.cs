@@ -16,11 +16,15 @@ namespace Society_management
         private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DateTime? fromDate = null;
         private DateTime? toDate = null;
-
+        decimal totalIncome;
+        decimal totalExpenses;
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            
             if (!IsPostBack)
             {
+               
                 // Set default date range to current month
                 fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 toDate = DateTime.Now;
@@ -61,7 +65,7 @@ namespace Society_management
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
                                WHERE t.TransactionType = @TransactionType and admin_id=@id";
-
+               
                 // Add date filter if specified
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -86,8 +90,7 @@ namespace Society_management
             }
             return dt;
         }
-        decimal totalIncome;
-        decimal totalExpenses;
+
         private void LoadIncomeSummary()
         {
             DataTable dtIncomeSummary = new DataTable();
@@ -113,7 +116,6 @@ namespace Society_management
                     cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                 }
                 cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dtIncomeSummary);
             }
@@ -124,6 +126,7 @@ namespace Society_management
             // Calculate total income
             totalIncome = dtIncomeSummary.AsEnumerable().Sum(row => row.Field<decimal>("TotalAmount"));
             litTotalIncome.Text = string.Format("₹{0:N2}", totalIncome);
+            litIncomeTotal.Text = string.Format("₹{0:N2}", totalIncome);
             litPLTotalIncome.Text = string.Format("₹{0:N2}", totalIncome);
         }
 
@@ -165,6 +168,7 @@ namespace Society_management
             // Calculate total expenses
             totalExpenses = dtExpenseSummary.AsEnumerable().Sum(row => row.Field<decimal>("TotalAmount"));
             litTotalExpense.Text = string.Format("₹{0:N2}", totalExpenses);
+            litExpenseTotal.Text= string.Format("₹{0:N2}", totalExpenses);
             litPLTotalExpenses.Text = string.Format("₹{0:N2}", totalExpenses);
         }
         public void BindcurrentBallence()
