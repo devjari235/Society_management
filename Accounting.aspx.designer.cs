@@ -285,24 +285,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Literal litNetProfitLoss;
 
         /// <summary>
-        /// Repeater1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater Repeater1;
-
-        /// <summary>
-        /// Literal1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal Literal1;
-
-        /// <summary>
         /// ddlIncomeCategory control.
         /// </summary>
         /// <remarks>
