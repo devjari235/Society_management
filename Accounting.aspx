@@ -249,6 +249,10 @@
       #ddlProfitLossPeriod{
           width:20%;
       }
+
+      .w-auto{
+          width:150px !important;
+      }
     </style>
 
 </asp:Content>
@@ -274,10 +278,11 @@
                     CssClass="form-select form-select-sm w-auto" 
                     AutoPostBack="true" 
                     OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
-                    <asp:ListItem Text="Current Month" Value="1" />
+                    <asp:ListItem Text="Current Month" Value="1"  Selected="True" />
                     <asp:ListItem Text="Last Month" Value="2" />
-                    <asp:ListItem Text="Current Year" Value="3" Selected="True" />
-                    <asp:ListItem Text="Custom Period" Value="4" />
+                    <asp:ListItem Text="Current Year" Value="3"/>
+                    <asp:ListItem Text="Last Year" Value="4"/>
+                    <asp:ListItem Text="Custom Period" Value="5" />
                 </asp:DropDownList>
             </div>
         </div>
@@ -707,7 +712,7 @@
                         </div>
                     </div>
 
-                    <div class="card mb-3">
+      <%--              <div class="card mb-3">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">Income</h5>
                         </div>
@@ -730,7 +735,7 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div>--%>
                 </div>
             </div>
 

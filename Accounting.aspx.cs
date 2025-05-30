@@ -16,6 +16,7 @@ namespace Society_management
         private string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         private DateTime? fromDate = null;
         private DateTime? toDate = null;
+        int? year = null;
         decimal totalIncome;
         decimal totalExpenses;
         protected void Page_Load(object sender, EventArgs e)
@@ -270,8 +271,13 @@ namespace Society_management
                 litTotalAssetsSummary.Text = string.Format("₹{0:N2}", totalAssets);
                 litTotalLiabilitiesSummary.Text = string.Format("₹{0:N2}", totalLiabilities);
                 litNetWorth.Text = string.Format("₹{0:N2}", totalAssets - totalLiabilities);
+
+
             }
         }
+
+
+
 
 
         private void DeleteEntry(int entryId)
@@ -459,16 +465,19 @@ namespace Society_management
 
         protected void ddlBalanceSheetPeriod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //SetDateRange(ddlBalanceSheetPeriod.SelectedValue);
+           // SetDateRange(ddlBalanceSheetPeriod.SelectedValue);
             LoadBalanceSheet();
         }
 
         protected void ddlProfitLossPeriod_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetDateRange(ddlProfitLossPeriod.SelectedValue);
+            BindIncomeGrid();
+            BindExpenseGrid();
             LoadIncomeSummary();
             LoadExpenseSummary();
             LoadProfitLossStatement();
+            LoadBalanceSheet();
         }
 
         private void SetDateRange(string period)
@@ -487,7 +496,11 @@ namespace Society_management
                     fromDate = new DateTime(DateTime.Now.Year, 1, 1);
                     toDate = DateTime.Now;
                     break;
-                case "4": // Custom Period (will be handled by modal)
+                case "4": // Last Year
+                    fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddYears(-1);
+                    toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
+                    break;
+                case "5": // Custom Period (will be handled by modal)
                     // Show modal to select dates
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "showCustomPeriodModal",
                         "$('#customPeriodModal').modal('show');", true);
@@ -550,7 +563,8 @@ namespace Society_management
             BindIncomeGrid();
             LoadIncomeSummary();
             LoadBalanceSheet();
-
+            SetDateRange(ddlProfitLossPeriod.SelectedValue);
+            LoadProfitLossStatement();
             // Show success message
             // lblSuccessMessage.Text = "Income record added successfully!";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal",
@@ -596,7 +610,8 @@ namespace Society_management
                     BindExpenseGrid();
                     LoadExpenseSummary();
                     LoadBalanceSheet();
-
+                    SetDateRange(ddlProfitLossPeriod.SelectedValue);
+                    LoadProfitLossStatement();
                     // Show success message
                     //lblSuccessMessage.Text = "Expense record added successfully!";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal",
