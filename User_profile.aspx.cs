@@ -12,6 +12,12 @@ namespace Society_management
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["U_id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
             int userId = Convert.ToInt32(Session["U_id"]);
             if (!IsPostBack)
             {
@@ -30,67 +36,73 @@ namespace Society_management
 
         public void BindDetails()
         {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "SELECT User_name, Phone_no, Email, Gender, Age, Marital_Status, Photo FROM tblUser WHERE User_id = @id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            if (reader.Read())
+            using (SqlConnection con = new SqlConnection(strcon))
             {
-                name = reader["User_name"].ToString();
-                email = reader["Email"].ToString();
-                ph = reader["Phone_no"].ToString();
-                gen = reader["Gender"].ToString();
-                age = reader["Age"].ToString();
-                marite = reader["Marital_Status"].ToString();
-                img = reader["Photo"].ToString();
+                con.Open();
+                string Query = "SELECT User_name, Phone_no, Email, Gender, Age, Marital_Status, Photo FROM tblUser WHERE User_id = @id";
+                SqlCommand cmd = new SqlCommand(Query, con);
+                cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
 
-                txtname.Text = name;
-                txtemail.Text = email;
-                txtphone.Text = ph;
-                txtAge.Text = age;
-                txtmarite.Text = marite;
-                txtGender.Text = gen;
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        name = reader["User_name"].ToString();
+                        email = reader["Email"].ToString();
+                        ph = reader["Phone_no"].ToString();
+                        gen = reader["Gender"].ToString();
+                        age = reader["Age"].ToString();
+                        marite = reader["Marital_Status"].ToString();
+                        img = reader["Photo"].ToString();
 
-                imgPhoto.ImageUrl = !string.IsNullOrEmpty(img) ? img : "~/Profile/Default.png";
+                        txtname.Text = name;
+                        txtemail.Text = email;
+                        txtphone.Text = ph;
+                        txtAge.Text = age;
+                        txtmarite.Text = marite;
+                        txtGender.Text = gen;
+
+                        imgPhoto.ImageUrl = !string.IsNullOrEmpty(img) ? img : "~/Profile/Default.png";
+                    }
+                }
             }
-
-            reader.Close();
-            con.Close();
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "UPDATE tblUser SET User_name=@name, Email=@mail, Phone_no=@ph, Gender=@gen, Age=@age, Marital_Status=@marite WHERE User_id = @id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@name", txtname.Text);
-            cmd.Parameters.AddWithValue("@mail", txtemail.Text);
-            cmd.Parameters.AddWithValue("@ph", txtphone.Text);
-            cmd.Parameters.AddWithValue("@gen", txtGender.Text);
-            cmd.Parameters.AddWithValue("@age", txtAge.Text);
-            cmd.Parameters.AddWithValue("@marite", txtmarite.Text);
-            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
-            cmd.ExecuteNonQuery();
-            con.Close();
+            // First update the user table
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                con.Open();
+                string Query = @"UPDATE tblUser 
+                                SET User_name=@name, Email=@mail, Phone_no=@ph,
+                                    Gender=@gen, Age=@age, Marital_Status=@marite 
+                                WHERE User_id = @id";
+                SqlCommand cmd = new SqlCommand(Query, con);
+                cmd.Parameters.AddWithValue("@name", txtname.Text);
+                cmd.Parameters.AddWithValue("@mail", txtemail.Text);
+                cmd.Parameters.AddWithValue("@ph", txtphone.Text);
+                cmd.Parameters.AddWithValue("@gen", txtGender.Text);
+                cmd.Parameters.AddWithValue("@age", txtAge.Text);
+                cmd.Parameters.AddWithValue("@marite", txtmarite.Text);
+                cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+                cmd.ExecuteNonQuery();
+            }
 
             int userId = Convert.ToInt32(Session["U_id"]);
 
+            // Update owner table if user is an owner
             if (IsOwner(userId))
             {
                 using (SqlConnection conn = new SqlConnection(strcon))
                 {
-                    string query = @"
-                        UPDATE O
-                        SET O.Owner_name = @name,
-                            O.Contact_no = @ph,
-                            O.Email_id = @mail
-                        FROM tblOwner O
-                        INNER JOIN tblUser U ON O.Owner_id = U.Owner_id
-                        WHERE U.User_id = @id";
+                    string query = @"UPDATE O
+                                    SET O.Owner_name = @name, 
+                                        O.Contact_no = @ph, 
+                                        O.Email_id = @mail
+                                    FROM tblOwner O
+                                    INNER JOIN tblUser U ON O.Owner_id = U.Owner_id
+                                    WHERE U.User_id = @id";
 
                     using (SqlCommand cmd1 = new SqlCommand(query, conn))
                     {
@@ -101,24 +113,24 @@ namespace Society_management
 
                         conn.Open();
                         cmd1.ExecuteNonQuery();
-                        conn.Close();
                     }
                 }
             }
-            else
+
+            // Update family member table if user is a family member
+            if (IsFamilyMember(userId))
             {
                 using (SqlConnection con1 = new SqlConnection(strcon))
                 {
-                    string query = @"
-                        UPDATE tblFamilyMember
-                        SET Member_name = @name,
-                            Phone_no = @ph,
-                            Email = @mail,
-                            Age = @age,
-                            Gender = @gen
-                        WHERE Member_id = (
-                            SELECT Member_id FROM tblUser WHERE User_id = @id
-                        )";
+                    string query = @"UPDATE tblFamilyMember
+                                    SET Member_name = @name, 
+                                        Phone_no = @ph, 
+                                        Email = @mail, 
+                                        Age = @age, 
+                                        Gender = @gen
+                                    WHERE Member_id = (
+                                        SELECT Member_id FROM tblUser WHERE User_id = @id
+                                    )";
 
                     using (SqlCommand cmd2 = new SqlCommand(query, con1))
                     {
@@ -131,24 +143,12 @@ namespace Society_management
 
                         con1.Open();
                         cmd2.ExecuteNonQuery();
-                        con1.Close();
                     }
                 }
             }
 
-            string successScript = @"
-                <script>
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Details Updated',
-                        text: 'Your profile details have been successfully updated.',
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: 'OK'
-                    }).then(function() {
-                        window.location = 'User_profile.aspx';
-                    });
-                </script>";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
+            // Show success message
+            ShowSuccessMessage("Details Updated", "Your profile details have been successfully updated.");
         }
 
         private void UpdateProfilePicture()
@@ -157,26 +157,32 @@ namespace Society_management
             string filepath = "~/Profile/" + filename;
             profileImageUpload.SaveAs(Server.MapPath(filepath));
 
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "UPDATE tblUser SET Photo=@img WHERE User_id = @id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@img", filepath);
-            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
-            cmd.ExecuteNonQuery();
-            con.Close();
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                con.Open();
+                string Query = "UPDATE tblUser SET Photo=@img WHERE User_id = @id";
+                SqlCommand cmd = new SqlCommand(Query, con);
+                cmd.Parameters.AddWithValue("@img", filepath);
+                cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+                cmd.ExecuteNonQuery();
+            }
 
-            string successScript = @"
+            ShowSuccessMessage("Profile Picture Updated", "Your profile picture has been successfully updated.");
+        }
+
+        private void ShowSuccessMessage(string title, string text)
+        {
+            string successScript = $@"
                 <script>
-                    Swal.fire({
+                    Swal.fire({{
                         icon: 'success',
-                        title: 'Profile Picture Updated',
-                        text: 'Your profile picture has been successfully updated.',
+                        title: '{title}',
+                        text: '{text}',
                         confirmButtonColor: '#3085d6',
                         confirmButtonText: 'OK'
-                    }).then(function() {
+                    }}).then(function() {{
                         window.location = 'User_profile.aspx';
-                    });
+                    }});
                 </script>";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "UpdateSuccess", successScript, false);
         }
@@ -186,6 +192,19 @@ namespace Society_management
             using (SqlConnection conn = new SqlConnection(strcon))
             {
                 string query = "SELECT COUNT(*) FROM tblUser U INNER JOIN tblOwner O ON U.Owner_id = O.Owner_id WHERE U.User_id = @User_id";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@User_id", userId);
+                conn.Open();
+                int count = (int)cmd.ExecuteScalar();
+                return count > 0;
+            }
+        }
+
+        public bool IsFamilyMember(int userId)
+        {
+            using (SqlConnection conn = new SqlConnection(strcon))
+            {
+                string query = "SELECT COUNT(*) FROM tblUser WHERE User_id = @User_id ";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@User_id", userId);
                 conn.Open();
@@ -211,16 +230,22 @@ namespace Society_management
         public void bindRole()
         {
             int userId = Convert.ToInt32(Session["U_id"]);
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "SELECT c.Designation, c.Role FROM tblCommitteeMember c JOIN tblUser u ON c.User_id = u.User_id WHERE u.User_id = @id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
-            SqlDataReader reader = cmd.ExecuteReader();
-            if (reader.Read())
+
+            using (SqlConnection con = new SqlConnection(strcon))
             {
-                Desi = reader["Designation"].ToString();
-                Role = reader["Role"].ToString();
+                con.Open();
+                string Query = "SELECT c.Designation, c.Role FROM tblCommitteeMember c JOIN tblUser u ON c.User_id = u.User_id WHERE u.User_id = @id";
+                SqlCommand cmd = new SqlCommand(Query, con);
+                cmd.Parameters.AddWithValue("@id", Session["U_id"].ToString());
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        Desi = reader["Designation"].ToString();
+                        Role = reader["Role"].ToString();
+                    }
+                }
             }
 
             if (IsCommitteeMember(userId))
@@ -242,9 +267,6 @@ namespace Society_management
                 lblDesi.Visible = false;
                 lblRole.Visible = false;
             }
-
-            reader.Close();
-            con.Close();
         }
     }
 }

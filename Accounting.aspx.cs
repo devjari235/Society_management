@@ -362,7 +362,7 @@ namespace Society_management
                     string query = @"SELECT c.CategoryName, SUM(t.Amount) AS TotalAmount
                            FROM Transactions t
                            INNER JOIN Categories c ON t.CategoryID = c.CategoryID
-                           WHERE t.TransactionType = 'Income'";
+                           WHERE t.TransactionType = 'Income' and t.admin_id=@id";
 
                     if (fromDate.HasValue && toDate.HasValue)
                     {
@@ -378,7 +378,7 @@ namespace Society_management
                         cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                         cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                     }
-
+                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dtIncomeCategories);
                 }
@@ -398,7 +398,7 @@ namespace Society_management
                     string query = @"SELECT c.CategoryName, SUM(t.Amount) AS TotalAmount
                            FROM Transactions t
                            INNER JOIN Categories c ON t.CategoryID = c.CategoryID
-                           WHERE t.TransactionType = 'Expense'";
+                           WHERE t.TransactionType = 'Expense'and t.admin_id=@id";
 
                     if (fromDate.HasValue && toDate.HasValue)
                     {
@@ -414,6 +414,7 @@ namespace Society_management
                         cmd.Parameters.AddWithValue("@FromDate", fromDate.Value);
                         cmd.Parameters.AddWithValue("@ToDate", toDate.Value);
                     }
+                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
 
                     SqlDataAdapter da = new SqlDataAdapter(cmd);
                     da.Fill(dtExpenseCategories);
