@@ -99,12 +99,6 @@ namespace Society_management
 
             }
         }
-
-        protected void btnCheckScheduled_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("ScheduledVisitors.aspx");
-        }
-
         private void ClearForm()
         {
             txtVisitorName.Text = "";
