@@ -2242,6 +2242,7 @@
     <Content Include="Images\U_bg.jpg" />
     <Content Include="LiveNotice.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="MemberApproval.aspx" />
     <Content Include="MyFlat.aspx" />
     <Content Include="NoticeBoard.aspx" />
     <Content Include="NoticeDashboard.aspx" />
@@ -2481,6 +2482,13 @@
     </Compile>
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MemberApproval.aspx.cs">
+      <DependentUpon>MemberApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MemberApproval.aspx.designer.cs">
+      <DependentUpon>MemberApproval.aspx</DependentUpon>
     </Compile>
     <Compile Include="MyFlat.aspx.cs">
       <DependentUpon>MyFlat.aspx</DependentUpon>
