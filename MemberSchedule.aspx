@@ -64,7 +64,7 @@ body, html {
 }
 
 /* Button style */
-.btn-primary {
+#btnSchedule {
     width: 100%;
     padding: 12px;
     font-size: 1.1rem;

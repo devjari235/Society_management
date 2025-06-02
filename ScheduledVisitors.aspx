@@ -29,7 +29,6 @@
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
             <h1 class="mb-4">Scheduled Visitors</h1>
             
             <asp:GridView ID="gvScheduledVisitors" runat="server" AutoGenerateColumns="False"
@@ -58,7 +57,7 @@
             </asp:GridView>
             
             <asp:Label ID="lblMessage" runat="server" CssClass="alert alert-dismissible fade show" Visible="false"></asp:Label>
-        </div>
+
 
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
