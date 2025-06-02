@@ -5,20 +5,26 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery (required for Bootstrap dropdowns) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome (for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
-            margin: 0;
-            padding: 20px;
         }
 
-        h1 {
+        h2 {
             color: #2c3e50;
-            border-bottom: 3px solid #e74c3c;
             padding-bottom: 10px;
-            margin-bottom: 25px;
             font-weight: 700;
         }
 
@@ -108,20 +114,21 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
+                <h2>Visitor Approvals</h2>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-            <h1>Visitor Approvals</h1>
+
             <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table"
                 OnRowCommand="gvPendingVisitors_RowCommand">
                 <Columns>
-                    <asp:BoundField DataField="VisitorID" HeaderText="Visitor ID" ItemStyle-CssClass="align-middle" />
+                    
                     <asp:BoundField DataField="Name" HeaderText="Visitor Name" ItemStyle-CssClass="align-middle" />
                     <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" ItemStyle-CssClass="align-middle" />
                     <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" ItemStyle-CssClass="align-middle" />
                     <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" ItemStyle-CssClass="align-middle" />
                     <asp:BoundField DataField="MemberName" HeaderText="Meeting With" ItemStyle-CssClass="align-middle" />
-                    <asp:TemplateField>
+                    <asp:TemplateField HeaderText="Action">
                         <ItemTemplate>
                             <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve" 
                                 CommandArgument='<%# Eval("VisitorID") %>' CssClass="btn btn-success btn-sm" />
@@ -131,7 +138,9 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
-            <asp:Label ID="lblMessage" runat="server" Text=""></asp:Label>
+        <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+        </asp:Panel>
         </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
