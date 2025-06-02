@@ -25,16 +25,54 @@
             color: #dc3545;
             font-weight: bold;
         }
+
+        .create-notice-container {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-create-notice {
+            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .btn-create-notice:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+                color: #FFD700;
+                background: linear-gradient(135deg, #9d3df1 0%, #5b1ae6 100%);
+                text-decoration: none;
+            }
+
+            .btn-create-notice i {
+                margin-right: 10px;
+                font-size: 1.2rem;
+            }
+
     </style>
    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+        <div class="create-notice-container">
+            <a href="VisitorEntry.aspx" class="btn-create-notice">
+                <i class="fas fa-plus-circle"></i> Visitor Entry
+            </a>
+        </div>
 </asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    
-            <h1>Visitor Approval Status</h1>
+<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">   
             <asp:GridView ID="gvVisitorApprovals" runat="server" AutoGenerateColumns="False"
                 CssClass="table table-striped table-bordered"
                 OnRowCommand="gvVisitorApprovals_RowCommand"

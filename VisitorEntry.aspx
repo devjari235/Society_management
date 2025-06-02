@@ -81,33 +81,62 @@
             background-color: #f2dede;
             color: #a94442;
         }
+        /* Left-aligned button group */
+.button-group-left {
+    display: flex;
+    gap: 10px;
+}
+/* Base Button Style */
 .dashboard-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
-    padding: 8px 14px;
-    background: #2d3748; /* Dark slate (gray-blue) */
-    color: #e2e8f0;    /* Light gray text */
+    cursor: pointer;
     text-decoration: none;
-    border-radius: 5px;
-    border: 1px solid #4a5568; /* Slightly darker border */
-    font-size: 14px;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-btn:hover {
-    background: #3c4657; /* Lighter slate on hover */
-    border-color: #5a6778;
-    transform: translateY(-1px); /* Slight lift effect */
-    text-decoration:none;
+    color: white;
+    border: none;
 }
 
 .dashboard-btn i {
     margin-right: 8px;
-    font-size: 13px;
-    color: #a0aec0; /* Subdued icon color */
-}.button-group-left{
+    font-size: 1rem;
+}
+.dashboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: #FFD700;
     text-decoration:none;
+}
+@media (max-width: 768px) {
+    .page-title-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .button-group-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .btn-create {
+        width: 100%;
+        margin-left: 0;
+        order: -1; /* Moves Create button to top on mobile */
+    }
+    
+    .dashboard-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+.btn-Live {
+    background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
 }
     </style>
 </asp:Content>
@@ -115,9 +144,11 @@
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
     <div class="button-group-left">
-        <a href="VisitorApproval.aspx" class="dashboard-btn btn-Dashboard">
-            <i class="fas fa-arrow-left"></i>Check Approval
+        <a href="VisitorApproval.aspx" class="dashboard-btn btn-Live">
+            <i class="bi-check-circle"></i>Check Approval
         </a>
+        <asp:Button ID="btnCheckScheduled" runat="server" Text="Check Scheduled Visitors" 
+    OnClick="btnCheckScheduled_Click" CssClass="btn btn-secondary" />
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
@@ -150,8 +181,7 @@
             <div class="form-buttons">
                 <asp:Button ID="btnSubmit" runat="server" Text="Submit Visitor Entry" 
                     OnClick="btnSubmit_Click" CssClass="btn btn-primary" />
-                <asp:Button ID="btnCheckScheduled" runat="server" Text="Check Scheduled Visitors" 
-                    OnClick="btnCheckScheduled_Click" CssClass="btn btn-secondary" />
+                
             </div>
         </div>
     
