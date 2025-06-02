@@ -2282,6 +2282,7 @@
     <Content Include="View_family.aspx" />
     <Content Include="View_flat.aspx" />
     <Content Include="View_Owner.aspx" />
+    <Content Include="VisitorEntry.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -2768,6 +2769,13 @@
     </Compile>
     <Compile Include="View_Owner.aspx.designer.cs">
       <DependentUpon>View_Owner.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VisitorEntry.aspx.cs">
+      <DependentUpon>VisitorEntry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VisitorEntry.aspx.designer.cs">
+      <DependentUpon>VisitorEntry.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
