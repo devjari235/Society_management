@@ -2283,6 +2283,7 @@
     <Content Include="View_family.aspx" />
     <Content Include="View_flat.aspx" />
     <Content Include="View_Owner.aspx" />
+    <Content Include="VisitorApproval.aspx" />
     <Content Include="VisitorEntry.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -2777,6 +2778,13 @@
     </Compile>
     <Compile Include="View_Owner.aspx.designer.cs">
       <DependentUpon>View_Owner.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="VisitorApproval.aspx.cs">
+      <DependentUpon>VisitorApproval.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VisitorApproval.aspx.designer.cs">
+      <DependentUpon>VisitorApproval.aspx</DependentUpon>
     </Compile>
     <Compile Include="VisitorEntry.aspx.cs">
       <DependentUpon>VisitorEntry.aspx</DependentUpon>

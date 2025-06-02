@@ -81,11 +81,44 @@
             background-color: #f2dede;
             color: #a94442;
         }
+.dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    background: #2d3748; /* Dark slate (gray-blue) */
+    color: #e2e8f0;    /* Light gray text */
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #4a5568; /* Slightly darker border */
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-btn:hover {
+    background: #3c4657; /* Lighter slate on hover */
+    border-color: #5a6778;
+    transform: translateY(-1px); /* Slight lift effect */
+    text-decoration:none;
+}
+
+.dashboard-btn i {
+    margin-right: 8px;
+    font-size: 13px;
+    color: #a0aec0; /* Subdued icon color */
+}.button-group-left{
+    text-decoration:none;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+    <div class="button-group-left">
+        <a href="VisitorApproval.aspx" class="dashboard-btn btn-Dashboard">
+            <i class="fas fa-arrow-left"></i>Check Approval
+        </a>
+    </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="form-container">
