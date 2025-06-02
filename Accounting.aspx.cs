@@ -22,13 +22,16 @@ namespace Society_management
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            
             if (!IsPostBack)
             {
-               
                 // Set default date range to current month
                 fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 toDate = DateTime.Now;
+
+                // Initialize filter dates but keep hidden by default
+                txtFromDateFilter.Text = fromDate.Value.ToString("yyyy-MM-dd");
+                txtToDateFilter.Text = toDate.Value.ToString("yyyy-MM-dd");
+
                 BindIncomeGrid();
                 BindExpenseGrid();
                 LoadIncomeSummary();
@@ -38,7 +41,6 @@ namespace Society_management
                 BindcurrentBallence();
                 BindIncome();
                 BindExpense();
-                
             }
         }
 
@@ -471,13 +473,58 @@ namespace Society_management
 
         protected void ddlProfitLossPeriod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            SetDateRange(ddlProfitLossPeriod.SelectedValue);
-            BindIncomeGrid();
-            BindExpenseGrid();
-            LoadIncomeSummary();
-            LoadExpenseSummary();
-            LoadProfitLossStatement();
-            LoadBalanceSheet();
+            string selectedPeriod = ddlProfitLossPeriod.SelectedValue;
+
+            // Show/hide date filter controls based on selection
+            if (selectedPeriod == "5") // Custom Period
+            {
+                dateFilterContainer.Style["display"] = "flex";
+
+                // Initialize dates to current month if not already set
+                if (!fromDate.HasValue || !toDate.HasValue)
+                {
+                    fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                    toDate = DateTime.Now;
+                    txtFromDateFilter.Text = fromDate.Value.ToString("yyyy-MM-dd");
+                    txtToDateFilter.Text = toDate.Value.ToString("yyyy-MM-dd");
+                }
+            }
+            else
+            {
+                dateFilterContainer.Style["display"] = "none";
+                SetDateRange(selectedPeriod);
+
+                // Refresh all data
+                BindIncomeGrid();
+                BindExpenseGrid();
+                LoadIncomeSummary();
+                LoadExpenseSummary();
+                LoadBalanceSheet();
+                LoadProfitLossStatement();
+            }
+        }
+
+        protected void btnApplyFilter_Click(object sender, EventArgs e)
+        {
+            if (DateTime.TryParse(txtFromDateFilter.Text, out DateTime fromDt) &&
+                DateTime.TryParse(txtToDateFilter.Text, out DateTime toDt))
+            {
+                fromDate = fromDt;
+                toDate = toDt;
+
+                // Refresh all data
+                BindIncomeGrid();
+                BindExpenseGrid();
+                LoadIncomeSummary();
+                LoadExpenseSummary();
+                LoadBalanceSheet();
+                LoadProfitLossStatement();
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "showError",
+                    "showAlert('error', 'Please enter valid dates');", true);
+            }
         }
 
         private void SetDateRange(string period)
@@ -497,14 +544,19 @@ namespace Society_management
                     toDate = DateTime.Now;
                     break;
                 case "4": // Last Year
-                    fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddYears(-1);
-                    toDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
+                    fromDate = new DateTime(DateTime.Now.Year - 1, 1, 1);
+                    toDate = new DateTime(DateTime.Now.Year - 1, 12, 31);
                     break;
-                case "5": // Custom Period (will be handled by modal)
-                    // Show modal to select dates
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "showCustomPeriodModal",
-                        "$('#customPeriodModal').modal('show');", true);
+                case "5": // Custom Period
+                          // Dates will be set by the filter controls
                     break;
+            }
+
+            // Update the filter controls to match the selected period
+            if (fromDate.HasValue && toDate.HasValue && period != "5")
+            {
+                txtFromDateFilter.Text = fromDate.Value.ToString("yyyy-MM-dd");
+                txtToDateFilter.Text = toDate.Value.ToString("yyyy-MM-dd");
             }
         }
 

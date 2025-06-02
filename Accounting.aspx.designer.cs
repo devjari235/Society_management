@@ -15,6 +15,42 @@ namespace Society_management
     {
 
         /// <summary>
+        /// dateFilterContainer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dateFilterContainer;
+
+        /// <summary>
+        /// txtFromDateFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFromDateFilter;
+
+        /// <summary>
+        /// txtToDateFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtToDateFilter;
+
+        /// <summary>
+        /// btnApplyFilter control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnApplyFilter;
+
+        /// <summary>
         /// ddlProfitLossPeriod control.
         /// </summary>
         /// <remarks>

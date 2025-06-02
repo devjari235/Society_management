@@ -253,38 +253,71 @@
       .w-auto{
           width:150px !important;
       }
+       .date-filter-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 8px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        width: fit-content;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-filter-container .form-control {
+        min-width: 140px;
+    }
+
+    .date-filter-container .btn {
+        padding: 4px 12px;
+        font-size: 0.875rem;
+    }
+
+    .date-filter-label {
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: #333;
+        margin-right: 4px;
+    }
     </style>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-  <div class="">
-    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-        <h1 class="h2">Accounting Management</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group me-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
-                    <i class="fas fa-plus-circle me-1"></i>Add Income
-                </button>
-                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-                    <i class="fas fa-minus-circle me-1"></i>Add Expense
-                </button>
-            </div>
+  <div class="d-flex justify-content-between mb-3">
+    <div class="d-flex align-items-center">
+        <div class="date-filter-container" id="dateFilterContainer" runat="server" style="display: none;">
+            <span class="date-filter-label">From</span>
+            <asp:TextBox ID="txtFromDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
 
-            <!-- Place the dropdown OUTSIDE the btn-group -->
-            <div class="ms-2">
-                <asp:DropDownList ID="ddlProfitLossPeriod" runat="server" 
-                    CssClass="form-select form-select-sm w-auto" 
-                    AutoPostBack="true" 
-                    OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
-                    <asp:ListItem Text="Current Month" Value="1"  Selected="True" />
-                    <asp:ListItem Text="Last Month" Value="2" />
-                    <asp:ListItem Text="Current Year" Value="3"/>
-                    <asp:ListItem Text="Last Year" Value="4"/>
-                    <asp:ListItem Text="Custom Period" Value="5" />
-                </asp:DropDownList>
-            </div>
+            <span class="date-filter-label">To</span>
+            <asp:TextBox ID="txtToDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+
+            <asp:Button ID="btnApplyFilter" runat="server" Text="Apply"
+                CssClass="btn btn-primary" OnClick="btnApplyFilter_Click" />
+        </div>
+    </div>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <div class="btn-group me-2">
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
+                <i class="fas fa-plus-circle me-1"></i>Add Income
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                <i class="fas fa-minus-circle me-1"></i>Add Expense
+            </button>
+        </div>
+        <div class="ms-2">
+            <asp:DropDownList ID="ddlProfitLossPeriod" runat="server" 
+                CssClass="form-select form-select-sm w-auto" 
+                AutoPostBack="true" 
+                OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
+                <asp:ListItem Text="Current Month" Value="1" Selected="True" />
+                <asp:ListItem Text="Last Month" Value="2" />
+                <asp:ListItem Text="Current Year" Value="3"/>
+                <asp:ListItem Text="Last Year" Value="4"/>
+                <asp:ListItem Text="Custom Period" Value="5" />
+            </asp:DropDownList>
         </div>
     </div>
 </div>
@@ -871,7 +904,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
 </asp:Content>
