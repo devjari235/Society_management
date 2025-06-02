@@ -14,9 +14,13 @@ namespace Society_management
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-            lblTotalNotice.Text=GetTotalNotice().ToString();
-            lblTotalLive.Text=GetTotalLiveNotice().ToString();
-            lblTotalExpire.Text=GetTotalExpireNotice().ToString();
+            if(!IsPostBack)
+            {
+                lblTotalNotice.Text = GetTotalNotice().ToString();
+                lblTotalLive.Text = GetTotalLiveNotice().ToString();
+                lblTotalExpire.Text = GetTotalExpireNotice().ToString();
+            }
+           
         }
         public int GetTotalNotice()
         {
