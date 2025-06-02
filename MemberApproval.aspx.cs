@@ -27,15 +27,21 @@ namespace Society_management
                             u.User_name AS MemberName
                             FROM Visitors v
                             INNER JOIN tblUser u ON v.User_id = u.User_id
-                            WHERE v.IsApproved = 0";
+                            WHERE v.IsApproved = 0 and v.User_id=@id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlDataAdapter adapter = new SqlDataAdapter(query, connection);
-                DataTable dt = new DataTable();
-                adapter.Fill(dt);
-
-                gvPendingVisitors.DataSource = dt;
+                SqlCommand cmd= new SqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("id", Session["U_id"]);
+                SqlDataAdapter adapter = new SqlDataAdapter(cmd);
+               DataSet ds = new DataSet();
+                adapter.Fill(ds);
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    Label1.Text = "You have no visitors at the moment.";
+                    Panel1.Visible = true;
+                }
+                gvPendingVisitors.DataSource = ds;
                 gvPendingVisitors.DataBind();
             }
         }
@@ -66,7 +72,7 @@ namespace Society_management
                     }
                     catch (Exception ex)
                     {
-                        lblMessage.Text = "Error: " + ex.Message;
+                        Label1.Text = "Error: " + ex.Message;
                     }
                 }
             }
