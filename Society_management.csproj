@@ -2243,6 +2243,7 @@
     <Content Include="LiveNotice.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="MemberApproval.aspx" />
+    <Content Include="MemberSchedule.aspx" />
     <Content Include="MyFlat.aspx" />
     <Content Include="NoticeBoard.aspx" />
     <Content Include="NoticeDashboard.aspx" />
@@ -2257,6 +2258,7 @@
     <Content Include="Progress_Complaints.aspx" />
     <Content Include="Resolved_Complaints.aspx" />
     <Content Include="R_Society.aspx" />
+    <Content Include="ScheduledVisitors.aspx" />
     <Content Include="Terms.aspx" />
     <Content Include="UserDashboard.aspx" />
     <Content Include="User_CommitteeDetails.aspx" />
@@ -2491,6 +2493,13 @@
     <Compile Include="MemberApproval.aspx.designer.cs">
       <DependentUpon>MemberApproval.aspx</DependentUpon>
     </Compile>
+    <Compile Include="MemberSchedule.aspx.cs">
+      <DependentUpon>MemberSchedule.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MemberSchedule.aspx.designer.cs">
+      <DependentUpon>MemberSchedule.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MyFlat.aspx.cs">
       <DependentUpon>MyFlat.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2589,6 +2598,13 @@
     </Compile>
     <Compile Include="R_Society.aspx.designer.cs">
       <DependentUpon>R_Society.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ScheduledVisitors.aspx.cs">
+      <DependentUpon>ScheduledVisitors.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ScheduledVisitors.aspx.designer.cs">
+      <DependentUpon>ScheduledVisitors.aspx</DependentUpon>
     </Compile>
     <Compile Include="Terms.aspx.cs">
       <DependentUpon>Terms.aspx</DependentUpon>
