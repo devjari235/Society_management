@@ -69,6 +69,24 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtVisitPurpose;
 
         /// <summary>
+        /// lblBlock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBlock;
+
+        /// <summary>
+        /// ddlBlock control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlBlock;
+
+        /// <summary>
         /// lblMember control.
         /// </summary>
         /// <remarks>
@@ -103,14 +121,5 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCheckScheduled;
-
-        /// <summary>
-        /// lblMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
     }
 }

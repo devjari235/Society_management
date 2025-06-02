@@ -105,7 +105,10 @@
                 <asp:Label ID="lblVisitPurpose" runat="server" Text="Visit Purpose:" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtVisitPurpose" runat="server" TextMode="MultiLine" CssClass="form-control"></asp:TextBox>
             </div>
-            
+        <div class="form-row">
+            <asp:Label ID="lblBlock" runat="server" Text="Block Name:" CssClass="form-label"></asp:Label>
+            <asp:DropDownList ID="ddlBlock" runat="server" CssClass="form-control" AutoPostBack="True" OnSelectedIndexChanged="ddlBlock_SelectedIndexChanged"></asp:DropDownList>
+        </div>
             <div class="form-row">
                 <asp:Label ID="lblMember" runat="server" Text="Meeting With:" CssClass="form-label"></asp:Label>
                 <asp:DropDownList ID="ddlMembers" runat="server" CssClass="form-control"></asp:DropDownList>
@@ -117,8 +120,6 @@
                 <asp:Button ID="btnCheckScheduled" runat="server" Text="Check Scheduled Visitors" 
                     OnClick="btnCheckScheduled_Click" CssClass="btn btn-secondary" />
             </div>
-            
-            <asp:Label ID="lblMessage" runat="server" Text="" CssClass="message"></asp:Label>
         </div>
     
 </asp:Content>
