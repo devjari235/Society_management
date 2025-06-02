@@ -138,6 +138,9 @@
 .btn-Live {
     background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
 }
+.btn-create {
+   background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -147,8 +150,9 @@
         <a href="VisitorApproval.aspx" class="dashboard-btn btn-Live">
             <i class="bi-check-circle"></i>Check Approval
         </a>
-        <asp:Button ID="btnCheckScheduled" runat="server" Text="Check Scheduled Visitors" 
-    OnClick="btnCheckScheduled_Click" CssClass="btn btn-secondary" />
+        <a href="ScheduledVisitors.aspx" class="dashboard-btn btn-create">
+            <i class="bi-check-circle-fill"></i>Check Scheduled Visitors
+        </a>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
