@@ -29,7 +29,7 @@ namespace Society_management
             using (SqlConnection con = new SqlConnection(strcon))
             {
                 string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE a.admin_id = @id ORDER BY d.UploadDate DESC";
-
+               
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@id", Session["A_id"]);
@@ -224,6 +224,25 @@ namespace Society_management
             BindDocuments();
         }
 
-        
+        protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int selectedIndex = gvDisplay.SelectedIndex;
+            if (selectedIndex >= 0)
+            {
+                // Get the Notice_id from DataKeys
+                string ComplainId = gvDisplay.DataKeys[selectedIndex].Value.ToString();
+
+                // Redirect to details page with the id
+                Response.Redirect("Document_Details.aspx?id=" + ComplainId);
+            }
+        }
+        protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                e.Row.ToolTip = "Click to select this row.";
+            }
+        }
     }
 }

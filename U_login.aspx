@@ -284,10 +284,6 @@
       </div>
 
       <div class="forget">
-        <label for="chkRemember">
-          <asp:CheckBox ID="chkRemember" runat="server" />
-          <p>Remember me</p>
-        </label>
         <a href="ForgotPassword.aspx">Forgot password?</a>
       </div>
 
