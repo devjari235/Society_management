@@ -66,9 +66,6 @@ namespace Society_management
                     {
                         connection.Open();
                         command.ExecuteNonQuery();
-
-                        // Redirect to the approval status page
-                        Response.Redirect("VisitorApproval.aspx");
                     }
                     catch (Exception ex)
                     {

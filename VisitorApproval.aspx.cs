@@ -32,8 +32,7 @@ namespace Society_management
                                 FROM Visitors v
                                 LEFT JOIN tblUser u ON v.User_id = u.User_id
                                 WHERE v.IsScheduled = 0
-                                ORDER BY v.VisitDateTime DESC
-                                ";
+                                ORDER BY v.VisitDateTime DESC";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -113,7 +112,6 @@ namespace Society_management
             }
         }
 
-        // Helper methods for binding
         public string GetStatusText(object isApproved)
         {
             if (isApproved == DBNull.Value || isApproved == null) return "Pending";
@@ -149,8 +147,10 @@ namespace Society_management
 
                 bool isCheckedIn = rowView["CheckInTime"] != DBNull.Value;
                 bool isCheckedOut = rowView["CheckOutTime"] != DBNull.Value;
+
                 Button btnCheckIn = (Button)e.Row.FindControl("btnCheckIn");
                 Button btnCheckOut = (Button)e.Row.FindControl("btnCheckOut");
+                Label lblStatus = (Label)e.Row.FindControl("lblVisitStatus");
 
                 // Enable/Disable buttons
                 if (btnCheckIn != null)
@@ -161,8 +161,28 @@ namespace Society_management
 
                 if (btnCheckOut != null)
                 {
-                    btnCheckOut.Enabled = !isCheckedOut;
+                    btnCheckOut.Enabled = isCheckedIn && !isCheckedOut;
                     if (!btnCheckOut.Enabled) btnCheckOut.CssClass += " disabled";
+                }
+
+                // Set Visit Status Label
+                if (lblStatus != null)
+                {
+                    if (isCheckedIn && isCheckedOut)
+                    {
+                        lblStatus.Text = "Completed";
+                        lblStatus.CssClass = "badge badge-success";
+                    }
+                    else if (isCheckedIn)
+                    {
+                        lblStatus.Text = "In Progress";
+                        lblStatus.CssClass = "badge badge-warning";
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Pending";
+                        lblStatus.CssClass = "badge badge-secondary";
+                    }
                 }
             }
         }

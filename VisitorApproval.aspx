@@ -1,6 +1,17 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="VisitorApproval.aspx.cs" Inherits="Society_management.VisitorApproval" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- jQuery (required for Bootstrap dropdowns) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome (for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -170,7 +181,6 @@
                 OnRowCommand="gvVisitorApprovals_RowCommand"
                 DataKeyNames="VisitorID" OnRowDataBound="gvVisitorApprovals_RowDataBound">
                 <Columns>
-                    <asp:BoundField DataField="VisitorID" HeaderText="Visitor ID" />
                     <asp:BoundField DataField="Name" HeaderText="Visitor Name" />
                     <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" />
                     <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" />

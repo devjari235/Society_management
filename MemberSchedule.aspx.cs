@@ -55,7 +55,16 @@ namespace Society_management
                 {
                     connection.Open();
                     command.ExecuteNonQuery();
-                    lblMessage.Text = "Visitor scheduled successfully.";
+                    string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Visitor added successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'MemberSchedule.aspx';
+            });";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
                     ClearForm();
                 }
                 catch (Exception ex)

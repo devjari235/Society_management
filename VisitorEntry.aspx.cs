@@ -94,8 +94,18 @@ namespace Society_management
 
                     connection.Open();
                     command.ExecuteNonQuery();
-                   
-                    ClearForm();
+                string script = @"
+            Swal.fire({
+                title: 'Success!',
+                text: 'Visitor Entry successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(function() {
+                window.location = 'VisitorEntry.aspx';
+            });";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
+
+                ClearForm();
 
             }
         }
