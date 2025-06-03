@@ -284,12 +284,12 @@
                                     <span class="nav-link-text">Committee Member</span>
                                 </a>
                             </li>
-                            <li id="liNoticeBoard" runat="server" class="nav-item" >
+                        <%--    <li id="liNoticeBoard" runat="server" class="nav-item" >
                                 <a class="nav-link" href="#">
                                     <i class="bi bi-envelope-fill"></i>
                                     <span class="nav-link-text">Notice Board</span>
                                 </a>
-                            </li>
+                            </li>--%>
                             <li class="nav-item">
                                 <a class="nav-link" href="User_Complain.aspx">
                                     <i class="fas fa-exclamation-circle me-2"></i>

@@ -71,11 +71,11 @@ namespace Society_management
         {
             if (IsCommitteeMember()==true) 
             {
-               liNoticeBoard.Visible = true;
+             //  liNoticeBoard.Visible = true;
             }
             else
             {
-                liNoticeBoard.Visible = false;
+               // liNoticeBoard.Visible = false;
             }
         }
 

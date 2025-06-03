@@ -108,52 +108,120 @@
             border: 1px solid #f5c6cb;
         }
 
-        .create-notice-container {
-            display: flex;
-            justify-content: flex-end;
-        }
+          /* Button Group Container */
+  .action-button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 15px;
+     
+      width: 100%;
+  }
 
-        .btn-create-notice {
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-            text-decoration: none;
-        }
+  /* Base Button Styles */
+  .btn-register-notice,
+  .btn-view-notice {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      text-decoration: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
 
-            .btn-create-notice:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-                color: #FFD700;
-                background: linear-gradient(135deg, #9d3df1 0%, #5b1ae6 100%);
-                text-decoration: none;
-            }
+  /* Register Button */
+  .btn-register-notice {
+      background-color: #3498db;
+      color: white;
+  }
 
-            .btn-create-notice i {
-                margin-right: 10px;
-                font-size: 1.2rem;
-            }
+  .btn-register-notice:hover {
+      background-color: #2980b9;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      text-decoration:none;
+      color: white;
+  }
+
+  /* View Button */
+  .btn-view-notice {
+      background-color: #2ecc71;
+      color: white;
+  }
+
+  .btn-view-notice:hover {
+      background-color: #27ae60;
+      transform: translateY(-3px);
+      text-decoration:none;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      color: white;
+  }
+
+  /* Icons */
+  .btn-register-notice i,
+  .btn-view-notice i {
+      margin-right: 10px;
+      font-size: 18px;
+  }
+
+  /* Active State */
+  .btn-register-notice:active,
+  .btn-view-notice:active {
+      transform: scale(0.98);
+  }
+
+  /* Focus State */
+  .btn-register-notice:focus,
+  .btn-view-notice:focus {
+      outline: none;
+  }
+
+  .btn-register-notice:focus {
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+  }
+
+  .btn-view-notice:focus {
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.5);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+      .action-button-group {
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 10px;
+      }
+      
+      .btn-register-notice,
+      .btn-view-notice {
+          width: 100%;
+          max-width: 300px;
+          padding: 15px 20px;
+          font-size: 18px;
+          text-align: center;
+      }
+  }
     </style>
 
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
+    
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
-    <div class="create-notice-container">
-        <a href="MemberSchedule.aspx" class="btn-create-notice">
-            <i class="fas fa-plus-circle"></i>Schedule Visitor 
-        </a>
-    </div>
+   <div class="action-button-group">
+    <a href="MemberSchedule.aspx" class="btn-register-notice">
+        <i class="fas fa-plus-circle"></i> Scheduled Visitor
+    </a>
+    <a href="Visitor_List.aspx" class="btn-view-notice">
+        <i class="fas fa-users"></i> Visitors
+    </a>
+</div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
