@@ -76,41 +76,45 @@ namespace Society_management
         {
             try
             {
+                string visitorName = "";
                 string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     connection.Open();
 
+                    SqlCommand getNameCmd = new SqlCommand("SELECT Name FROM Visitors WHERE VisitorID = @VisitorID", connection);
+                    getNameCmd.Parameters.AddWithValue("@VisitorID", visitorId);
+                    visitorName = Convert.ToString(getNameCmd.ExecuteScalar());
+
                     string columnToUpdate = isCheckIn ? "CheckInTime" : "CheckOutTime";
                     string query = $"UPDATE Visitors SET {columnToUpdate} = @Time WHERE VisitorID = @VisitorID";
-
                     SqlCommand command = new SqlCommand(query, connection);
                     command.Parameters.AddWithValue("@Time", DateTime.Now);
                     command.Parameters.AddWithValue("@VisitorID", visitorId);
                     command.ExecuteNonQuery();
 
-                    // Check if both times are filled, then mark IsCompleted = 1
                     SqlCommand checkCommand = new SqlCommand(
                         @"UPDATE Visitors
-                          SET IsCompleted = 
-                              CASE 
-                                  WHEN CheckInTime IS NOT NULL AND CheckOutTime IS NOT NULL THEN 1
-                                  ELSE 0
-                              END
-                          WHERE VisitorID = @VisitorID", connection);
-
+                  SET IsCompleted = 
+                      CASE 
+                          WHEN CheckInTime IS NOT NULL AND CheckOutTime IS NOT NULL THEN 1
+                          ELSE 0
+                      END
+                  WHERE VisitorID = @VisitorID", connection);
                     checkCommand.Parameters.AddWithValue("@VisitorID", visitorId);
                     checkCommand.ExecuteNonQuery();
                 }
 
                 string action = isCheckIn ? "Check-In" : "Check-Out";
-                ShowMessage($"{action} successful for Visitor ID {visitorId}.", "success");
+                string toastMessage = $"{action} successful for visitor <strong>{visitorName}</strong>.";
+                ShowMessage(toastMessage, "success");
             }
             catch (Exception ex)
             {
-                ShowMessage("Error updating time: " + ex.Message, "danger");
+                ShowMessage("Error: " + ex.Message, "danger");
             }
         }
+
 
         public string GetStatusText(object isApproved)
         {
@@ -132,11 +136,10 @@ namespace Society_management
             return Convert.ToBoolean(isApproved);
         }
 
-        private void ShowMessage(string message, string alertType)
+        private void ShowMessage(string message, string type)
         {
-            lblMessage.Text = message;
-            lblMessage.CssClass = $"alert alert-{alertType} alert-dismissible fade show";
-            lblMessage.Visible = true;
+            string script = $"showToast('{message.Replace("'", "\\'")}', '{type}');";
+            ScriptManager.RegisterStartupScript(this, GetType(), "showToast", script, true);
         }
 
         protected void gvVisitorApprovals_RowDataBound(object sender, GridViewRowEventArgs e)

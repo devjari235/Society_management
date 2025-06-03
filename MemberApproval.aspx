@@ -1,21 +1,22 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User.Master" AutoEventWireup="true" CodeBehind="MemberApproval.aspx.cs" Inherits="Society_management.MemberApproval" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery (required for Bootstrap dropdowns) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Font Awesome (for icons) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -71,18 +72,18 @@
             color: white;
         }
 
-        #btnApprove:hover {
-            background-color: #27ae60;
-        }
+            #btnApprove:hover {
+                background-color: #27ae60;
+            }
 
         #btnReject {
             background-color: #e74c3c;
             color: white;
         }
 
-        #btnReject:hover {
-            background-color: #c0392b;
-        }
+            #btnReject:hover {
+                background-color: #c0392b;
+            }
 
         /* Message label styles */
         #lblMessage {
@@ -106,6 +107,7 @@
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+
         .create-notice-container {
             display: flex;
             justify-content: flex-end;
@@ -147,38 +149,70 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
-     <div class="create-notice-container">
-     <a href="MemberSchedule.aspx" class="btn-create-notice">
-         <i class="fas fa-plus-circle"></i> Schedule Visitor 
-     </a>
- </div>
+    <div class="create-notice-container">
+        <a href="MemberSchedule.aspx" class="btn-create-notice">
+            <i class="fas fa-plus-circle"></i>Schedule Visitor 
+        </a>
+    </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
 
-            <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table"
-                OnRowCommand="gvPendingVisitors_RowCommand">
-                <Columns>
-                    
-                    <asp:BoundField DataField="Name" HeaderText="Visitor Name" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="MemberName" HeaderText="Meeting With" ItemStyle-CssClass="align-middle" />
-                    <asp:TemplateField HeaderText="Action">
-                        <ItemTemplate>
-                            <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve" 
-                                CommandArgument='<%# Eval("VisitorID") %>' CssClass="btn btn-success btn-sm" />
-                            <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject" 
-                                CommandArgument='<%# Eval("VisitorID") %>' CssClass="btn btn-danger btn-sm" />
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
+        <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table"
+            OnRowCommand="gvPendingVisitors_RowCommand">
+            <Columns>
+
+                <asp:BoundField DataField="Name" HeaderText="Visitor Name" ItemStyle-CssClass="align-middle" />
+                <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" ItemStyle-CssClass="align-middle" />
+                <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" ItemStyle-CssClass="align-middle" />
+                <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" ItemStyle-CssClass="align-middle" />
+                <asp:BoundField DataField="MemberName" HeaderText="Meeting With" ItemStyle-CssClass="align-middle" />
+                <asp:TemplateField HeaderText="Action">
+                    <ItemTemplate>
+                        <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve"
+                            CommandArgument='<%# Eval("VisitorID") %>' CssClass="btn btn-success btn-sm" />
+                        <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject"
+                            CommandArgument='<%# Eval("VisitorID") %>' CssClass="btn btn-danger btn-sm" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
         <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
             <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
         </asp:Panel>
+        <!-- Custom Toast -->
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+            <div id="customToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body" id="toastMessage">
+                        Success!
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            </div>
         </div>
+
+    </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
+    <script>
+    function showToast(message, isSuccess) {
+        const toastEl = document.getElementById('customToast');
+        const toastBody = document.getElementById('toastMessage');
+
+        toastBody.textContent = message;
+
+        if (isSuccess) {
+            toastEl.classList.remove('bg-danger');
+            toastEl.classList.add('bg-success');
+        } else {
+            toastEl.classList.remove('bg-success');
+            toastEl.classList.add('bg-danger');
+        }
+
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+    }
+    </script>
+
 </asp:Content>

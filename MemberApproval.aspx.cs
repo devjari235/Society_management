@@ -52,6 +52,7 @@ namespace Society_management
             {
                 int visitorId = Convert.ToInt32(e.CommandArgument);
                 bool isApproved = e.CommandName == "Approve";
+                string resultMsg = isApproved ? "Visitor approved successfully!" : "Visitor rejected.";
 
                 string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
                 string query = "UPDATE Visitors SET IsApproved = @IsApproved WHERE VisitorID = @VisitorID";
@@ -66,10 +67,18 @@ namespace Society_management
                     {
                         connection.Open();
                         command.ExecuteNonQuery();
+
+                        // Inject toast script
+                        string script = $"showToast('{resultMsg}', {isApproved.ToString().ToLower()});";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowToast", script, true);
+
+                        // Reload visitors
+                        LoadPendingVisitors();
                     }
                     catch (Exception ex)
                     {
-                        Label1.Text = "Error: " + ex.Message;
+                        string errorScript = $"showToast('Error: {ex.Message}', false);";
+                        ScriptManager.RegisterStartupScript(this, GetType(), "ShowErrorToast", errorScript, true);
                     }
                 }
             }
