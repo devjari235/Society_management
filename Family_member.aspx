@@ -141,6 +141,22 @@
             text-align: center;
         }
     }
+    .validation-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 3px;
+    display: block;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.validation-error::before {
+    content: "⚠ ";
+    font-size: 0.85rem;
+    margin-right: 4px;
+}
+.is-invalid {
+    border-color: #dc3545 !important;
+}
 
 </style>
 </asp:Content>
@@ -159,59 +175,120 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="card">
-            <div class="card-header bg-primary text-white text-center">
-                <h4>Add Family Member</h4>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="txtName" class="form-label">Member Name</label>
-                    <asp:TextBox ID="txtName" CssClass="form-control" runat="server" AutoCompleteType="Disabled" />
-                </div>
-                <div class="mb-3">
-                    <label for="txtEmail" class="form-label">Email</label>
-                    <asp:TextBox ID="txtEmail" CssClass="form-control" TextMode="Email" runat="server" AutoCompleteType="Disabled" />
-                </div>
-                <div class="mb-3">
-                    <label for="txtPhone" class="form-label">Phone Number</label>
-                    <asp:TextBox ID="txtPhone" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
-                </div>
-                <div class="mb-3">
-                    <label for="txtAge" class="form-label">Age</label>
-                    <asp:TextBox ID="txtAge" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
-                </div>
+<div class="card">
+        <div class="card-header bg-primary text-white text-center">
+            <h4>Add Family Member</h4>
+        </div>
+        <div class="card-body">
 
-                <div class="mb-3">
-                    <label for="ddlGender" class="form-label">Gender</label>
-                    <asp:DropDownList ID="ddlGender" CssClass="form-select" runat="server">
-                        <asp:ListItem Text="Select Gender" Value="" />
-                        <asp:ListItem Text="Male" />
-                        <asp:ListItem Text="Female" />
-                    </asp:DropDownList>
-                </div>
-                <div class="mb-3">
-                    <label for="ddlRelationship" class="form-label">Relationship</label>
-                    <asp:DropDownList ID="ddlRelationship" CssClass="form-select" runat="server">
-                        <asp:ListItem Text="Select Relationship" Value="" />
-                        <asp:ListItem Text="Father" />
-                        <asp:ListItem Text="Mother" />
-                        <asp:ListItem Text="Spouse" />
-                        <asp:ListItem Text="Son" />
-                        <asp:ListItem Text="Daughter" />
-                        <asp:ListItem Text="Brother" />
-                        <asp:ListItem Text="Sister" />
-                        <asp:ListItem Text="Other" />
-                    </asp:DropDownList>
-                </div>
-                <div class="d-grid">
-                    <asp:Button ID="btnAddMember" CssClass="btn btn-primary" runat="server" Text="Add Member"
-                        OnClientClick="return validateForm();" OnClick="btnAddMember_Click" />
-                </div>
-                <div class="mt-3 text-center">
-                    <asp:Label ID="lblMessage" runat="server" CssClass="fw-bold" />
-                </div>
+            <div class="mb-3">
+                <label for="txtName" class="form-label">Member Name</label>
+                <asp:TextBox ID="txtName" CssClass="form-control" runat="server" AutoCompleteType="Disabled" />
+                <asp:RequiredFieldValidator ID="rfvName" runat="server"
+                    ControlToValidate="txtName"
+                    CssClass="validation-error"
+                    ErrorMessage="Name is required."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="mb-3">
+                <label for="txtEmail" class="form-label">Email</label>
+                <asp:TextBox ID="txtEmail" CssClass="form-control" TextMode="Email" runat="server" AutoCompleteType="Disabled" />
+                <asp:RequiredFieldValidator ID="rfvEmail" runat="server"
+                    ControlToValidate="txtEmail"
+                    CssClass="validation-error"
+                    ErrorMessage="Email is required."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="mb-3">
+                <label for="txtPhone" class="form-label">Phone Number</label>
+                <asp:TextBox ID="txtPhone" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
+                <asp:RequiredFieldValidator ID="rfvPhone" runat="server"
+                    ControlToValidate="txtPhone"
+                    CssClass="validation-error"
+                    ErrorMessage="Phone number is required."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="mb-3">
+                <label for="txtAge" class="form-label">Age</label>
+                <asp:TextBox ID="txtAge" CssClass="form-control" TextMode="Number" runat="server" AutoCompleteType="Disabled" />
+                <asp:RequiredFieldValidator ID="rfvAge" runat="server"
+                    ControlToValidate="txtAge"
+                    CssClass="validation-error"
+                    ErrorMessage="Age is required."
+                    Display="Dynamic" />
+                <asp:RangeValidator ID="rvAge" runat="server"
+                    ControlToValidate="txtAge"
+                    MinimumValue="0"
+                    MaximumValue="150"
+                    Type="Integer"
+                    CssClass="validation-error"
+                    ErrorMessage="Enter a valid age." />
+            </div>
+
+            <div class="mb-3">
+                <label for="ddlGender" class="form-label">Gender</label>
+                <asp:DropDownList ID="ddlGender" CssClass="form-select" runat="server">
+                    <asp:ListItem Text="Select Gender" Value="" />
+                    <asp:ListItem Text="Male" />
+                    <asp:ListItem Text="Female" />
+                </asp:DropDownList>
+                <asp:RequiredFieldValidator ID="rfvGender" runat="server"
+                    ControlToValidate="ddlGender"
+                    InitialValue=""
+                    CssClass="validation-error"
+                    ErrorMessage="Please select gender."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="mb-3">
+                <label for="ddlRelationship" class="form-label">Relationship</label>
+                <asp:DropDownList ID="ddlRelationship" CssClass="form-select" runat="server">
+                    <asp:ListItem Text="Select Relationship" Value="" />
+                    <asp:ListItem Text="Father" />
+                    <asp:ListItem Text="Mother" />
+                    <asp:ListItem Text="Spouse" />
+                    <asp:ListItem Text="Son" />
+                    <asp:ListItem Text="Daughter" />
+                    <asp:ListItem Text="Brother" />
+                    <asp:ListItem Text="Sister" />
+                    <asp:ListItem Text="Other" />
+                </asp:DropDownList>
+                <asp:RequiredFieldValidator ID="rfvRelationship" runat="server"
+                    ControlToValidate="ddlRelationship"
+                    InitialValue=""
+                    CssClass="validation-error"
+                    ErrorMessage="Please select relationship."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="mb-3">
+                <label for="txtDOB" class="form-label">Date of Birth</label>
+                <asp:TextBox ID="txtDOB" CssClass="form-control" TextMode="Date" runat="server" AutoCompleteType="Disabled" />
+                <asp:RequiredFieldValidator ID="rfvDOB" runat="server"
+                    ControlToValidate="txtDOB"
+                    CssClass="validation-error"
+                    ErrorMessage="Date of birth is required."
+                    Display="Dynamic" />
+                <asp:CustomValidator ID="cvDOB" runat="server"
+                    ControlToValidate="txtDOB"
+                    OnServerValidate="cvDOB_ServerValidate"
+                    CssClass="validation-error"
+                    ErrorMessage="Date of birth cannot be in the future."
+                    Display="Dynamic" />
+            </div>
+
+            <div class="d-grid">
+                <asp:Button ID="btnAddMember" CssClass="btn btn-primary" runat="server" Text="Add Member" OnClick="btnAddMember_Click" />
+            </div>
+
+            <div class="mt-3 text-center">
+                <asp:Label ID="lblMessage" runat="server" CssClass="fw-bold" />
             </div>
         </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

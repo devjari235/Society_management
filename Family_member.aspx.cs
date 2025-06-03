@@ -20,6 +20,17 @@ namespace Society_management
             
 
         }
+        protected void cvDOB_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            if (DateTime.TryParse(txtDOB.Text, out DateTime dob))
+            {
+                args.IsValid = dob <= DateTime.Today;
+            }
+            else
+            {
+                args.IsValid = false;
+            }
+        }
 
         int id;
         public void OwnerID()

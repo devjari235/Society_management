@@ -24,6 +24,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlUser;
 
         /// <summary>
+        /// rfvUser control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvUser;
+
+        /// <summary>
         /// ddlDesignation control.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlDesignation;
+
+        /// <summary>
+        /// rfvDesignation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvDesignation;
 
         /// <summary>
         /// txtBlockName control.
@@ -60,6 +78,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlRole;
 
         /// <summary>
+        /// rfvRole control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvRole;
+
+        /// <summary>
         /// txtEmail control.
         /// </summary>
         /// <remarks>
@@ -87,6 +114,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtFromDate;
 
         /// <summary>
+        /// rfvFromDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFromDate;
+
+        /// <summary>
         /// txtToDate control.
         /// </summary>
         /// <remarks>
@@ -94,6 +130,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtToDate;
+
+        /// <summary>
+        /// cvDateCompare control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CompareValidator cvDateCompare;
 
         /// <summary>
         /// btnSave control.

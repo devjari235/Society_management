@@ -15,9 +15,24 @@ namespace Society_management
             if (!IsPostBack)
             {
                 pnlAdmin.Visible = true;
+                cvExpireDate.ValueToCompare = DateTime.Now.ToString("yyyy-MM-dd");
+                DataBind();
             }
         }
-
+        protected void cvOptions_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            string optionsString = hdnOptions.Value;
+            if (!string.IsNullOrEmpty(optionsString))
+            {
+                string[] options = optionsString.Split(new string[] { "|||" }, StringSplitOptions.RemoveEmptyEntries);
+                if (options.Length >= 2)
+                {
+                    args.IsValid = true;
+                    return;
+                }
+            }
+            args.IsValid = false;
+        }
         protected void btnCreatePoll_Click(object sender, EventArgs e)
         {
             // Reset messages

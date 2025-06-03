@@ -33,6 +33,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtVisitorName;
 
         /// <summary>
+        /// rfvVisitorName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvVisitorName;
+
+        /// <summary>
         /// lblContactNumber control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtContactNumber;
+
+        /// <summary>
+        /// rfvContactNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvContactNumber;
+
+        /// <summary>
+        /// revContactNumber control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator revContactNumber;
 
         /// <summary>
         /// lblVisitDateTime control.
@@ -69,6 +96,24 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.TextBox txtVisitDateTime;
 
         /// <summary>
+        /// rfvVisitDateTime control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvVisitDateTime;
+
+        /// <summary>
+        /// cvFutureDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvFutureDate;
+
+        /// <summary>
         /// lblVisitPurpose control.
         /// </summary>
         /// <remarks>
@@ -85,6 +130,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtVisitPurpose;
+
+        /// <summary>
+        /// rfvPurpose control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPurpose;
+
+        /// <summary>
+        /// cvPurposeLength control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvPurposeLength;
 
         /// <summary>
         /// btnSchedule control.

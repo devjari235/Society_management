@@ -18,7 +18,22 @@ namespace Society_management
                
             }
         }
-
+        protected void cvPurposeLength_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = args.Value.Trim().Length >= 5;
+        }
+        protected void cvFutureDate_ServerValidate(object source, ServerValidateEventArgs args)
+        {
+            DateTime visitDate;
+            if (DateTime.TryParse(args.Value, out visitDate))
+            {
+                args.IsValid = visitDate >= DateTime.Now;
+            }
+            else
+            {
+                args.IsValid = false; 
+            }
+        }
         protected void btnSchedule_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtVisitorName.Text) ||

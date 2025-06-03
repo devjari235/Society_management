@@ -142,6 +142,23 @@
 .btn-create {
    background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
 }
+.validation-error {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 3px;
+  display: block;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.validation-error::before {
+  content: "⚠ ";
+  font-size: 0.85rem;
+  margin-right: 4px;
+}
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -157,39 +174,53 @@
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="form-container">
-            <h3><b>New Visitor Entry</b></h3>
-            <p>&nbsp;</p>
-            <div class="form-row">
-                <asp:Label ID="lblVisitorName" runat="server" Text="Visitor Name:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>
-            
-            <div class="form-row">
-                <asp:Label ID="lblContactNumber" runat="server" Text="Contact Number:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control"></asp:TextBox>
-            </div>
-            
-            <div class="form-row">
-                <asp:Label ID="lblVisitPurpose" runat="server" Text="Visit Purpose:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtVisitPurpose" runat="server" TextMode="MultiLine" CssClass="form-control"></asp:TextBox>
-            </div>
+      <div class="form-container">
+        <h3><b>New Visitor Entry</b></h3>
         <div class="form-row">
-            <asp:Label ID="lblBlock" runat="server" Text="Block Name:" CssClass="form-label"></asp:Label>
-            <asp:DropDownList ID="ddlBlock" runat="server" CssClass="form-control" AutoPostBack="True" OnSelectedIndexChanged="ddlBlock_SelectedIndexChanged"></asp:DropDownList>
+            <asp:Label ID="lblVisitorName" runat="server" Text="Visitor Name:" CssClass="form-label" />
+            <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control" AutoCompleteType="Disabled" />
+            <asp:RequiredFieldValidator ID="rfvVisitorName" runat="server" ControlToValidate="txtVisitorName"
+                ErrorMessage="Visitor name is required." CssClass="validation-error" Display="Dynamic" />
         </div>
-            <div class="form-row">
-                <asp:Label ID="lblMember" runat="server" Text="Meeting With:" CssClass="form-label"></asp:Label>
-                <asp:DropDownList ID="ddlMembers" runat="server" CssClass="form-control"></asp:DropDownList>
-            </div>
-            
-            <div class="form-buttons">
-                <asp:Button ID="btnSubmit" runat="server" Text="Submit Visitor Entry" 
-                    OnClick="btnSubmit_Click" CssClass="btn btn-primary" />
-                
-            </div>
+
+        <div class="form-row">
+            <asp:Label ID="lblContactNumber" runat="server" Text="Contact Number:" CssClass="form-label" />
+            <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control" AutoCompleteType="Disabled" />
+            <asp:RequiredFieldValidator ID="rfvContact" runat="server" ControlToValidate="txtContactNumber"
+                ErrorMessage="Contact number is required." CssClass="validation-error" Display="Dynamic" />
+            <asp:RegularExpressionValidator ID="revContact" runat="server" ControlToValidate="txtContactNumber"
+                ErrorMessage="Enter valid 10-digit number." ValidationExpression="^\d{10}$" CssClass="validation-error" Display="Dynamic" />
         </div>
-    
+
+        <div class="form-row">
+            <asp:Label ID="lblVisitPurpose" runat="server" Text="Visit Purpose:" CssClass="form-label" />
+            <asp:TextBox ID="txtVisitPurpose" runat="server" TextMode="MultiLine" CssClass="form-control" AutoCompleteType="Disabled" />
+            <asp:RequiredFieldValidator ID="rfvPurpose" runat="server" ControlToValidate="txtVisitPurpose"
+                ErrorMessage="Purpose is required." CssClass="validation-error" Display="Dynamic" />
+        </div>
+
+        <div class="form-row">
+            <asp:Label ID="lblBlock" runat="server" Text="Block Name:" CssClass="form-label" />
+            <asp:DropDownList ID="ddlBlock" runat="server" CssClass="form-control" AutoPostBack="True" OnSelectedIndexChanged="ddlBlock_SelectedIndexChanged">
+                <asp:ListItem Text="--Select Block--" Value="" />
+            </asp:DropDownList>
+            <asp:RequiredFieldValidator ID="rfvBlock" runat="server" ControlToValidate="ddlBlock"
+                InitialValue="" ErrorMessage="Please select a block." CssClass="validation-error" Display="Dynamic" />
+        </div>
+
+        <div class="form-row">
+            <asp:Label ID="lblMember" runat="server" Text="Meeting With:" CssClass="form-label" />
+            <asp:DropDownList ID="ddlMembers" runat="server" CssClass="form-control">
+                <asp:ListItem Text="--Select Member--" Value="" />
+            </asp:DropDownList>
+            <asp:RequiredFieldValidator ID="rfvMember" runat="server" ControlToValidate="ddlMembers"
+                InitialValue="" ErrorMessage="Please select a member." CssClass="validation-error" Display="Dynamic" />
+        </div>
+
+        <div class="form-buttons">
+            <asp:Button ID="btnSubmit" runat="server" Text="Submit Visitor Entry" OnClick="btnSubmit_Click" CssClass="btn btn-primary" />
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

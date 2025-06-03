@@ -171,6 +171,25 @@ body, html {
         justify-content: center;
     }
 }
+.validation-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 3px;
+    display: block;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.validation-error::before {
+    content: "⚠ ";
+    font-size: 0.85rem;
+    margin-right: 4px;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
 </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -190,39 +209,62 @@ body, html {
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container mt-5">
-            <div class="custom-schedule-card">
+        <div class="container mt-5">
+        <div class="custom-schedule-card">
 
-                <h4>Schedule a Visitor</h4>
+            <h4>Schedule a Visitor</h4>
 
-                <div class="mb-3">
-                    <asp:Label ID="lblVisitorName" runat="server" Text="Visitor Name:" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
+            <!-- Visitor Name -->
+            <div class="mb-3">
+                <asp:Label ID="lblVisitorName" runat="server" Text="Visitor Name:" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvVisitorName" runat="server" ControlToValidate="txtVisitorName"
+                    ErrorMessage="Visitor name is required." CssClass="validation-error" Display="Dynamic" />
+            </div>
 
-                <div class="mb-3">
-                    <asp:Label ID="lblContactNumber" runat="server" Text="Contact Number:" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control"></asp:TextBox>
-                </div>
+            <!-- Contact Number -->
+            <div class="mb-3">
+                <asp:Label ID="lblContactNumber" runat="server" Text="Contact Number:" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvContactNumber" runat="server" ControlToValidate="txtContactNumber"
+                    ErrorMessage="Contact number is required." CssClass="validation-error" Display="Dynamic" />
+                <asp:RegularExpressionValidator ID="revContactNumber" runat="server" ControlToValidate="txtContactNumber"
+                    ValidationExpression="^\d{10}$" ErrorMessage="Enter a valid 10-digit number."
+                    CssClass="validation-error" Display="Dynamic" />
+            </div>
 
-                <div class="mb-3">
-                    <asp:Label ID="lblVisitDateTime" runat="server" Text="Visit Date & Time:" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtVisitDateTime" runat="server" CssClass="form-control" placeholder="e.g., 2025-06-01 14:00" TextMode="DateTimeLocal"></asp:TextBox>
-                </div>
+            <!-- Visit Date & Time -->
+            <div class="mb-3">
+                <asp:Label ID="lblVisitDateTime" runat="server" Text="Visit Date & Time:" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtVisitDateTime" runat="server" CssClass="form-control"
+                    placeholder="e.g., 2025-06-01 14:00" TextMode="DateTimeLocal"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvVisitDateTime" runat="server" ControlToValidate="txtVisitDateTime"
+                    ErrorMessage="Visit date and time is required." CssClass="validation-error" Display="Dynamic" />
+                <asp:CustomValidator ID="cvFutureDate" runat="server" ControlToValidate="txtVisitDateTime"
+                    OnServerValidate="cvFutureDate_ServerValidate"
+                    ErrorMessage="Visit date and time cannot be in the past." CssClass="validation-error" Display="Dynamic" />
+            </div>
 
-                <div class="mb-3">
-                    <asp:Label ID="lblVisitPurpose" runat="server" Text="Visit Purpose:" CssClass="form-label"></asp:Label>
-                    <asp:TextBox ID="txtVisitPurpose" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
-                </div>
+            <!-- Visit Purpose -->
+            <div class="mb-3">
+                <asp:Label ID="lblVisitPurpose" runat="server" Text="Visit Purpose:" CssClass="form-label"></asp:Label>
+                <asp:TextBox ID="txtVisitPurpose" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                <asp:RequiredFieldValidator ID="rfvPurpose" runat="server" ControlToValidate="txtVisitPurpose"
+                    ErrorMessage="Visit purpose is required." CssClass="validation-error" Display="Dynamic" />
+                <asp:CustomValidator ID="cvPurposeLength" runat="server" ControlToValidate="txtVisitPurpose"
+                    OnServerValidate="cvPurposeLength_ServerValidate"
+                    ErrorMessage="Purpose must be at least 5 characters." CssClass="validation-error" Display="Dynamic" />
+            </div>
 
-                <asp:Button ID="btnSchedule" runat="server" Text="Schedule Visitor" CssClass="btn btn-primary" OnClick="btnSchedule_Click" />
+            <!-- Submit Button -->
+            <asp:Button ID="btnSchedule" runat="server" Text="Schedule Visitor" CssClass="btn btn-primary" OnClick="btnSchedule_Click" />
 
-                <div class="mt-3">
-                    <asp:Label ID="lblMessage" runat="server"></asp:Label>
-                </div>
+            <!-- Message Label -->
+            <div class="mt-3">
+                <asp:Label ID="lblMessage" runat="server"></asp:Label>
             </div>
         </div>
-
+    </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

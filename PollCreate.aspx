@@ -45,6 +45,22 @@
         .remove-option:hover {
             color: #bb2d3b;
         }
+          .validation-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 3px;
+    display: block;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.validation-error::before {
+    content: "⚠ ";
+    font-size: 0.85rem;
+    margin-right: 4px;
+}
+.is-invalid {
+    border-color: #dc3545 !important;
+}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>    
@@ -169,6 +185,22 @@
             text-align: center;
         }
     }
+      .validation-error {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 3px;
+    display: block;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.validation-error::before {
+    content: "⚠ ";
+    font-size: 0.85rem;
+    margin-right: 4px;
+}
+.is-invalid {
+    border-color: #dc3545 !important;
+}
 </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -182,60 +214,79 @@
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
             <div class="container">
-            <div class="poll-container bg-white">
-                <h2 class="mb-4">Create New Poll</h2>
-                
-                <asp:Panel ID="pnlAdmin" runat="server">
-                    <!-- Poll Question -->
-                    <div class="mb-3">
-                        <label for="txtNewQuestion" class="form-label fw-bold">Poll Question</label>
-                        <asp:TextBox ID="txtNewQuestion" runat="server" CssClass="form-control" placeholder="Enter your poll question"></asp:TextBox>
-                    </div>
-                    <div class="mb-3">
-                        <label for="txtExpireDate" class="form-label fw-bold">Expire Date</label>
-                        <asp:TextBox ID="txtExpireDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
-                    </div>
-                    <!-- Poll Options -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Poll Options</label>
-                        <div id="optionsContainer">
-                            <!-- Option 1 -->
-                            <div class="input-group option-group mb-2">
-                                <input type="text" class="form-control option-input" placeholder="Option 1" runat="server" id="option1">
-                                <span class="input-group-text remove-option" onclick="removeOption(this)">×</span>
-                            </div>
-                            
-                            <!-- Option 2 -->
-                            <div class="input-group option-group mb-2">
-                                <input type="text" class="form-control option-input" placeholder="Option 2" runat="server" id="option2">
-                                <span class="input-group-text remove-option" onclick="removeOption(this)">×</span>
-                            </div>
+        <div class="poll-container bg-white">
+            <h2 class="mb-4">Create New Poll</h2>
+            
+            <asp:Panel ID="pnlAdmin" runat="server">
+                <!-- Poll Question -->
+                <div class="mb-3">
+                    <label for="txtNewQuestion" class="form-label fw-bold">Poll Question</label>
+                    <asp:TextBox ID="txtNewQuestion" runat="server" CssClass="form-control" placeholder="Enter your poll question"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="rfvQuestion" runat="server" ControlToValidate="txtNewQuestion"
+                        ErrorMessage="Poll question is required."
+                        CssClass="validation-error" Display="Dynamic" SetFocusOnError="True" />
+                </div>
+
+                <!-- Expire Date -->
+                <div class="mb-3">
+                    <label for="txtExpireDate" class="form-label fw-bold">Expire Date</label>
+                    <asp:TextBox ID="txtExpireDate" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="rfvExpireDate" runat="server" ControlToValidate="txtExpireDate"
+                        ErrorMessage="Expire date is required."
+                        CssClass="validation-error" Display="Dynamic" SetFocusOnError="True" />
+                    <asp:CompareValidator ID="cvExpireDate" runat="server" ControlToValidate="txtExpireDate"
+                        Operator="GreaterThan" Type="Date" 
+                        ErrorMessage="Expire date must be a future date."
+                        CssClass="validation-error" Display="Dynamic" SetFocusOnError="True" />
+                </div>
+
+                <!-- Poll Options -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Poll Options</label>
+                    <div id="optionsContainer">
+                        <!-- Option 1 -->
+                        <div class="input-group option-group mb-2">
+                            <input type="text" class="form-control option-input" placeholder="Option 1" runat="server" id="option1" />
+                            <span class="input-group-text remove-option" onclick="removeOption(this)">×</span>
                         </div>
                         
-                        <button type="button" class="btn btn-outline-primary add-option-btn" id="addOptionBtn">
-                            <i class="bi bi-plus"></i> Add Another Option
-                        </button>
+                        <!-- Option 2 -->
+                        <div class="input-group option-group mb-2">
+                            <input type="text" class="form-control option-input" placeholder="Option 2" runat="server" id="option2" />
+                            <span class="input-group-text remove-option" onclick="removeOption(this)">×</span>
+                        </div>
                     </div>
+
+                    <asp:CustomValidator ID="cvOptions" runat="server" 
+                        ErrorMessage="At least two options are required."
+                        CssClass="validation-error" Display="Dynamic" 
+                        OnServerValidate="cvOptions_ServerValidate" />
                     
-                    <!-- Hidden field to store options -->
-                    <asp:HiddenField ID="hdnOptions" runat="server" />
-                    
-                    <!-- Action Buttons -->
-                    <div class="d-flex justify-content-between mt-4">
-                        <asp:Button ID="btnCreatePoll" runat="server" Text="Create Poll" 
-                            CssClass="btn btn-primary px-4" OnClick="btnCreatePoll_Click" />
-                        <asp:Button ID="btnClosePoll" runat="server" Text="Close Current Poll" 
-                            CssClass="btn btn-danger px-4" Visible="false" />
-                    </div>
-                    
-                    <!-- Messages -->
-                    <div class="mt-3">
-                        <asp:Label ID="lblAdminMessage" runat="server" CssClass="alert alert-danger d-none" Visible="false"></asp:Label>
-                        <asp:Label ID="lblAdminSuccess" runat="server" CssClass="alert alert-success d-none" Visible="false"></asp:Label>
-                    </div>
-                </asp:Panel>
-            </div>
+                    <button type="button" class="btn btn-outline-primary add-option-btn" id="addOptionBtn">
+                        <i class="bi bi-plus"></i> Add Another Option
+                    </button>
+                </div>
+                
+                <!-- Hidden field to store options -->
+                <asp:HiddenField ID="hdnOptions" runat="server" />
+
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-between mt-4">
+                    <asp:Button ID="btnCreatePoll" runat="server" Text="Create Poll" 
+                        CssClass="btn btn-primary px-4" OnClick="btnCreatePoll_Click" />
+                    <asp:Button ID="btnClosePoll" runat="server" Text="Close Current Poll" 
+                        CssClass="btn btn-danger px-4" Visible="false" />
+                </div>
+
+                <!-- Messages -->
+                <div class="mt-3">
+                    <asp:Label ID="lblAdminMessage" runat="server" CssClass="alert alert-danger d-none" Visible="false"></asp:Label>
+                    <asp:Label ID="lblAdminSuccess" runat="server" CssClass="alert alert-success d-none" Visible="false"></asp:Label>
+                </div>
+            </asp:Panel>
         </div>
+    </div>
+
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
