@@ -119,6 +119,7 @@
     <Content Include="datatable\css\dataTables.dataTables.min.css" />
     <Content Include="datatable\js\dataTables.min.js" />
     <Content Include="Documents.aspx" />
+    <Content Include="Document_Details.aspx" />
     <Content Include="EditEvent.aspx" />
     <Content Include="EmailSend.aspx" />
     <Content Include="EventDetails.aspx" />
@@ -2415,6 +2416,13 @@
     </Compile>
     <Compile Include="Documents.aspx.designer.cs">
       <DependentUpon>Documents.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Document_Details.aspx.cs">
+      <DependentUpon>Document_Details.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Document_Details.aspx.designer.cs">
+      <DependentUpon>Document_Details.aspx</DependentUpon>
     </Compile>
     <Compile Include="EditEvent.aspx.cs">
       <DependentUpon>EditEvent.aspx</DependentUpon>

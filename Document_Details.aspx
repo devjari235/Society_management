@@ -1,6 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Complaint_Details.aspx.cs" Inherits="Society_management.complaint_Details" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Document_Details.aspx.cs" Inherits="Society_management.Document_Details" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-           <style>
+               <style>
         table {
             width: 90%;
             margin: 30px auto;
@@ -115,39 +115,35 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-        <div class="action-button-group">
-<a href="View_Complaints.aspx" class="btn-register-notice">
+            <div class="action-button-group">
+<a href="View_Document.aspx" class="btn-register-notice">
     <i class="fas fa-arrow-left"></i> Back to Details
 </a>
         </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-              <div class="card">
-           <h2>Complaint Details</h2>
-           <asp:Panel ID="pnlNotice" runat="server" Visible="false">
-               <table>
-                   <tr><th>Complaint Type</th><td><asp:Label ID="lbltype" runat="server" /></td></tr>
-                   <tr><th>Description</th><td><asp:Label ID="lblDescription" runat="server" /></td></tr>
-                   <tr><th>Block Name</th><td><asp:Label ID="lblblock" runat="server" /></td></tr>
-                   <tr><th>Flat No</th><td><asp:Label ID="lblNo" runat="server" /></td></tr>
-                   <tr><th>Complaint By</th><td><asp:Label ID="lblBy" runat="server" /></td></tr>
-                   <tr><th>Complaint Date</th><td><asp:Label ID="lblCDate" runat="server" /></td></tr>
-                   <tr><th>Resolve Date</th><td><asp:Label ID="lblRDate" runat="server" /></td></tr>
-                   <tr><th>Status</th><td><asp:Label ID="lblStatus" runat="server" /></td></tr>
-                   <tr><th>Priority</th><td><asp:Label ID="lblPriority" runat="server" /></td></tr>
-                   <tr><th>Attachment</th>
-                             <td>
-                                 <asp:HyperLink runat="server" ID="hlAttachment" NavigateUrl='<%# Eval("FilePath") %>'
-                                     Text="📎 View Attachment" Target="_blank"
-                                     CssClass="btn btn-sm btn-outline-secondary mt-2"
-                                     Visible='<%# !string.IsNullOrEmpty(Eval("FilePaths").ToString()) %>' />
+           <div class="card">
+    <h2>Document Details</h2>
+    <asp:Panel ID="pnlNotice" runat="server" Visible="false">
+        <table>
+            <tr><th>Document Title:</th><td><asp:Label ID="lbltitle" runat="server" /></td></tr>
+            <tr><th>Document Type:</th><td><asp:Label ID="lbltype" runat="server" /></td></tr>
+            <tr><th>Description:</th><td><asp:Label ID="lblDescription" runat="server" /></td></tr>   
+            <tr><th>Date:</th><td><asp:Label ID="lblDate" runat="server" /></td></tr>
+            <tr><th>Upload By:</th><td><asp:Label ID="lblupload" runat="server" /></td></tr>
+            <tr><th>Attachment:</th>
+                      <td>
+                          <asp:HyperLink runat="server" ID="hlAttachment" NavigateUrl='<%# Eval("image") %>'
+                              Text="📎 View Attachment" Target="_blank"
+                              CssClass="btn btn-sm btn-outline-secondary mt-2"
+                              Visible='<%# !string.IsNullOrEmpty(Eval("image").ToString()) %>' />
 
-                             </td>
-                   </tr>
-               </table>
-           </asp:Panel>
-           <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
-       </div>
+                      </td>
+            </tr>
+        </table>
+    </asp:Panel>
+    <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
+</div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
