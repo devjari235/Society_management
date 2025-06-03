@@ -8,6 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
     <script type="text/javascript">
         function closeModal(modalId) {
             $('#' + modalId).modal('hide');
@@ -163,6 +165,72 @@
             initializeCharts();
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".delete-liability-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const uniqueId = this.getAttribute("data-uniqueid");
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This liability will be deleted permanently.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-2',
+                            cancelButton: 'btn btn-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            __doPostBack(uniqueId, '');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".delete-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const uniqueId = this.getAttribute("data-uniqueid");
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-2',
+                            cancelButton: 'btn btn-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed && uniqueId) {
+                            __doPostBack(uniqueId, '');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 
     <style type="text/css">
         body {
@@ -246,81 +314,103 @@
             margin-bottom: 10px;
         }
 
-      #ddlProfitLossPeriod{
-          width:20%;
-      }
+        #ddlProfitLossPeriod {
+            width: 20%;
+        }
 
-      .w-auto{
-          width:150px !important;
-      }
-       .date-filter-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 8px;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        width: fit-content;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
+        .w-auto {
+            width: 150px !important;
+        }
 
-    .date-filter-container .form-control {
-        min-width: 140px;
-    }
+        .date-filter-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            width: fit-content;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-    .date-filter-container .btn {
-        padding: 4px 12px;
-        font-size: 0.875rem;
-    }
+            .date-filter-container .form-control {
+                min-width: 140px;
+            }
 
-    .date-filter-label {
-        font-weight: 500;
-        font-size: 0.875rem;
-        color: #333;
-        margin-right: 4px;
-    }
+            .date-filter-container .btn {
+                padding: 4px 12px;
+                font-size: 0.875rem;
+            }
+
+        .date-filter-label {
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #333;
+            margin-right: 4px;
+        }
     </style>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var tabLinks = document.querySelectorAll('#accountingTabs .nav-link');
+            tabLinks.forEach(function (tab) {
+                tab.addEventListener('shown.bs.tab', function (event) {
+                    var activeTabId = event.target.id;
+                    document.getElementById('<%= hdnActiveTab.ClientID %>').value = activeTabId;
+                });
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var activeTabId = document.getElementById('<%= hdnActiveTab.ClientID %>').value;
+            if (activeTabId) {
+                var tabToShow = new bootstrap.Tab(document.getElementById(activeTabId));
+                tabToShow.show();
+            }
+        });
+    </script>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-  <div class="d-flex justify-content-between mb-3">
-    <div class="d-flex align-items-center">
-        <div class="date-filter-container" id="dateFilterContainer" runat="server" style="display: none;">
-            <span class="date-filter-label">From</span>
-            <asp:TextBox ID="txtFromDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+    <div class="d-flex justify-content-between mb-3">
+        <div class="d-flex align-items-center">
+            <div class="date-filter-container" id="dateFilterContainer" runat="server" style="display: none;">
+                <span class="date-filter-label">From</span>
+                <asp:TextBox ID="txtFromDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
 
-            <span class="date-filter-label">To</span>
-            <asp:TextBox ID="txtToDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                <span class="date-filter-label">To</span>
+                <asp:TextBox ID="txtToDateFilter" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
 
-            <asp:Button ID="btnApplyFilter" runat="server" Text="Apply"
-                CssClass="btn btn-primary" OnClick="btnApplyFilter_Click" />
+                <asp:Button ID="btnApplyFilter" runat="server" Text="Apply"
+                    CssClass="btn btn-primary" OnClick="btnApplyFilter_Click" />
+            </div>
+        </div>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
+                    <i class="fas fa-plus-circle me-1"></i>Add Income
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
+                    <i class="fas fa-minus-circle me-1"></i>Add Expense
+                </button>
+            </div>
+            <div class="ms-2">
+                <asp:DropDownList ID="ddlProfitLossPeriod" runat="server"
+                    CssClass="form-select form-select-sm w-auto"
+                    AutoPostBack="true"
+                    OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
+                    <asp:ListItem Text="Current Month" Value="1" Selected="True" />
+                    <asp:ListItem Text="Last Month" Value="2" />
+                    <asp:ListItem Text="Current Year" Value="3" />
+                    <asp:ListItem Text="Last Year" Value="4" />
+                    <asp:ListItem Text="Custom Period" Value="5" />
+                </asp:DropDownList>
+            </div>
         </div>
     </div>
-    <div class="btn-toolbar mb-2 mb-md-0">
-        <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
-                <i class="fas fa-plus-circle me-1"></i>Add Income
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-                <i class="fas fa-minus-circle me-1"></i>Add Expense
-            </button>
-        </div>
-        <div class="ms-2">
-            <asp:DropDownList ID="ddlProfitLossPeriod" runat="server" 
-                CssClass="form-select form-select-sm w-auto" 
-                AutoPostBack="true" 
-                OnSelectedIndexChanged="ddlProfitLossPeriod_SelectedIndexChanged">
-                <asp:ListItem Text="Current Month" Value="1" Selected="True" />
-                <asp:ListItem Text="Last Month" Value="2" />
-                <asp:ListItem Text="Current Year" Value="3"/>
-                <asp:ListItem Text="Last Year" Value="4"/>
-                <asp:ListItem Text="Custom Period" Value="5" />
-            </asp:DropDownList>
-        </div>
-    </div>
-</div>
 
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
@@ -388,6 +478,8 @@
                     </div>
                 </div>
             </div>
+
+            <asp:HiddenField ID="hdnActiveTab" runat="server" />
 
             <!-- Transaction Tabs -->
             <ul class="nav nav-tabs" id="accountingTabs" role="tablist">
@@ -553,7 +645,7 @@
                                 <asp:Label ID="lblStatus" runat="server" CssClass="mt-2 d-block" />
                             </div>
                         </div>
-
+                        <%-- Balance sheet tab--%>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card mb-4">
@@ -566,7 +658,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body p-0">
-                                        <asp:Repeater ID="rptAssets" runat="server">
+                                        <asp:Repeater ID="rptAssets" runat="server" OnItemCommand="rptAssets_ItemCommand">
                                             <HeaderTemplate>
                                                 <table class="table table-striped table-hover mb-0">
                                                     <thead class="table-light">
@@ -578,21 +670,60 @@
                                                     </thead>
                                                     <tbody>
                                             </HeaderTemplate>
+
                                             <ItemTemplate>
                                                 <tr>
-                                                    <td><%# Eval("Category") %></td>
-                                                    <td class="text-end"><%# string.Format("₹{0:N2}", Eval("Amount")) %></td>
+                                                    <!-- Category Column -->
+                                                    <td>
+                                                        <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("Category") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                                        <asp:TextBox ID="txtCategory" runat="server" Text='<%# Eval("Category") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                                    </td>
+
+                                                    <!-- Amount Column -->
+                                                    <td class="text-end">
+                                                        <asp:Label ID="lblAmount" runat="server" Text='<%# string.Format("₹{0:N2}", Eval("Amount")) %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                                    </td>
+
+                                                    <!-- Action Buttons -->
+                                                    <td class="text-end">
+                                                        <!-- View Mode -->
+                                                        <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success"
+                                                            CommandName="Edit" CommandArgument='<%# Eval("EntryID") %>'
+                                                            Visible='<%# !(bool)Eval("IsEditing") %>'>Edit</asp:LinkButton>
+
+                                                        <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-sm btn-danger delete-btn"
+                                                            CommandName="Delete" CommandArgument='<%# Eval("EntryID") %>'
+                                                            OnClientClick="return false;"
+                                                            data-uniqueid='<%# ((LinkButton)Container.FindControl("btnDelete")).UniqueID %>'
+                                                            Visible='<%# !(bool)Eval("IsEditing") %>'>
+                                                            Delete
+                                                        </asp:LinkButton>
+
+                                                        <!-- Edit Mode -->
+                                                        <div class="d-inline-flex gap-2" runat="server" visible='<%# (bool)Eval("IsEditing") %>'>
+                                                            <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
+                                                                CommandName="Update" CommandArgument='<%# Eval("EntryID") %>'>Update</asp:LinkButton>
+
+                                                            <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
+                                                                CommandName="Cancel" CommandArgument='<%# Eval("EntryID") %>'>Cancel</asp:LinkButton>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </ItemTemplate>
+
                                             <FooterTemplate>
                                                 </tbody>
         </table>
                                             </FooterTemplate>
                                         </asp:Repeater>
+
+                                        <!-- No Assets Panel -->
                                         <asp:Panel ID="pnlNoAssets" runat="server" CssClass="text-center py-3" Visible="false">
                                             <i class="fas fa-wallet fa-2x text-muted mb-2"></i>
                                             <p class="text-muted">No assets recorded yet</p>
                                         </asp:Panel>
+
                                     </div>
                                 </div>
                             </div>
@@ -608,7 +739,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body p-0">
-                                        <asp:Repeater ID="rptLiabilities" runat="server">
+                                        <asp:Repeater ID="rptLiabilities" runat="server" OnItemCommand="rptLiabilities_ItemCommand">
                                             <HeaderTemplate>
                                                 <table class="table table-striped table-hover mb-0">
                                                     <thead class="table-light">
@@ -622,15 +753,52 @@
                                             </HeaderTemplate>
                                             <ItemTemplate>
                                                 <tr>
-                                                    <td><%# Eval("Category") %></td>
-                                                    <td class="text-end"><%# string.Format("₹{0:N2}", Eval("Amount")) %></td>
+                                                    <!-- Category Column -->
+                                                    <td>
+                                                        <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("Category") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                                        <asp:TextBox ID="txtCategory" runat="server" Text='<%# Eval("Category") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                                    </td>
+
+                                                    <!-- Amount Column -->
+                                                    <td class="text-end">
+                                                        <asp:Label ID="lblAmount" runat="server" Text='<%# string.Format("₹{0:N2}", Eval("Amount")) %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                                    </td>
+
+                                                    <!-- Action Column -->
+                                                    <td class="text-end">
+                                                        <!-- View Mode -->
+                                                        <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success"
+                                                            CommandName="Edit" CommandArgument='<%# Eval("EntryID") %>'
+                                                            Visible='<%# !(bool)Eval("IsEditing") %>'>Edit</asp:LinkButton>
+
+                                                        <asp:LinkButton ID="btnDeleteLiability" runat="server"
+                                                            CssClass="btn btn-sm btn-danger delete-liability-btn"
+                                                            CommandName="DeleteLiability"
+                                                            CommandArgument='<%# Eval("EntryID") %>'
+                                                            OnClientClick="return false;"
+                                                            data-uniqueid='<%# ((LinkButton)Container.FindControl("btnDeleteLiability")).UniqueID %>'
+                                                            Visible='<%# !(bool)Eval("IsEditing") %>'>
+                    Delete
+                                                        </asp:LinkButton>
+
+                                                        <!-- Edit Mode -->
+                                                        <div class="d-inline-flex gap-2" runat="server" visible='<%# (bool)Eval("IsEditing") %>'>
+                                                            <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
+                                                                CommandName="Update" CommandArgument='<%# Eval("EntryID") %>'>Update</asp:LinkButton>
+
+                                                            <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
+                                                                CommandName="Cancel" CommandArgument='<%# Eval("EntryID") %>'>Cancel</asp:LinkButton>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </ItemTemplate>
                                             <FooterTemplate>
                                                 </tbody>
-        </table>
+</table>
                                             </FooterTemplate>
                                         </asp:Repeater>
+
                                         <asp:Panel ID="Panel1" runat="server" CssClass="text-center py-3" Visible="false">
                                             <i class="fas fa-file-invoice-dollar fa-2x text-muted mb-2"></i>
                                             <p class="text-muted">No liabilities recorded yet</p>
@@ -745,7 +913,7 @@
                         </div>
                     </div>
 
-      <%--              <div class="card mb-3">
+                    <%--              <div class="card mb-3">
                         <div class="card-header bg-light">
                             <h5 class="mb-0">Income</h5>
                         </div>

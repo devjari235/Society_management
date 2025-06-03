@@ -19,11 +19,18 @@ namespace Society_management
         int? year = null;
         decimal totalIncome;
         decimal totalExpenses;
+
+        private DataTable dtAssets
+        {
+            get { return ViewState["AssetsTable"] as DataTable; }
+            set { ViewState["AssetsTable"] = value; }
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
 
             if (!IsPostBack)
             {
+                
                 // Set default date range to current month
                 fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 toDate = DateTime.Now;
@@ -207,7 +214,7 @@ namespace Society_management
                         }
                     }
 
-                    lblStatus.Text = "Entry added successfully.";
+                    //lblStatus.Text = "Entry added successfully.";
                     lblStatus.CssClass = "text-success";
 
                     // Clear inputs
@@ -245,7 +252,13 @@ namespace Society_management
                 SqlDataAdapter daAssets = new SqlDataAdapter(cmdAssets);
                 DataTable dtAssets = new DataTable();
                 daAssets.Fill(dtAssets);
+                if (!dtAssets.Columns.Contains("IsEditing"))
+                    dtAssets.Columns.Add("IsEditing", typeof(bool));
 
+                foreach (DataRow row in dtAssets.Rows)
+                    row["IsEditing"] = false;
+
+                ViewState["AssetsTable"] = dtAssets;
                 rptAssets.DataSource = dtAssets;
                 rptAssets.DataBind();
                 pnlNoAssets.Visible = dtAssets.Rows.Count == 0;
@@ -259,6 +272,13 @@ namespace Society_management
                 DataTable dtLiabilities = new DataTable();
                 daLiabilities.Fill(dtLiabilities);
 
+                if (!dtLiabilities.Columns.Contains("IsEditing"))
+                    dtLiabilities.Columns.Add("IsEditing", typeof(bool));
+
+                foreach (DataRow row in dtLiabilities.Rows)
+                    row["IsEditing"] = false;
+
+                ViewState["LiabilitiesTable"] = dtLiabilities;
                 rptLiabilities.DataSource = dtLiabilities;
                 rptLiabilities.DataBind();
                 pnlNoLiabilities.Visible = dtLiabilities.Rows.Count == 0;
@@ -277,24 +297,138 @@ namespace Society_management
 
             }
         }
-
-
-
-
-
-        private void DeleteEntry(int entryId)
+        protected void rptAssets_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            using (SqlConnection con = new SqlConnection(connectionString))
-            {
-                string query = "DELETE FROM BalanceEntry WHERE EntryID = @EntryID";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@EntryID", entryId);
-                con.Open();
-                cmd.ExecuteNonQuery();
-            }
+            DataTable dtAssets = ViewState["AssetsTable"] as DataTable;
+            if (dtAssets == null) return;
 
-            LoadBalanceSheet();
+            int entryId = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "Edit")
+            {
+                hdnActiveTab.Value = "balance-tab";
+                foreach (DataRow row in dtAssets.Rows)
+                    row["IsEditing"] = (Convert.ToInt32(row["EntryID"]) == entryId);
+
+                ViewState["AssetsTable"] = dtAssets;
+                rptAssets.DataSource = dtAssets;
+                rptAssets.DataBind();
+            }
+            else if (e.CommandName == "Cancel")
+            {
+                hdnActiveTab.Value = "balance-tab";
+                foreach (DataRow row in dtAssets.Rows)
+                    row["IsEditing"] = false;
+
+                ViewState["AssetsTable"] = dtAssets;
+                rptAssets.DataSource = dtAssets;
+                rptAssets.DataBind();
+            }
+            else if (e.CommandName == "Update")
+            {
+                hdnActiveTab.Value = "balance-tab";
+                TextBox txtCategory = (TextBox)e.Item.FindControl("txtCategory");
+                TextBox txtAmount = (TextBox)e.Item.FindControl("txtAmount");
+
+                string category = txtCategory.Text.Trim();
+                decimal amount = 0;
+                decimal.TryParse(txtAmount.Text, out amount);
+
+                string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    string query = "UPDATE BalanceEntry SET Category=@Category, Amount=@Amount WHERE EntryID=@EntryID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Category", category);
+                    cmd.Parameters.AddWithValue("@Amount", amount);
+                    cmd.Parameters.AddWithValue("@EntryID", entryId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadBalanceSheet(); 
+            }
+            else if (e.CommandName == "Delete")
+            {
+                hdnActiveTab.Value = "balance-tab";
+                string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    SqlCommand cmd = new SqlCommand("DELETE FROM BalanceEntry WHERE EntryID=@EntryID", con);
+                    cmd.Parameters.AddWithValue("@EntryID", entryId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadBalanceSheet();
+            }
         }
+
+
+        protected void rptLiabilities_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            DataTable dtLiabilities = ViewState["LiabilitiesTable"] as DataTable;
+            if (dtLiabilities == null) return;
+
+            int entryId = Convert.ToInt32(e.CommandArgument);
+            hdnActiveTab.Value = "balance-tab"; // keep liabilities tab active
+
+            if (e.CommandName == "Edit")
+            {
+                foreach (DataRow row in dtLiabilities.Rows)
+                    row["IsEditing"] = (Convert.ToInt32(row["EntryID"]) == entryId);
+
+                ViewState["LiabilitiesTable"] = dtLiabilities;
+                rptLiabilities.DataSource = dtLiabilities;
+                rptLiabilities.DataBind();
+            }
+            else if (e.CommandName == "Cancel")
+            {
+                foreach (DataRow row in dtLiabilities.Rows)
+                    row["IsEditing"] = false;
+
+                ViewState["LiabilitiesTable"] = dtLiabilities;
+                rptLiabilities.DataSource = dtLiabilities;
+                rptLiabilities.DataBind();
+            }
+            else if (e.CommandName == "Update")
+            {
+                TextBox txtCategory = (TextBox)e.Item.FindControl("txtCategory");
+                TextBox txtAmount = (TextBox)e.Item.FindControl("txtAmount");
+
+                string category = txtCategory.Text.Trim();
+                decimal amount = 0;
+                decimal.TryParse(txtAmount.Text, out amount);
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE BalanceEntry SET Category=@Category, Amount=@Amount WHERE EntryID=@EntryID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Category", category);
+                    cmd.Parameters.AddWithValue("@Amount", amount);
+                    cmd.Parameters.AddWithValue("@EntryID", entryId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadBalanceSheet(); // Reload data from DB
+            }
+            else if (e.CommandName == "DeleteLiability")
+            {
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM BalanceEntry WHERE EntryID = @EntryID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@EntryID", entryId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadBalanceSheet(); // Refresh table after delete
+            }
+        }
+
+
 
         private decimal GetAccountBalance(string accountType)
         {
