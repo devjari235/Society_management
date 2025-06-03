@@ -208,6 +208,7 @@
             <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" />
             <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" />
             <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" />
+            <asp:BoundField DataField="MemberName" HeaderText="Meeting With" />
             <asp:TemplateField HeaderText="Approval Status">
                 <ItemTemplate>
                     <asp:Label ID="lblStatus" runat="server"

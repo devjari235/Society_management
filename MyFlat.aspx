@@ -45,13 +45,13 @@
             color: #0044cc;
             margin: 20px 0;
         }
-        <style>
+      
     /* Button Group Container */
     .action-button-group {
         display: flex;
         justify-content: flex-end;
         gap: 15px;
-        margin: 15px 0;
+       
         width: 100%;
     }
 
