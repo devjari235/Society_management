@@ -77,11 +77,11 @@
 .gradient-btn {
     display: inline-block;
     padding: 10px 20px;
-    color:darkred;
+     color: white;
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
-    background: linear-gradient(to right, #FF7E5F, #FEB47B);
+   background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -90,10 +90,10 @@
 }
 
 .gradient-btn:hover {
-    color:black;
+        transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: #FFD700;
     text-decoration:none;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    transform: translateY(-2px);
 }
 
 .gradient-btn:active {
