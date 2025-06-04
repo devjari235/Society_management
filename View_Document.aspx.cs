@@ -28,34 +28,24 @@ namespace Society_management
         {
             using (SqlConnection con = new SqlConnection(strcon))
             {
-                string query = "SELECT d.DocumentID, d.FilePath, d.DocumentTitle, d.DocumentType, d.Description, d.UploadDate,a.name FROM tblDocuments d JOIN tblAdmin a ON d.admin_id = a.admin_id WHERE a.admin_id = @id ORDER BY d.UploadDate DESC";
-               
+                string query = @"SELECT d.DocumentID, d.DocumentTitle, 
+                               FORMAT(d.UploadDate, 'dd-MMM-yyyy') as UploadDate, 
+                               a.name, d.FileName, d.StoredFileName 
+                               FROM tblDocuments d 
+                               JOIN tblAdmin a ON d.admin_id = a.admin_id 
+                               WHERE a.admin_id = @id 
+                               ORDER BY d.UploadDate DESC";
+
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                    con.Open();
 
-                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
-                    {
-                        DataTable dt = new DataTable();
-                        da.Fill(dt);
+                    DataTable dt = new DataTable();
+                    dt.Load(cmd.ExecuteReader());
 
-                        if (dt.Rows.Count > 0)
-                        {
-                            gvDisplay.DataSource = dt;
-                            gvDisplay.DataBind();
-                        }
-                        else
-                        {
-                            dt.Rows.Add(dt.NewRow());
-                            gvDisplay.DataSource = dt;
-                            gvDisplay.DataBind();
-                            gvDisplay.Rows[0].Cells.Clear();
-                            gvDisplay.Rows[0].Cells.Add(new TableCell());
-                            gvDisplay.Rows[0].Cells[0].ColumnSpan = gvDisplay.Columns.Count;
-                            gvDisplay.Rows[0].Cells[0].Text = "No documents found";
-                            gvDisplay.Rows[0].Cells[0].HorizontalAlign = HorizontalAlign.Center;
-                        }
-                    }
+                    gvDisplay.DataSource = dt;
+                    gvDisplay.DataBind();
                 }
             }
         }
@@ -64,13 +54,11 @@ namespace Society_management
         {
             if (e.CommandName == "Download")
             {
-                int documentId = Convert.ToInt32(e.CommandArgument);
-                DownloadDocument(documentId);
+                DownloadDocument(Convert.ToInt32(e.CommandArgument));
             }
             else if (e.CommandName == "DeleteDocument")
             {
-                int documentId = Convert.ToInt32(e.CommandArgument);
-                DeleteDocument(documentId);
+                DeleteDocument(Convert.ToInt32(e.CommandArgument));
             }
         }
 
@@ -79,44 +67,31 @@ namespace Society_management
             try
             {
                 using (SqlConnection con = new SqlConnection(strcon))
+                using (SqlCommand cmd = new SqlCommand(
+                    "SELECT FileName, StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID", con))
                 {
-                    string query = "SELECT FileName, StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
+                    cmd.Parameters.AddWithValue("@DocumentID", documentId);
+                    con.Open();
 
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@DocumentID", documentId);
-                        con.Open();
-
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            string fileName = reader["FileName"].ToString();
+                            string storedFileName = reader["StoredFileName"].ToString();
+                            string filePath = Server.MapPath("~/Uploads/" + storedFileName);
+
+                            if (File.Exists(filePath))
                             {
-                                string fileName = reader["FileName"].ToString();
-                                string storedFileName = reader["StoredFileName"].ToString();
-
-                                string filePath = Server.MapPath("~/Uploads/" + storedFileName);
-
-                                if (File.Exists(filePath))
-                                {
-                                    Response.Clear();
-                                    Response.ContentType = GetContentType(Path.GetExtension(fileName));
-                                    Response.AddHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
-                                    Response.WriteFile(filePath);
-                                    Response.End();
-                                }
-                                else
-                                {
-                                    string script = @"
-                                        <script type='text/javascript'>
-                                            Swal.fire({
-                                                title: 'Error!',
-                                                text: 'File not found on server.',
-                                                icon: 'error',
-                                                confirmButtonText: 'OK'
-                                            });
-                                        </script>";
-                                    ClientScript.RegisterStartupScript(this.GetType(), "FileNotFoundError", script);
-                                }
+                                Response.Clear();
+                                Response.ContentType = GetContentType(Path.GetExtension(fileName));
+                                Response.AddHeader("Content-Disposition", "attachment;filename=\"" + fileName + "\"");
+                                Response.TransmitFile(filePath);
+                                Response.End();
+                            }
+                            else
+                            {
+                                ShowAlert("Error", "File not found on server", "error");
                             }
                         }
                     }
@@ -124,15 +99,7 @@ namespace Society_management
             }
             catch (Exception ex)
             {
-                //string script = $@"
-                //    <script type='text/javascript'>
-                //        Swal.fire({title: 'Error!',
-                //            text: 'Error downloading document: {ex.Message}',
-                //            icon: 'error',
-                //            confirmButtonText: 'OK'
-                //        });
-                //    </script>";
-                //ClientScript.RegisterStartupScript(this.GetType(), "DownloadError", script);
+                ShowAlert("Error", "Download failed: " + ex.Message, "error");
             }
         }
 
@@ -140,65 +107,67 @@ namespace Society_management
         {
             try
             {
-                //string storedFileName = "";
+                string storedFileName = null;
 
-                // First get the filename from database
-                //using (SqlConnection con = new SqlConnection(strcon))
-                //{
-                //    string query = "SELECT StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID";
-                //    using (SqlCommand cmd = new SqlCommand(query, con))
-                //    {
-                //        cmd.Parameters.AddWithValue("@DocumentID", documentId);
-                //        con.Open();
-                //        storedFileName = cmd.ExecuteScalar()?.ToString();
-                //    }
-                //}
+                // First get the filename
+                using (SqlConnection con = new SqlConnection(strcon))
+                using (SqlCommand cmd = new SqlCommand(
+                    "SELECT StoredFileName FROM tblDocuments WHERE DocumentID = @DocumentID", con))
+                {
+                    cmd.Parameters.AddWithValue("@DocumentID", documentId);
+                    con.Open();
+                    storedFileName = cmd.ExecuteScalar() as string;
+                }
 
                 // Delete from database
                 using (SqlConnection con = new SqlConnection(strcon))
+                using (SqlCommand cmd = new SqlCommand(
+                    "DELETE FROM tblDocuments WHERE DocumentID = @DocumentID", con))
                 {
-                    string query = "DELETE FROM tblDocuments WHERE DocumentID = @DocumentID";
-                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    cmd.Parameters.AddWithValue("@DocumentID", documentId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Delete physical file
+                if (!string.IsNullOrEmpty(storedFileName))
+                {
+                    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
+                    if (File.Exists(filePath))
                     {
-                        cmd.Parameters.AddWithValue("@DocumentID", documentId);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
+                        File.Delete(filePath);
                     }
                 }
 
-                // Delete file from server
-                //if (!string.IsNullOrEmpty(storedFileName))
-                //{
-                //    string filePath = Server.MapPath("~/Uploads/" + storedFileName);
-                //    if (File.Exists(filePath))
-                //    {
-                //        File.Delete(filePath);
-                //    }
-                //}
-
-                // **Crucially, rebind the GridView here to reflect the changes**
                 BindDocuments();
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "deleteSuccess", @"
-            Swal.fire({
-                title: 'Deleted!',
-                text: 'Document deleted successfully.',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });", true);
-                // Optionally, show a success message
+                ShowAlert("Success", "Document deleted successfully", "success");
             }
             catch (Exception ex)
             {
-                // Handle the error appropriately (logging, displaying a user-friendly message)
-                //string script = $@"
-                //    <script type='text/javascript'>
-                //        Swal.fire({title: 'Error!',
-                //            text: 'Error deleting document: {ex.Message}',
-                //            icon: 'error',
-                //            confirmButtonText: 'OK'
-                //        });
-                //    </script>";
-                //ClientScript.RegisterStartupScript(this.GetType(), "DeleteError", script);
+                ShowAlert("Error", "Delete failed: " + ex.Message, "error");
+            }
+        }
+
+        protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                // Add click event to all cells except the action buttons cell
+                for (int i = 0; i < e.Row.Cells.Count - 1; i++)
+                {
+                    e.Row.Cells[i].Attributes["onclick"] =
+                        "window.location.href='Document_Details.aspx?id=" +
+                        DataBinder.Eval(e.Row.DataItem, "DocumentID") + "'";
+                    e.Row.Cells[i].Style["cursor"] = "pointer";
+                }
+
+                // Hide the DocumentID column (index 0)
+                e.Row.Cells[0].Style["display"] = "none";
+            }
+            else if (e.Row.RowType == DataControlRowType.Header)
+            {
+                // Hide the DocumentID header
+                e.Row.Cells[0].Style["display"] = "none";
             }
         }
 
@@ -218,46 +187,10 @@ namespace Society_management
             }
         }
 
-        protected void gvDisplay_PageIndexChanging1(object sender, GridViewPageEventArgs e)
+        private void ShowAlert(string title, string message, string type)
         {
-            gvDisplay.PageIndex = e.NewPageIndex;
-            BindDocuments();
-        }
-
-        protected void gvDisplay_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            int selectedIndex = gvDisplay.SelectedIndex;
-            if (selectedIndex >= 0)
-            {
-                // Get the Notice_id from DataKeys
-                string ComplainId = gvDisplay.DataKeys[selectedIndex].Value.ToString();
-
-                // Redirect to details page with the id
-                Response.Redirect("Document_Details.aspx?id=" + ComplainId);
-            }
-        }
-        protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                for (int i = 0; i < e.Row.Cells.Count; i++)
-                {
-                    if (i < 3)
-                    {
-                        // Add click event to cell
-                        e.Row.Cells[i].Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
-                        e.Row.Cells[i].ToolTip = "Click to select this row";
-                        e.Row.Cells[i].Style["cursor"] = "pointer"; // Show pointer cursor
-                    }
-                    else
-                    {
-                        // Remove any click events from other cells
-                        e.Row.Cells[i].Attributes.Remove("onclick");
-                        e.Row.Cells[i].ToolTip = "";
-                        e.Row.Cells[i].Style["cursor"] = "default"; // Show default cursor
-                    }
-                }
-            }
+            ScriptManager.RegisterStartupScript(this, GetType(), "alert",
+                $"Swal.fire('{title}', '{message.Replace("'", "\\'")}', '{type}');", true);
         }
     }
 }

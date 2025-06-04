@@ -198,6 +198,29 @@
         });
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script type="text/javascript">
+    function confirmDelete(linkButton) {
+        event.preventDefault(); // prevent postback immediately
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you really want to delete this income record?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                __doPostBack(linkButton.name, '');
+            }
+        });
+
+        return false;
+    }
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -507,8 +530,9 @@
                                 </button>--%>
                     </div>
                     <div class="table-responsive">
-                        <asp:GridView ID="gvIncome" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover"
-                            DataKeyNames="TransactionID" OnRowDeleting="gvIncome_RowDeleting" EmptyDataText="No income records found.">
+                        <asp:GridView ID="gvIncome" runat="server" OnRowCommand="gvIncome_RowCommand"
+                            AutoGenerateColumns="False" CssClass="table table-striped table-hover"
+                            DataKeyNames="TransactionID" EmptyDataText="No income records found.">
                             <Columns>
                                 <asp:BoundField DataField="TransactionID" HeaderText="ID" Visible="false" />
                                 <asp:BoundField DataField="Date" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" ItemStyle-Width="100px" />
@@ -517,7 +541,16 @@
                                 <asp:BoundField DataField="ReceivedFrom" HeaderText="Received From" />
                                 <asp:BoundField DataField="PaymentMethod" HeaderText="Payment Method" />
                                 <asp:BoundField DataField="Description" HeaderText="Description" />
-                                <asp:CommandField ShowDeleteButton="True" ButtonType="Button" ControlStyle-CssClass="btn btn-danger btn-sm" ItemStyle-Width="80px" />
+                                 <asp:TemplateField HeaderText="Actions" ItemStyle-CssClass="action-buttons">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="lnkDelete" runat="server" CssClass="btn btn-danger btn-sm"
+                                             CommandName="DeleteIncome" CommandArgument='<%# Eval("TransactionID") %>'
+                                            OnClientClick="return confirmDelete(this);">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </asp:LinkButton>
+
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
                     </div>

@@ -30,7 +30,7 @@ namespace Society_management
 
             if (!IsPostBack)
             {
-                
+
                 // Set default date range to current month
                 fromDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 toDate = DateTime.Now;
@@ -75,7 +75,7 @@ namespace Society_management
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
                                WHERE t.TransactionType = @TransactionType and admin_id=@id";
-               
+
                 // Add date filter if specified
                 if (fromDate.HasValue && toDate.HasValue)
                 {
@@ -178,7 +178,7 @@ namespace Society_management
             // Calculate total expenses
             totalExpenses = dtExpenseSummary.AsEnumerable().Sum(row => row.Field<decimal>("TotalAmount"));
             litTotalExpense.Text = string.Format("₹{0:N2}", totalExpenses);
-            litExpenseTotal.Text= string.Format("₹{0:N2}", totalExpenses);
+            litExpenseTotal.Text = string.Format("₹{0:N2}", totalExpenses);
             litPLTotalExpenses.Text = string.Format("₹{0:N2}", totalExpenses);
         }
         public void BindcurrentBallence()
@@ -346,7 +346,7 @@ namespace Society_management
                     cmd.ExecuteNonQuery();
                 }
 
-                LoadBalanceSheet(); 
+                LoadBalanceSheet();
             }
             else if (e.CommandName == "Delete")
             {
@@ -601,7 +601,7 @@ namespace Society_management
 
         protected void ddlBalanceSheetPeriod_SelectedIndexChanged(object sender, EventArgs e)
         {
-           // SetDateRange(ddlBalanceSheetPeriod.SelectedValue);
+            // SetDateRange(ddlBalanceSheetPeriod.SelectedValue);
             LoadBalanceSheet();
         }
 
@@ -811,63 +811,63 @@ namespace Society_management
             }
         }
 
-        protected void gvIncome_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            try
-            {
-                int transactionID = Convert.ToInt32(gvIncome.DataKeys[e.RowIndex].Value);
+        //protected void gvIncome_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        //{
+        //    try
+        //    {
+        //        int transactionID = Convert.ToInt32(gvIncome.DataKeys[e.RowIndex].Value);
 
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    // First get transaction details before deleting (for account adjustment)
-                    DataTable dtTransaction = GetTransactionDetails(transactionID);
+        //        using (SqlConnection con = new SqlConnection(connectionString))
+        //        {
+        //            // First get transaction details before deleting (for account adjustment)
+        //            DataTable dtTransaction = GetTransactionDetails(transactionID);
 
-                    // Delete the transaction
-                    string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@TransactionID", transactionID);
+        //            // Delete the transaction
+        //            string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
+        //            SqlCommand cmd = new SqlCommand(query, con);
+        //            cmd.Parameters.AddWithValue("@TransactionID", transactionID);
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+        //            con.Open();
+        //            cmd.ExecuteNonQuery();
 
-                    // Update affected account balances
-                    if (dtTransaction.Rows.Count > 0)
-                    {
-                        string paymentMethod = dtTransaction.Rows[0]["PaymentMethod"].ToString();
-                        decimal amount = Convert.ToDecimal(dtTransaction.Rows[0]["Amount"]);
+        //            // Update affected account balances
+        //            if (dtTransaction.Rows.Count > 0)
+        //            {
+        //                string paymentMethod = dtTransaction.Rows[0]["PaymentMethod"].ToString();
+        //                decimal amount = Convert.ToDecimal(dtTransaction.Rows[0]["Amount"]);
 
-                        // Reverse the transaction effect on accounts
-                        if (paymentMethod == "Cash")
-                        {
-                            UpdateAccountBalance("CashInHand", -amount);
-                        }
-                        else // Bank transfer, cheque, etc.
-                        {
-                            UpdateAccountBalance("BankAccounts", -amount);
-                        }
-                    }
+        //                // Reverse the transaction effect on accounts
+        //                if (paymentMethod == "Cash")
+        //                {
+        //                    UpdateAccountBalance("CashInHand", -amount);
+        //                }
+        //                else // Bank transfer, cheque, etc.
+        //                {
+        //                    UpdateAccountBalance("BankAccounts", -amount);
+        //                }
+        //            }
 
-                    con.Close();
-                }
+        //            con.Close();
+        //        }
 
-                // Refresh all financial data
-                BindIncomeGrid();
-                LoadIncomeSummary();
-                LoadExpenseSummary();
-                LoadBalanceSheet();
-                LoadProfitLossStatement();
+        //        // Refresh all financial data
+        //        BindIncomeGrid();
+        //        LoadIncomeSummary();
+        //        LoadExpenseSummary();
+        //        LoadBalanceSheet();
+        //        LoadProfitLossStatement();
 
-                // Show success message
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess",
-                    "showAlert('success', 'Income record deleted successfully!');", true);
-            }
-            catch (Exception ex)
-            {
-                // Show error message
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError",
-                    $"showAlert('error', 'Error deleting income record: {ex.Message}');", true);
-            }
-        }
+        //        // Show success message
+        //        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess",
+        //            "showAlert('success', 'Income record deleted successfully!');", true);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Show error message
+        //        ScriptManager.RegisterStartupScript(this, GetType(), "showError",
+        //            $"showAlert('error', 'Error deleting income record: {ex.Message}');", true);
+        //    }
+        //}
 
         protected void gvExpense_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
@@ -989,6 +989,38 @@ namespace Society_management
             ddlExpenseCategory.Items.Insert(0, new ListItem("---select Expense---"));
             con.Close();
         }
+
+        protected void gvIncome_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "DeleteIncome")
+            {
+                int transactionID = Convert.ToInt32(e.CommandArgument);
+                DeleteIncome(transactionID);
+                BindExpenseGrid();
+                LoadIncomeSummary();
+                LoadExpenseSummary();
+                LoadBalanceSheet();
+                LoadProfitLossStatement();
+            }
+        }
+
+
+        private void DeleteIncome(int transactionID)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(connStr))
+            {
+                string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionID);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
 
         // These labels are used for showing success/error messages via JavaScript
         //protected Label lblSuccessMessage
