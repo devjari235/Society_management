@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -15,24 +12,20 @@ namespace Society_management
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
-            {
                 LoadScheduledVisitors();
-            }
         }
 
         private void LoadScheduledVisitors()
         {
-            try
-            {
-                string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-                string query = @"SELECT 
+            string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            string query = @"SELECT 
                                 s.ScheduleID, 
                                 s.VisitorName, 
                                 s.ContactNumber, 
                                 s.ScheduledDateTime, 
                                 s.Purpose, 
                                 ISNULL(s.IsCompleted, 0) AS IsCompleted,
-                                m.User_name AS MemberName,
+                                m.User_name,
                                 v.CheckOutTime
                             FROM ScheduledVisits s
                             INNER JOIN tblUser m ON s.User_id = m.User_id
@@ -43,109 +36,75 @@ namespace Society_management
                             WHERE s.ScheduledDateTime >= @Today
                             ORDER BY s.ScheduledDateTime";
 
-
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    command.Parameters.AddWithValue("@Today", DateTime.Today);
-
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-
-                    gvScheduledVisitors.DataSource = dt;
-                    gvScheduledVisitors.DataBind();
-                }
-            }
-            catch (Exception ex)
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                ShowMessage($"Error loading data: {ex.Message}", "danger");
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Today", DateTime.Today);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvScheduledVisitors.DataSource = dt;
+                gvScheduledVisitors.DataBind();
             }
         }
 
         protected void gvScheduledVisitors_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "CheckIn")
-            {
-                HandleCheckIn(Convert.ToInt32(e.CommandArgument));
-            }
-            else if (e.CommandName == "CheckOut")
-            {
-                HandleCheckOut(Convert.ToInt32(e.CommandArgument));
-            }
+            int scheduleId = Convert.ToInt32(e.CommandArgument);
+            if (e.CommandName == "CheckIn") HandleCheckIn(scheduleId);
+            else if (e.CommandName == "CheckOut") HandleCheckOut(scheduleId);
         }
 
         private void HandleCheckIn(int scheduleId)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            string getDetailsQuery = @"SELECT VisitorName, ContactNumber, Purpose, MemberID 
-                                     FROM ScheduledVisits 
-                                     WHERE ScheduleID = @ScheduleID";
-
-            string updateScheduleQuery = @"UPDATE ScheduledVisits 
-                                        SET IsCompleted = 1 
-                                        WHERE ScheduleID = @ScheduleID";
-
-            string insertVisitorQuery = @"INSERT INTO Visitors 
-                                        (Name, ContactNumber, VisitPurpose, MemberID, 
-                                         IsApproved, IsScheduled, CheckInTime)
-                                        VALUES 
-                                        (@Name, @ContactNumber, @Purpose, @MemberID, 
-                                         1, 1, @CheckInTime)";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
+                conn.Open();
+                SqlTransaction trans = conn.BeginTransaction();
 
                 try
                 {
-                    // Step 1: Get visitor details
-                    SqlCommand getCommand = new SqlCommand(getDetailsQuery, connection, transaction);
-                    getCommand.Parameters.AddWithValue("@ScheduleID", scheduleId);
+                    SqlCommand getCmd = new SqlCommand("SELECT VisitorName, ContactNumber, Purpose, User_id FROM ScheduledVisits WHERE ScheduleID = @ScheduleID", conn, trans);
+                    getCmd.Parameters.AddWithValue("@ScheduleID", scheduleId);
 
-                    using (SqlDataReader reader = getCommand.ExecuteReader())
+                    SqlDataReader rdr = getCmd.ExecuteReader();
+                    if (rdr.Read())
                     {
-                        if (reader.Read())
-                        {
-                            string name = reader["VisitorName"].ToString();
-                            string contact = reader["ContactNumber"].ToString();
-                            string purpose = reader["Purpose"].ToString();
-                            int memberId = Convert.ToInt32(reader["MemberID"]);
-                            reader.Close();
+                        string name = rdr["VisitorName"].ToString();
+                        string contact = rdr["ContactNumber"].ToString();
+                        string purpose = rdr["Purpose"].ToString();
+                        int memberId = Convert.ToInt32(rdr["User_id"]);
+                        rdr.Close();
 
-                            // Step 2: Mark schedule as completed
-                            SqlCommand updateCommand = new SqlCommand(updateScheduleQuery, connection, transaction);
-                            updateCommand.Parameters.AddWithValue("@ScheduleID", scheduleId);
-                            updateCommand.ExecuteNonQuery();
+                        SqlCommand updateCmd = new SqlCommand("UPDATE ScheduledVisits SET IsCompleted = 1 WHERE ScheduleID = @ScheduleID", conn, trans);
+                        updateCmd.Parameters.AddWithValue("@ScheduleID", scheduleId);
+                        updateCmd.ExecuteNonQuery();
 
-                            // Step 3: Create visitor record
-                            SqlCommand insertCommand = new SqlCommand(insertVisitorQuery, connection, transaction);
-                            insertCommand.Parameters.AddWithValue("@Name", name);
-                            insertCommand.Parameters.AddWithValue("@ContactNumber", contact);
-                            insertCommand.Parameters.AddWithValue("@Purpose", purpose);
-                            insertCommand.Parameters.AddWithValue("@MemberID", memberId);
-                            insertCommand.Parameters.AddWithValue("@CheckInTime", DateTime.Now);
-                            insertCommand.ExecuteNonQuery();
+                        SqlCommand insertCmd = new SqlCommand(@"INSERT INTO Visitors (Name, ContactNumber, VisitPurpose, User_id, IsApproved, IsScheduled, CheckInTime) 
+                            VALUES (@Name, @ContactNumber, @Purpose, @User_id, 1, 1, @CheckInTime)", conn, trans);
+                        insertCmd.Parameters.AddWithValue("@Name", name);
+                        insertCmd.Parameters.AddWithValue("@ContactNumber", contact);
+                        insertCmd.Parameters.AddWithValue("@Purpose", purpose);
+                        insertCmd.Parameters.AddWithValue("@User_id", memberId);
+                        insertCmd.Parameters.AddWithValue("@CheckInTime", DateTime.Now);
+                        insertCmd.ExecuteNonQuery();
 
-                            transaction.Commit();
-                            ShowMessage("Visitor checked in successfully!", "success");
-                        }
-                        else
-                        {
-                            reader.Close();
-                            transaction.Rollback();
-                            ShowMessage("Schedule record not found.", "danger");
-                            return;
-                        }
+                        trans.Commit();
+                        ShowToast($"Visitor '{name}' checked in successfully!", "success");
+                    }
+                    else
+                    {
+                        rdr.Close();
+                        trans.Rollback();
+                        ShowToast("Scheduled visitor not found.", "danger");
                     }
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    ShowMessage($"Check-in failed: {ex.Message}", "danger");
-                    return;
+                    trans.Rollback();
+                    ShowToast("Check-in failed: " + ex.Message, "danger");
                 }
             }
 
@@ -154,55 +113,47 @@ namespace Society_management
 
         private void HandleCheckOut(int scheduleId)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            string getVisitorQuery = @"SELECT v.VisitorID 
-                                     FROM Visitors v
-                                     INNER JOIN ScheduledVisits s ON 
-                                        v.Name = s.VisitorName AND 
-                                        v.ContactNumber = s.ContactNumber
-                                     WHERE s.ScheduleID = @ScheduleID";
-
-            string updateVisitorQuery = @"UPDATE Visitors 
-                                        SET CheckOutTime = @CheckOutTime 
-                                        WHERE VisitorID = @VisitorID";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(cs))
             {
-                connection.Open();
-                SqlTransaction transaction = connection.BeginTransaction();
+                conn.Open();
+                SqlTransaction trans = conn.BeginTransaction();
 
                 try
                 {
-                    // Find the visitor record
-                    SqlCommand getCommand = new SqlCommand(getVisitorQuery, connection, transaction);
-                    getCommand.Parameters.AddWithValue("@ScheduleID", scheduleId);
+                    SqlCommand getCmd = new SqlCommand(@"SELECT v.VisitorID, v.Name 
+                        FROM Visitors v 
+                        INNER JOIN ScheduledVisits s 
+                            ON v.Name = s.VisitorName AND v.ContactNumber = s.ContactNumber
+                        WHERE s.ScheduleID = @ScheduleID", conn, trans);
+                    getCmd.Parameters.AddWithValue("@ScheduleID", scheduleId);
 
-                    object visitorId = getCommand.ExecuteScalar();
-
-                    if (visitorId != null)
+                    SqlDataReader rdr = getCmd.ExecuteReader();
+                    if (rdr.Read())
                     {
-                        // Update checkout time
-                        SqlCommand updateCommand = new SqlCommand(updateVisitorQuery, connection, transaction);
-                        updateCommand.Parameters.AddWithValue("@CheckOutTime", DateTime.Now);
-                        updateCommand.Parameters.AddWithValue("@VisitorID", visitorId);
-                        updateCommand.ExecuteNonQuery();
+                        int visitorId = Convert.ToInt32(rdr["VisitorID"]);
+                        string name = rdr["Name"].ToString();
+                        rdr.Close();
 
-                        transaction.Commit();
-                        ShowMessage("Visitor checked out successfully!", "success");
+                        SqlCommand updateCmd = new SqlCommand("UPDATE Visitors SET CheckOutTime = @CheckOutTime WHERE VisitorID = @VisitorID", conn, trans);
+                        updateCmd.Parameters.AddWithValue("@CheckOutTime", DateTime.Now);
+                        updateCmd.Parameters.AddWithValue("@VisitorID", visitorId);
+                        updateCmd.ExecuteNonQuery();
+
+                        trans.Commit();
+                        ShowToast($"Visitor '{name}' checked out successfully!", "success");
                     }
                     else
                     {
-                        transaction.Rollback();
-                        ShowMessage("No matching visitor record found.", "danger");
-                        return;
+                        rdr.Close();
+                        trans.Rollback();
+                        ShowToast("Visitor record not found.", "danger");
                     }
                 }
                 catch (Exception ex)
                 {
-                    transaction.Rollback();
-                    ShowMessage($"Check-out failed: {ex.Message}", "danger");
-                    return;
+                    trans.Rollback();
+                    ShowToast("Check-out failed: " + ex.Message, "danger");
                 }
             }
 
@@ -213,37 +164,27 @@ namespace Society_management
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                DataRowView rowView = (DataRowView)e.Row.DataItem;
-
-                bool isCompleted = rowView["IsCompleted"] != DBNull.Value && Convert.ToBoolean(rowView["IsCompleted"]);
-                bool isCheckedOut = rowView["CheckOutTime"] != DBNull.Value;
+                DataRowView row = (DataRowView)e.Row.DataItem;
+                bool isCompleted = Convert.ToBoolean(row["IsCompleted"]);
+                bool isCheckedOut = row["CheckOutTime"] != DBNull.Value;
 
                 Button btnCheckIn = (Button)e.Row.FindControl("btnCheckIn");
                 Button btnCheckOut = (Button)e.Row.FindControl("btnCheckOut");
 
-                // CheckIn: Enable only if not completed
                 btnCheckIn.Enabled = !isCompleted;
-                if (!btnCheckIn.Enabled)
-                {
-                    btnCheckIn.CssClass += " disabled-btn";
-                }
-
-                // CheckOut: Enable only if completed and not already checked out
                 btnCheckOut.Enabled = isCompleted && !isCheckedOut;
-                if (!btnCheckOut.Enabled)
-                {
-                    btnCheckOut.CssClass += " disabled-btn";
-                }
+
+                if (!btnCheckIn.Enabled) btnCheckIn.CssClass += " disabled-btn";
+                if (!btnCheckOut.Enabled) btnCheckOut.CssClass += " disabled-btn";
             }
         }
 
-
-
-        private void ShowMessage(string message, string alertType)
+        private void ShowToast(string message, string type)
         {
-            lblMessage.Text = message;
-            lblMessage.CssClass = $"alert alert-{alertType} alert-dismissible fade show";
-            lblMessage.Visible = true;
+            // Escape single quotes in message for JS
+            string cleanMsg = message.Replace("'", "\\'");
+            string script = $"showToast('{cleanMsg}', '{type}');";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), Guid.NewGuid().ToString(), script, true);
         }
     }
 }

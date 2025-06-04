@@ -218,25 +218,21 @@
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Actions">
-                <ItemTemplate>
-                    <asp:Button ID="btnSchedule" runat="server" Text="Schedule"
-                        CommandName="Schedule"
-                        CommandArgument='<%# Eval("VisitorID") %>'
-                        CssClass="btn btn-primary btn-sm"
-                        Visible='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) %>' />
-                </ItemTemplate>
-                <ItemTemplate>
-                    <asp:Button ID="btnCheckIn" runat="server" Text="Check In" CommandName="CheckIn"
-                        CommandArgument='<%# Eval("VisitorID") %>'
-                        CssClass='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "btn btn-success btn-action" : "btn btn-success btn-action disabled" %>'
-                        Enabled='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) %>'
-                        ToolTip='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "" : "Cannot check in rejected visitors" %>' />
+    <ItemTemplate>
+        <div class="d-flex gap-1">
+                <asp:Button ID="btnCheckIn" runat="server" Text="Check In" CommandName="CheckIn"
+                    CommandArgument='<%# Eval("VisitorID") %>'
+                    CssClass='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "btn btn-success btn-action" : "btn btn-success btn-action disabled" %>'
+                    Enabled='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) %>'
+                    ToolTip='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "" : "Cannot check in rejected visitors" %>' 
+                    />
 
-                    <asp:Button ID="btnCheckOut" runat="server" Text="Check Out" CommandName="CheckOut"
-                        CommandArgument='<%# Eval("VisitorID") %>'
-                        CssClass="btn btn-warning btn-action" />
-                </ItemTemplate>
-            </asp:TemplateField>
+                <asp:Button ID="btnCheckOut" runat="server" Text="Check Out" CommandName="CheckOut"
+                    CommandArgument='<%# Eval("VisitorID") %>'
+                    CssClass="btn btn-warning btn-action" />
+            </div>
+            </ItemTemplate>
+        </asp:TemplateField>
         </Columns>
     </asp:GridView>
     <!-- Custom Toast -->

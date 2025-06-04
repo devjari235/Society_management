@@ -240,8 +240,23 @@ namespace Society_management
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
-                e.Row.ToolTip = "Click to select this row.";
+                for (int i = 0; i < e.Row.Cells.Count; i++)
+                {
+                    if (i < 3)
+                    {
+                        // Add click event to cell
+                        e.Row.Cells[i].Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
+                        e.Row.Cells[i].ToolTip = "Click to select this row";
+                        e.Row.Cells[i].Style["cursor"] = "pointer"; // Show pointer cursor
+                    }
+                    else
+                    {
+                        // Remove any click events from other cells
+                        e.Row.Cells[i].Attributes.Remove("onclick");
+                        e.Row.Cells[i].ToolTip = "";
+                        e.Row.Cells[i].Style["cursor"] = "default"; // Show default cursor
+                    }
+                }
             }
         }
     }

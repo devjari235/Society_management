@@ -48,6 +48,63 @@
         });
     });
 </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // Initialize DataTable
+            var $table = $('.table');
+            if (!$.fn.DataTable.isDataTable($table)) {
+                $table.DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true
+                });
+            }
+
+            // Add click handler for status links
+            $table.on('click', '.btn-primary', function (e) {
+                e.stopPropagation(); // Prevent row click event from firing
+            });
+            $table.on('click', '.btn-danger', function (e) {
+                e.stopPropagation(); // Prevent row click event from firing
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".delete-liability-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const uniqueId = this.getAttribute("data-uniqueid");
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This document will be deleted permanently.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-2',
+                            cancelButton: 'btn btn-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            __doPostBack(uniqueId, '');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
         <style>
 /* GridView Button-Row Style */
 .grid-view-custom {
@@ -147,20 +204,23 @@
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Action">
-                        <ItemTemplate>
-                            <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download" CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm mb-2">
-                                     <i class="fas fa-download"></i> Download
+                       <ItemTemplate>
+                            <asp:LinkButton ID="lnkDownload" runat="server"
+                                CommandName="Download"
+                                CommandArgument='<%# Eval("DocumentID") %>'
+                                CssClass="btn btn-primary btn-sm me-2">
+                                <i class="fas fa-download"></i> Download
                             </asp:LinkButton>
                             <asp:LinkButton
                                 ID="lnkDelete"
                                 runat="server"
                                 CommandName="DeleteDocument"
                                 CommandArgument='<%# Eval("DocumentID") %>'
-                                OnClientClick="return confirm('Are you sure you want to delete this document?');"
-                                CssClass="btn btn-danger btn-sm">
-                                     <i class="fas fa-trash-alt"></i> Delete
+                                CssClass="btn btn-danger btn-sm delete-liability-btn"
+                                OnClientClick="return false;"
+                                data-uniqueid='<%# ((LinkButton)((GridViewRow)Container).FindControl("lnkDelete")).UniqueID %>'>
+                                <i class="fas fa-trash-alt"></i> Delete
                             </asp:LinkButton>
-
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
