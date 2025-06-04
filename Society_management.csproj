@@ -2254,6 +2254,7 @@
     <Content Include="Owner_Membr.aspx" />
     <Content Include="Past_Committee.aspx" />
     <Content Include="Pending_Complaints.aspx" />
+    <Content Include="PhotoGallery.aspx" />
     <Content Include="PollCreate.aspx" />
     <Content Include="Poll_Result.aspx" />
     <Content Include="Progress_Complaints.aspx" />
@@ -2261,6 +2262,7 @@
     <Content Include="R_Society.aspx" />
     <Content Include="ScheduledVisitors.aspx" />
     <Content Include="Terms.aspx" />
+    <Content Include="UploadPhoto.aspx" />
     <Content Include="UserDashboard.aspx" />
     <Content Include="User_CommitteeDetails.aspx" />
     <Content Include="User_Complain.aspx" />
@@ -2268,6 +2270,7 @@
     <Content Include="User_Event_Details.aspx" />
     <Content Include="User_pass_change.aspx" />
     <Content Include="User_Past_Committee.aspx" />
+    <Content Include="User_PhotoGallery.aspx" />
     <Content Include="User_Poll.aspx" />
     <Content Include="User_profile.aspx" />
     <Content Include="User_ViewAllNotice.aspx" />
@@ -2572,6 +2575,13 @@
     <Compile Include="Pending_Complaints.aspx.designer.cs">
       <DependentUpon>Pending_Complaints.aspx</DependentUpon>
     </Compile>
+    <Compile Include="PhotoGallery.aspx.cs">
+      <DependentUpon>PhotoGallery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PhotoGallery.aspx.designer.cs">
+      <DependentUpon>PhotoGallery.aspx</DependentUpon>
+    </Compile>
     <Compile Include="PollCreate.aspx.cs">
       <DependentUpon>PollCreate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2621,6 +2631,13 @@
     </Compile>
     <Compile Include="Terms.aspx.designer.cs">
       <DependentUpon>Terms.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UploadPhoto.aspx.cs">
+      <DependentUpon>UploadPhoto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UploadPhoto.aspx.designer.cs">
+      <DependentUpon>UploadPhoto.aspx</DependentUpon>
     </Compile>
     <Compile Include="User.Master.cs">
       <DependentUpon>User.Master</DependentUpon>
@@ -2677,6 +2694,13 @@
     </Compile>
     <Compile Include="User_Past_Committee.aspx.designer.cs">
       <DependentUpon>User_Past_Committee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User_PhotoGallery.aspx.cs">
+      <DependentUpon>User_PhotoGallery.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User_PhotoGallery.aspx.designer.cs">
+      <DependentUpon>User_PhotoGallery.aspx</DependentUpon>
     </Compile>
     <Compile Include="User_Poll.aspx.cs">
       <DependentUpon>User_Poll.aspx</DependentUpon>

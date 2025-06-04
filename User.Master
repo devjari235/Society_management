@@ -308,6 +308,12 @@
                                     <span class="nav-link-text">My Visitors</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="User_PhotoGallery.aspx">
+                                    <i class="bi bi-images me-2"></i>
+                                    <span class="nav-link-text">Photo Gallery</span>
+                                </a>
+                            </li>
 <%--                            <li class="nav-item">
                                 <a class="nav-link" href="MyPayments.aspx">
                                     <i class="fas fa-rupee-sign me-2"></i>
