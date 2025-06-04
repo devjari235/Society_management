@@ -245,7 +245,7 @@
         margin: 15px;
       }
 
-      .wrapper h2 {
+      .wrapper h2 {                                                                                                                                                                                                                                                                                                                                                                                                          
         font-size: 24px;
       }
 
