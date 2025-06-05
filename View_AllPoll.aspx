@@ -14,7 +14,7 @@
             gap: 20px;
             justify-content: flex-start;
             padding: 20px;
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
         }
 
