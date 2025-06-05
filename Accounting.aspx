@@ -539,77 +539,83 @@
                                 </button>--%>
                     </div>
                     <div class="table-responsive">
-<asp:Repeater ID="rptIncome" runat="server" OnItemCommand="rptIncome_ItemCommand" OnItemDataBound="rptIncome_ItemDataBound">
-    <HeaderTemplate>
-        <table class="table table-striped table-hover mb-0">
-            <thead class="table-light">
-                <tr>
-                    <th class="text-end">Amount</th>
-                    <th>Received From</th>
-                    <th>Payment Method</th>
-                    <th>Description</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-    </HeaderTemplate>
+                        <asp:Repeater ID="rptIncome" runat="server" OnItemCommand="rptIncome_ItemCommand" OnItemDataBound="rptIncome_ItemDataBound">
+                            <HeaderTemplate>
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="text-end">Amount</th>
+                                            <th>Received From</th>
+                                            <th>Payment Method</th>
+                                            <th>Description</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            </HeaderTemplate>
 
-    <ItemTemplate>
-        <tr>
-            <td class="text-end">
-                <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount", "{0:C}") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
-                <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
-            </td>
+                            <ItemTemplate>
+                                <tr>
+                                    <td class="text-end">
+                                        <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount", "{0:C}") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
 
-            <td>
-                <asp:Label ID="lblFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
-                <asp:TextBox ID="txtFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
-            </td>
+                                    <td>
+                                        <asp:Label ID="lblFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
 
-            <td>
-                <asp:Label ID="lblPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
-                <asp:TextBox ID="txtPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
-            </td>
+                                    <td>
+                                        <asp:Label ID="lblPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
 
-            <td>
-                <asp:Label ID="lblDesc" runat="server" Text='<%# Eval("Description") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
-                <asp:TextBox ID="txtDesc" runat="server" Text='<%# Eval("Description") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
-            </td>
+                                    <td>
+                                        <asp:Label ID="lblDesc" runat="server" Text='<%# Eval("Description") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtDesc" runat="server" Text='<%# Eval("Description") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
 
-          <td class="text-end">
-    <!-- Normal View -->
-    <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success me-1"
-        CommandName="Edit" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
+                                    <td class="text-end">
+                                        <!-- Normal View -->
+                                        <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success me-1"
+                                            CommandName="Edit" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
         Edit
-    </asp:LinkButton>
+                                        </asp:LinkButton>
 
-    <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-sm btn-danger"
-        CommandName="Delete" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
+                                        <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-sm btn-danger"
+                                            CommandName="Delete" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
         Delete
-    </asp:LinkButton>
+                                        </asp:LinkButton>
 
-    <!-- Edit Mode: Group Update and Cancel in same line -->
-    <div class="d-inline-flex gap-1" visible='<%# (bool)Eval("IsEditing") %>' runat="server">
-        <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
-            CommandName="Update" CommandArgument='<%# Eval("TransactionID") %>'>
+                                        <!-- Edit Mode: Group Update and Cancel in same line -->
+                                        <div class="d-inline-flex gap-1" visible='<%# (bool)Eval("IsEditing") %>' runat="server">
+                                            <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
+                                                CommandName="Update" CommandArgument='<%# Eval("TransactionID") %>'>
             Update
-        </asp:LinkButton>
+                                            </asp:LinkButton>
 
-        <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
-            CommandName="Cancel" CommandArgument='<%# Eval("TransactionID") %>'>
+                                            <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
+                                                CommandName="Cancel" CommandArgument='<%# Eval("TransactionID") %>'>
             Cancel
-        </asp:LinkButton>
-    </div>
-</td>
+                                            </asp:LinkButton>
+                                        </div>
+                                    </td>
 
-        </tr>
-    </ItemTemplate>
+                                </tr>
+                            </ItemTemplate>
 
-    <FooterTemplate>
-            </tbody>
+                            <FooterTemplate>
+                                </tbody>
         </table>
-    </FooterTemplate>
-</asp:Repeater>
+                            </FooterTemplate>
+                        </asp:Repeater>
+                        <asp:Panel ID="pnlNoIncome" runat="server" Visible="false">
+                            <div class="border rounded p-3 text-center text-muted bg-light fw-semibold">
+                                No income records found.
+                            </div>
+                        </asp:Panel>
+
 
                     </div>
                     <div class="card mt-3">

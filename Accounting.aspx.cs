@@ -71,7 +71,7 @@ namespace Society_management
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 string query = @"SELECT t.TransactionID, t.Date, c.CategoryName, t.Amount, t.Description, 
-                               t.ReceivedFrom, t.PaidTo, t.PaymentMethod 
+                               t.ReceivedFrom, t.PaidTo, t.PaymentMethod, CAST(0 AS BIT) AS IsEditing 
                                FROM Transactions t
                                INNER JOIN Categories c ON t.CategoryID = c.CategoryID
                                WHERE t.TransactionType = @TransactionType and admin_id=@id";
@@ -301,34 +301,46 @@ namespace Society_management
         {
             using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
             {
-                string query = @"
-        SELECT 
-            T.TransactionID,
-            T.Date,
-            T.Amount,
-            T.ReceivedFrom,
-            T.PaymentMethod,
-            T.Description,
-            C.CategoryName,
-            CAST(0 AS BIT) AS IsEditing
-        FROM Transactions T
-        INNER JOIN Categories C ON T.CategoryID = C.CategoryID
-        WHERE T.TransactionType = 'Income'
-        ORDER BY T.Date DESC";
+                //string query = @"
+                //                SELECT 
+                //                    T.TransactionID,
+                //                    T.Date,
+                //                    T.Amount,
+                //                    T.ReceivedFrom,
+                //                    T.PaymentMethod,
+                //                    T.Description,
+                //                    C.CategoryName,
+                //                    CAST(0 AS BIT) AS IsEditing
+                //                FROM Transactions T
+                //                INNER JOIN Categories C ON T.CategoryID = C.CategoryID
+                //                WHERE T.TransactionType = 'Income'
+                //                ORDER BY T.Date DESC";
 
-                SqlDataAdapter da = new SqlDataAdapter(query, con);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                // Reset all IsEditing flags to false
-                foreach (DataRow row in dt.Rows)
+                //SqlDataAdapter da = new SqlDataAdapter(query, con);
+               
+                DataTable dt = GetTransactions("Income");
+                if (dt.Rows.Count > 0)
                 {
-                    row["IsEditing"] = false;
-                }
+                    //DataTable dt = new DataTable("Income");
+                    //da.Fill(dt);
 
-                ViewState["IncomeData"] = dt;
-                rptIncome.DataSource = dt;
-                rptIncome.DataBind();
+                    // Reset all IsEditing flags to false
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        row["IsEditing"] = false;
+                    }
+
+                    ViewState["IncomeData"] = dt;
+                    rptIncome.DataSource = dt;
+                    rptIncome.DataBind();
+                    pnlNoIncome.Visible = false; // Hide "no data" message
+                }
+                else
+                {
+                    rptIncome.DataSource = null;
+                    rptIncome.DataBind();
+                    pnlNoIncome.Visible = true; // Show "no data" message
+                }
             }
         }
         protected void rptIncome_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -373,7 +385,7 @@ namespace Society_management
             else if (e.CommandName == "Update")
             {
                 TextBox txtAmount = (TextBox)e.Item.FindControl("txtAmount");
-                TextBox txtDescription = (TextBox)e.Item.FindControl("txtDesc"); // make sure this ID is correct
+                TextBox txtDescription = (TextBox)e.Item.FindControl("txtDesc");
 
                 decimal amount = 0;
                 decimal.TryParse(txtAmount.Text, out amount);
@@ -391,8 +403,35 @@ namespace Society_management
                     cmd.ExecuteNonQuery();
                 }
 
-                LoadIncome(); // refresh after update
+                // ✅ Use the already-declared dtIncome (don’t declare it again)
+                dtIncome = ViewState["IncomeData"] as DataTable;
+                if (dtIncome != null)
+                {
+                    foreach (DataRow row in dtIncome.Rows)
+                    {
+                        row["IsEditing"] = false;
+                    }
+
+                    ViewState["IncomeData"] = dtIncome;
+                    rptIncome.DataSource = dtIncome;
+                    rptIncome.DataBind();
+                }
+
+                // ✅ SweetAlert
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "updateSuccess", @"
+        Swal.fire({
+            icon: 'success',
+            title: 'Updated',
+            text: 'Record updated successfully',
+            confirmButtonColor: '#3085d6'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'Accounting.aspx';
             }
+        });", true);
+            }
+
+
             else if (e.CommandName == "Delete")
             {
                 string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
@@ -405,7 +444,6 @@ namespace Society_management
                     cmd.ExecuteNonQuery();
                 }
 
-                System.Diagnostics.Debug.WriteLine($"Deleted TransactionID = {transactionId}"); // optional debug log
                 LoadIncome(); // refresh after delete
             }
         }
