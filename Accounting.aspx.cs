@@ -39,7 +39,7 @@ namespace Society_management
                 txtFromDateFilter.Text = fromDate.Value.ToString("yyyy-MM-dd");
                 txtToDateFilter.Text = toDate.Value.ToString("yyyy-MM-dd");
 
-                BindIncomeGrid();
+                LoadIncome();
                 BindExpenseGrid();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
@@ -51,12 +51,12 @@ namespace Society_management
             }
         }
 
-        private void BindIncomeGrid()
-        {
-            DataTable dtIncome = GetTransactions("Income");
-            gvIncome.DataSource = dtIncome;
-            gvIncome.DataBind();
-        }
+        //private void BindIncomeGrid()
+        //{
+        //    DataTable dtIncome = GetTransactions("Income");
+        //    //gvIncome.DataSource = dtIncome;
+        //    //gvIncome.DataBind();
+        //}
 
         private void BindExpenseGrid()
         {
@@ -297,6 +297,120 @@ namespace Society_management
 
             }
         }
+        private void LoadIncome()
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+            {
+                string query = @"
+        SELECT 
+            T.TransactionID,
+            T.Date,
+            T.Amount,
+            T.ReceivedFrom,
+            T.PaymentMethod,
+            T.Description,
+            C.CategoryName,
+            CAST(0 AS BIT) AS IsEditing
+        FROM Transactions T
+        INNER JOIN Categories C ON T.CategoryID = C.CategoryID
+        WHERE T.TransactionType = 'Income'
+        ORDER BY T.Date DESC";
+
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                // Reset all IsEditing flags to false
+                foreach (DataRow row in dt.Rows)
+                {
+                    row["IsEditing"] = false;
+                }
+
+                ViewState["IncomeData"] = dt;
+                rptIncome.DataSource = dt;
+                rptIncome.DataBind();
+            }
+        }
+        protected void rptIncome_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                LinkButton btnDelete = (LinkButton)e.Item.FindControl("btnDelete");
+                if (btnDelete != null)
+                {
+                    btnDelete.Attributes["data-uniqueid"] = btnDelete.UniqueID;
+                }
+            }
+        }
+
+
+        protected void rptIncome_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            DataTable dtIncome = ViewState["IncomeData"] as DataTable; // ✅ fixed here
+            if (dtIncome == null) return;
+
+            int transactionId = Convert.ToInt32(e.CommandArgument);
+            hdnActiveTab.Value = "income-tab"; // moved up for common use
+
+            if (e.CommandName == "Edit")
+            {
+                foreach (DataRow row in dtIncome.Rows)
+                    row["IsEditing"] = (Convert.ToInt32(row["TransactionID"]) == transactionId);
+
+                ViewState["IncomeData"] = dtIncome; // ✅ fixed here
+                rptIncome.DataSource = dtIncome;
+                rptIncome.DataBind();
+            }
+            else if (e.CommandName == "Cancel")
+            {
+                foreach (DataRow row in dtIncome.Rows)
+                    row["IsEditing"] = false;
+
+                ViewState["IncomeData"] = dtIncome; // ✅ fixed here
+                rptIncome.DataSource = dtIncome;
+                rptIncome.DataBind();
+            }
+            else if (e.CommandName == "Update")
+            {
+                TextBox txtAmount = (TextBox)e.Item.FindControl("txtAmount");
+                TextBox txtDescription = (TextBox)e.Item.FindControl("txtDesc"); // make sure this ID is correct
+
+                decimal amount = 0;
+                decimal.TryParse(txtAmount.Text, out amount);
+                string description = txtDescription.Text.Trim();
+
+                string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    string query = "UPDATE Transactions SET Amount = @Amount, Description = @Description WHERE TransactionID = @TransactionID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Amount", amount);
+                    cmd.Parameters.AddWithValue("@Description", description);
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadIncome(); // refresh after update
+            }
+            else if (e.CommandName == "Delete")
+            {
+                string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+                using (SqlConnection con = new SqlConnection(cs))
+                {
+                    string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                System.Diagnostics.Debug.WriteLine($"Deleted TransactionID = {transactionId}"); // optional debug log
+                LoadIncome(); // refresh after delete
+            }
+        }
+
+
         protected void rptAssets_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             DataTable dtAssets = ViewState["AssetsTable"] as DataTable;
@@ -629,7 +743,7 @@ namespace Society_management
                 SetDateRange(selectedPeriod);
 
                 // Refresh all data
-                BindIncomeGrid();
+                LoadIncome();
                 BindExpenseGrid();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
@@ -647,7 +761,7 @@ namespace Society_management
                 toDate = toDt;
 
                 // Refresh all data
-                BindIncomeGrid();
+                LoadIncome();
                 BindExpenseGrid();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
@@ -703,7 +817,7 @@ namespace Society_management
                 toDate = toDt;
 
                 // Refresh all data
-                BindIncomeGrid();
+                LoadIncome();
                 BindExpenseGrid();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
@@ -746,7 +860,7 @@ namespace Society_management
             txtReceivedFrom.Text = "";
 
             // Refresh data
-            BindIncomeGrid();
+            LoadIncome();
             LoadIncomeSummary();
             LoadBalanceSheet();
             SetDateRange(ddlProfitLossPeriod.SelectedValue);
@@ -990,19 +1104,7 @@ namespace Society_management
             con.Close();
         }
 
-        protected void gvIncome_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            if (e.CommandName == "DeleteIncome")
-            {
-                int transactionID = Convert.ToInt32(e.CommandArgument);
-                DeleteIncome(transactionID);
-                BindExpenseGrid();
-                LoadIncomeSummary();
-                LoadExpenseSummary();
-                LoadBalanceSheet();
-                LoadProfitLossStatement();
-            }
-        }
+       
 
 
         private void DeleteIncome(int transactionID)

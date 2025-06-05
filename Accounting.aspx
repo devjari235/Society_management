@@ -198,29 +198,38 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script type="text/javascript">
-    function confirmDelete(linkButton) {
-        event.preventDefault(); // prevent postback immediately
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".delete-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const uniqueId = this.getAttribute("data-uniqueid");
 
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you really want to delete this income record?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                __doPostBack(linkButton.name, '');
-            }
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This Income Record will be deleted permanently.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-2',
+                            cancelButton: 'btn btn-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            __doPostBack(uniqueId, '');
+                        }
+                    });
+                });
+            });
         });
+    </script>
 
-        return false;
-    }
-</script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -530,29 +539,78 @@
                                 </button>--%>
                     </div>
                     <div class="table-responsive">
-                        <asp:GridView ID="gvIncome" runat="server" OnRowCommand="gvIncome_RowCommand"
-                            AutoGenerateColumns="False" CssClass="table table-striped table-hover"
-                            DataKeyNames="TransactionID" EmptyDataText="No income records found.">
-                            <Columns>
-                                <asp:BoundField DataField="TransactionID" HeaderText="ID" Visible="false" />
-                                <asp:BoundField DataField="Date" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" ItemStyle-Width="100px" />
-                                <asp:BoundField DataField="CategoryName" HeaderText="Category" />
-                                <asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="{0:C}" ItemStyle-HorizontalAlign="Right" />
-                                <asp:BoundField DataField="ReceivedFrom" HeaderText="Received From" />
-                                <asp:BoundField DataField="PaymentMethod" HeaderText="Payment Method" />
-                                <asp:BoundField DataField="Description" HeaderText="Description" />
-                                 <asp:TemplateField HeaderText="Actions" ItemStyle-CssClass="action-buttons">
-                                    <ItemTemplate>
-                                        <asp:LinkButton ID="lnkDelete" runat="server" CssClass="btn btn-danger btn-sm"
-                                             CommandName="DeleteIncome" CommandArgument='<%# Eval("TransactionID") %>'
-                                            OnClientClick="return confirmDelete(this);">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </asp:LinkButton>
+<asp:Repeater ID="rptIncome" runat="server" OnItemCommand="rptIncome_ItemCommand" OnItemDataBound="rptIncome_ItemDataBound">
+    <HeaderTemplate>
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-end">Amount</th>
+                    <th>Received From</th>
+                    <th>Payment Method</th>
+                    <th>Description</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+    </HeaderTemplate>
 
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                            </Columns>
-                        </asp:GridView>
+    <ItemTemplate>
+        <tr>
+            <td class="text-end">
+                <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount", "{0:C}") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+            </td>
+
+            <td>
+                <asp:Label ID="lblFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                <asp:TextBox ID="txtFrom" runat="server" Text='<%# Eval("ReceivedFrom") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+            </td>
+
+            <td>
+                <asp:Label ID="lblPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                <asp:TextBox ID="txtPayment" runat="server" Text='<%# Eval("PaymentMethod") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+            </td>
+
+            <td>
+                <asp:Label ID="lblDesc" runat="server" Text='<%# Eval("Description") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                <asp:TextBox ID="txtDesc" runat="server" Text='<%# Eval("Description") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+            </td>
+
+          <td class="text-end">
+    <!-- Normal View -->
+    <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success me-1"
+        CommandName="Edit" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
+        Edit
+    </asp:LinkButton>
+
+    <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-sm btn-danger"
+        CommandName="Delete" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
+        Delete
+    </asp:LinkButton>
+
+    <!-- Edit Mode: Group Update and Cancel in same line -->
+    <div class="d-inline-flex gap-1" visible='<%# (bool)Eval("IsEditing") %>' runat="server">
+        <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
+            CommandName="Update" CommandArgument='<%# Eval("TransactionID") %>'>
+            Update
+        </asp:LinkButton>
+
+        <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
+            CommandName="Cancel" CommandArgument='<%# Eval("TransactionID") %>'>
+            Cancel
+        </asp:LinkButton>
+    </div>
+</td>
+
+        </tr>
+    </ItemTemplate>
+
+    <FooterTemplate>
+            </tbody>
+        </table>
+    </FooterTemplate>
+</asp:Repeater>
+
                     </div>
                     <div class="card mt-3">
                         <div class="card-header bg-light">
@@ -734,7 +792,7 @@
                                                         </asp:LinkButton>
 
                                                         <!-- Edit Mode -->
-                                                        <div class="d-inline-flex gap-2" runat="server" visible='<%# (bool)Eval("IsEditing") %>'>
+                                                        <div class="d-inline-flex gap-1" runat="server" visible='<%# (bool)Eval("IsEditing") %>'>
                                                             <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
                                                                 CommandName="Update" CommandArgument='<%# Eval("EntryID") %>'>Update</asp:LinkButton>
 

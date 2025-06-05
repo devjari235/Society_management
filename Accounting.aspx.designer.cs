@@ -96,13 +96,13 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.HiddenField hdnActiveTab;
 
         /// <summary>
-        /// gvIncome control.
+        /// rptIncome control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvIncome;
+        protected global::System.Web.UI.WebControls.Repeater rptIncome;
 
         /// <summary>
         /// rptIncomeSummary control.
