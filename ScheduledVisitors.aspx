@@ -2,6 +2,34 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $table = $('.table');
+
+        // Ensure thead exists
+        if ($table.find('thead').length === 0) {
+            var $thead = $('<thead></thead>').append($table.find('tr:first'));
+            $table.prepend($thead);
+        }
+
+        // Initialize only if not already done
+        if (!$.fn.DataTable.isDataTable($table)) {
+            $table.DataTable({
+                "paging": true,
+                "lengthChange": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "serverSide": false,
+                "processing": false
+            });
+        }
+    });
+</script>
     <style>
         .btn-action { min-width: 100px; margin: 2px; }
         .disabled-btn { opacity: 0.65; cursor: not-allowed; }
@@ -114,9 +142,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server"></asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-between align-items-center">
         <a href="VisitorApproval.aspx" class="dashboard-btn btn-Dashboard"><i class="fas fa-arrow-left"></i> Back to Details</a>
-        <h1>Scheduled Visitors</h1>
+        <h2>Scheduled Visitors</h2>
     </div>
 </asp:Content>
 
