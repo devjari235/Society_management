@@ -13,6 +13,8 @@
 
     <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -160,6 +162,32 @@
             }
         }
     </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $table = $('.table');
+
+            // Ensure thead exists
+            if ($table.find('thead').length === 0) {
+                var $thead = $('<thead></thead>').append($table.find('tr:first'));
+                $table.prepend($thead);
+            }
+
+            // Initialize only if not already done
+            if (!$.fn.DataTable.isDataTable($table)) {
+                $table.DataTable({
+                    "paging": true,
+                    "lengthChange": true,
+                    "searching": true,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                    "serverSide": false,
+                    "processing": false
+                });
+            }
+        });
+    </script>
     <script>
     function showToast(message, type) {
         const toast = document.getElementById('customToast');

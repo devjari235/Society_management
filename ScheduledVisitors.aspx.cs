@@ -33,13 +33,12 @@ namespace Society_management
                                 ON v.Name = s.VisitorName 
                                 AND v.ContactNumber = s.ContactNumber 
                                 AND v.IsScheduled = 1
-                            WHERE s.ScheduledDateTime >= @Today
-                            ORDER BY s.ScheduledDateTime";
+                            ORDER BY s.ScheduledDateTime DESC";
 
             using (SqlConnection conn = new SqlConnection(cs))
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Today", DateTime.Today);
+               // cmd.Parameters.AddWithValue("@Today", DateTime.Today);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -135,7 +134,7 @@ namespace Society_management
                         string name = rdr["Name"].ToString();
                         rdr.Close();
 
-                        SqlCommand updateCmd = new SqlCommand("UPDATE Visitors SET CheckOutTime = @CheckOutTime WHERE VisitorID = @VisitorID", conn, trans);
+                        SqlCommand updateCmd = new SqlCommand("UPDATE Visitors SET IsCompleted = 1, CheckOutTime = @CheckOutTime WHERE VisitorID = @VisitorID", conn, trans);
                         updateCmd.Parameters.AddWithValue("@CheckOutTime", DateTime.Now);
                         updateCmd.Parameters.AddWithValue("@VisitorID", visitorId);
                         updateCmd.ExecuteNonQuery();

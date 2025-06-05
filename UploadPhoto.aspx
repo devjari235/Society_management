@@ -266,7 +266,7 @@
 
             <div class="form-group">
                 <label for="txtTitle">Title:</label>
-                <asp:TextBox ID="txtTitle" runat="server" ></asp:TextBox>
+                <asp:TextBox ID="txtTitle" runat="server" AutoCompleteType="Disabled" ></asp:TextBox>
             </div>
 
             <div class="form-group">

@@ -217,7 +217,7 @@ body, html {
             <!-- Visitor Name -->
             <div class="mb-3">
                 <asp:Label ID="lblVisitorName" runat="server" Text="Visitor Name:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="txtVisitorName" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="rfvVisitorName" runat="server" ControlToValidate="txtVisitorName"
                     ErrorMessage="Visitor name is required." CssClass="validation-error" Display="Dynamic" />
             </div>
@@ -225,7 +225,7 @@ body, html {
             <!-- Contact Number -->
             <div class="mb-3">
                 <asp:Label ID="lblContactNumber" runat="server" Text="Contact Number:" CssClass="form-label"></asp:Label>
-                <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:TextBox ID="txtContactNumber" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="rfvContactNumber" runat="server" ControlToValidate="txtContactNumber"
                     ErrorMessage="Contact number is required." CssClass="validation-error" Display="Dynamic" />
                 <asp:RegularExpressionValidator ID="revContactNumber" runat="server" ControlToValidate="txtContactNumber"
@@ -237,7 +237,7 @@ body, html {
             <div class="mb-3">
                 <asp:Label ID="lblVisitDateTime" runat="server" Text="Visit Date & Time:" CssClass="form-label"></asp:Label>
                 <asp:TextBox ID="txtVisitDateTime" runat="server" CssClass="form-control"
-                    placeholder="e.g., 2025-06-01 14:00" TextMode="DateTimeLocal"></asp:TextBox>
+                    placeholder="e.g., 2025-06-01 14:00" TextMode="DateTimeLocal" AutoCompleteType="Disabled"></asp:TextBox>
                 <asp:RequiredFieldValidator ID="rfvVisitDateTime" runat="server" ControlToValidate="txtVisitDateTime"
                     ErrorMessage="Visit date and time is required." CssClass="validation-error" Display="Dynamic" />
                 <asp:CustomValidator ID="cvFutureDate" runat="server" ControlToValidate="txtVisitDateTime"
