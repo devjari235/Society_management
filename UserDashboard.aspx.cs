@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
+using System.Data.SqlClient;
+using System.Configuration;
 using System.Web.UI.WebControls;
 
 namespace Society_management
@@ -13,97 +9,290 @@ namespace Society_management
     public partial class UserDashboard : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-        
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                int userId = Convert.ToInt32(Session["U_id"]);
-                IsCommitteeMember(userId);
+                
                 bindOwnerID();
                 IsOwner();
                 IsUser();
-                BindNotices();
-                rptNotices.ItemCommand += rptNotices_ItemCommand;
+
+                    LoadDashboardData();
+                    LoadNotices();
+                    LoadUpcomingEvents();
+                
             }
-            //LoadDashboardData();
         }
-        //private void LoadDashboardData()
-        //{
+
+        private void LoadDashboardData()
+        {
+            int userId = Convert.ToInt32(Session["U_id"]);
+
+            // Get maintenance due information
+            LoadMaintenanceData(userId);
+
+            // Get visitor information
+            LoadVisitorData(userId);
+
+            // Get upcoming event information
+            LoadEventData();
+            IsCommitteeMember(userId);
+        }
+
+        private void LoadMaintenanceData(int userId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                // Get owner_id from tblUser
+                string ownerQuery = "SELECT Owner_id FROM tblUser WHERE User_id = @UserId";
+                SqlCommand ownerCmd = new SqlCommand(ownerQuery, con);
+                ownerCmd.Parameters.AddWithValue("@UserId", userId);
+
+                con.Open();
+                int ownerId = Convert.ToInt32(ownerCmd.ExecuteScalar());
+
+                // Get flat and maintenance info
+                string query = @"SELECT f.Mentanance, o.Allotment_Date 
+                                FROM tblOwner o 
+                                JOIN tblFlat f ON o.Flate_id = f.Flate_id 
+                                WHERE o.Owner_id = @OwnerId";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@OwnerId", ownerId);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        decimal maintenanceAmount = Convert.ToDecimal(reader["Mentanance"]);
+                        DateTime allotmentDate = Convert.ToDateTime(reader["Allotment_Date"]);
+
+                        // Calculate due date (25th of current month)
+                        DateTime dueDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 25);
+                        if (DateTime.Now.Day > 25)
+                        {
+                            dueDate = dueDate.AddMonths(1);
+                        }
+
+                        // Calculate days left
+                        int daysLeft = (dueDate - DateTime.Now).Days;
+
+                        // Update UI
+                        lblMaintenanceAmount.Text = maintenanceAmount.ToString("N0");
+                        lblDueDate.Text = dueDate.ToString("dd MMMM yyyy");
+                        lblDaysLeft.Text = $"{daysLeft} days left";
+                    }
+                }
+            }
+        }
+
+        private void LoadVisitorData(int userId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                // Get today's visitors count
+                string countQuery = @"SELECT COUNT(*) FROM Visitors 
+                                    WHERE User_id = @UserId 
+                                    AND CONVERT(date, VisitDateTime) = CONVERT(date, GETDATE())";
+
+                SqlCommand countCmd = new SqlCommand(countQuery, con);
+                countCmd.Parameters.AddWithValue("@UserId", userId);
+
+                con.Open();
+                int visitorCount = Convert.ToInt32(countCmd.ExecuteScalar());
+                lblVisitorCount.Text = $"{visitorCount} Today";
+                lblTotalVisitors.Text = visitorCount.ToString();
+
+                // Get last visitor time
+                string lastVisitorQuery = @"SELECT TOP 1 VisitDateTime FROM Visitors 
+                                          WHERE User_id = @UserId 
+                                          ORDER BY VisitDateTime DESC";
+
+                SqlCommand lastVisitorCmd = new SqlCommand(lastVisitorQuery, con);
+                lastVisitorCmd.Parameters.AddWithValue("@UserId", userId);
+
+                object lastVisitorTime = lastVisitorCmd.ExecuteScalar();
+                if (lastVisitorTime != null)
+                {
+                    lblLastVisitorTime.Text = Convert.ToDateTime(lastVisitorTime).ToString("dd-MM-yyyy h:mm tt");
+
+                }
+
+                // Get next scheduled visitor
+                string nextVisitorQuery = @"SELECT TOP 1 ScheduledDateTime FROM ScheduledVisits 
+                                           WHERE User_id = @UserId 
+                                           AND ScheduledDateTime > GETDATE() 
+                                           AND IsCompleted = 0 
+                                           ORDER BY ScheduledDateTime ASC";
+
+                SqlCommand nextVisitorCmd = new SqlCommand(nextVisitorQuery, con);
+                nextVisitorCmd.Parameters.AddWithValue("@UserId", userId);
+
+                object nextVisitorTime = nextVisitorCmd.ExecuteScalar();
+                if (nextVisitorTime != null)
+                {
+                    lblNextVisitorTime.Text = Convert.ToDateTime(nextVisitorTime).ToString("dd-MM-yyyy h:mm tt");
+                    pnlNextVisitor.Visible = true;
+                }
+                else
+                {
+                    pnlNextVisitor.Visible = false;
+                }
+            }
+        }
+
+        private void LoadEventData()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT TOP 1 EventName, EventDate AS EventDay, 
+                                EventDate AS StartTime, DATEADD(HOUR, 2, EventDate) AS EndTime
+                                FROM tblEvents 
+                                WHERE EventDate > GETDATE() 
+                                ORDER BY EventDate ASC";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                con.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        lblEventTitle.Text = reader["EventName"].ToString();
+                        lblEventDate.Text = Convert.ToDateTime(reader["EventDay"]).ToString("dd MMMM");
+
+                        DateTime eventDate = Convert.ToDateTime(reader["EventDay"]);
+                        int daysToEvent = (eventDate - DateTime.Now).Days;
+                        lblDaysToEvent.Text = $"{daysToEvent} days to go";
+
+                        //pnlRegistration.Visible = true;
+                    }
+                    else
+                    {
+                        // No upcoming events
+                        lblEventTitle.Text = "No upcoming events";
+                        lblEventDate.Text = "";
+                        lblDaysToEvent.Text = "";
+                        //pnlRegistration.Visible = false;
+                    }
+                }
+            }
+        }
+
+        private void LoadNotices()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                int userId = Convert.ToInt32(Session["U_id"]);
+                conn.Open();
+                string updateQuery = @"UPDATE tblNotices 
+                               SET Status = 'Expired' 
+                               WHERE Expiry_date < GETDATE() AND Status != 'Expired'";
+                SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
+                updateCmd.ExecuteNonQuery();
+                DataSet allnotice = new DataSet();
+                if (IsCommitteeMember(userId) == true)
+                {
+                    // Step 1: Update expired notices
+
+                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App') and n.Broadcast_By='Committee Member' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
+                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
+                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+
+                    allnotice.Merge(ds);
+                }
+                if (IsOwner() == true)
+                {
+                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='Owners' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
+                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
+                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+
+                    allnotice.Merge(ds);
+                }
+                if (IsUser() == true)
+                {
+                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='All Members' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
+                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
+                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+                    allnotice.Merge(ds);
 
 
-        //    // Load user stats
-        //    lblMaintenanceDue.Text = "₹2,500";
-        //    lblDueDate.Text = DateTime.Now.AddDays(10).ToString("dd MMM yyyy");
-        //    lblPendingPayments.Text = "2";
-        //    lblOpenComplaints.Text = "3";
-        //    lblNewNotices.Text = "5";
+                }
 
-        //    // Load recent activity
-        //    var recentActivity = new List<dynamic>
-        //{
-        //    new {
-        //        Title = "Complaint Registered",
-        //        Description = "Water leakage in bathroom has been registered",
-        //        Date = DateTime.Now.AddHours(-2).ToString("dd MMM hh:mm tt"),
-        //        Link = "MyComplaints.aspx",
-        //        ActivityClass = "complaint"
-        //    },
-        //    new {
-        //        Title = "Payment Received",
-        //        Description = "Maintenance payment for October received",
-        //        Date = DateTime.Now.AddDays(-1).ToString("dd MMM hh:mm tt"),
-        //        Link = "MyPayments.aspx",
-        //        ActivityClass = "payment"
-        //    },
-        //    new {
-        //        Title = "New Notice",
-        //        Description = "Society meeting on 25th October",
-        //        Date = DateTime.Now.AddDays(-2).ToString("dd MMM hh:mm tt"),
-        //        Link = "NoticeBoard.aspx",
-        //        ActivityClass = "notice"
-        //    }
-        //};
+                if (allnotice.Tables.Count > 0 && allnotice.Tables[0].Rows.Count > 0)
+                {
+                    rptNotices.DataSource = allnotice;
+                    rptNotices.DataBind();
+                    pnlNoNotice.Visible = false;
+                }
+                else
+                {
+                    rptNotices.DataSource = null;
+                    rptNotices.DataBind();
+                    pnlNoNotice.Visible = true;
+                }
+            }
+        }
 
-        //    if (recentActivity.Count > 0)
-        //    {
-        //        rptRecentActivity.DataSource = recentActivity;
-        //        rptRecentActivity.DataBind();
-        //        pnlNoActivity.Visible = false;
-        //    }
-        //    else
-        //    {
-        //        pnlNoActivity.Visible = true;
-        //    }
+        private void LoadUpcomingEvents()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
-        //    // Load important notices
-        //    var importantNotices = new List<dynamic>
-        //{
-        //    new {
-        //        Title = "Annual Maintenance Hike",
-        //        Summary = "Maintenance charges will increase by 10% from next month",
-        //        Date = "15 Oct 2023",
-        //        Link = "NoticeDetails.aspx?id=1"
-        //    },
-        //    new {
-        //        Title = "Diwali Celebration",
-        //        Summary = "Society Diwali celebration on 12th November at club house",
-        //        Date = "10 Oct 2023",
-        //        Link = "NoticeDetails.aspx?id=2"
-        //    }
-        //};
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT EventName, EventDate AS EventDay, 
+                               EventDate AS StartTime, DATEADD(HOUR, 2, EventDate) AS EndTime
+                               FROM tblEvents 
+                               WHERE EventDate > GETDATE() 
+                               ORDER BY EventDate ASC";
 
-        //    if (importantNotices.Count > 0)
-        //    {
-        //        rptImportantNotices.DataSource = importantNotices;
-        //        rptImportantNotices.DataBind();
-        //        pnlNoNotices.Visible = false;
-        //    }
-        //    else
-        //    {
-        //        pnlNoNotices.Visible = true;
-        //    }
-        //}
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                con.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                if (dt.Rows.Count > 0)
+                {
+                    rptEvents.DataSource = dt;
+                    rptEvents.DataBind();
+                    pnlNoEvents.Visible = false;
+                }
+                else
+                {
+                    pnlNoEvents.Visible = true;
+                }
+            }
+        }
+
+        protected void rptNotices_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "ViewDetails")
+            {
+                string noticeId = e.CommandArgument.ToString();
+                Response.Redirect($"NoticeDetails.aspx?id={noticeId}");
+            }
+        }
+
         public bool IsCommitteeMember(int userId)
         {
             using (SqlConnection con = new SqlConnection(strcon))
@@ -139,7 +328,7 @@ namespace Society_management
             }
             else
             {
-                id = 0; 
+                id = 0;
             }
 
             reader.Close();
@@ -169,92 +358,6 @@ namespace Society_management
                 con.Open();
                 int count = (int)cmd.ExecuteScalar();
                 return count > 0;
-            }
-        }
-        private void BindNotices()
-        {
-            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-            
-            using (SqlConnection conn = new SqlConnection(connStr))
-            {
-                int userId = Convert.ToInt32(Session["U_id"]);
-                conn.Open();
-                string updateQuery = @"UPDATE tblNotices 
-                               SET Status = 'Expired' 
-                               WHERE Expiry_date < GETDATE() AND Status != 'Expired'";
-                SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
-                updateCmd.ExecuteNonQuery();
-                DataSet allnotice = new DataSet();
-                if (IsCommitteeMember(userId) == true)
-                {
-                    // Step 1: Update expired notices
-   
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App') and n.Broadcast_By='Committee Member' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-
-                    allnotice.Merge(ds);
-                }
-                if (IsOwner() == true)
-                {
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='Owners' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-
-                    allnotice.Merge(ds);
-                }
-                if (IsUser() == true) 
-                {
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='All Members' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-                    allnotice.Merge(ds);
-
-
-                }
-
-                if (allnotice.Tables.Count > 0 && allnotice.Tables[0].Rows.Count > 0)
-                {
-                    rptNotices.DataSource = allnotice;
-                    rptNotices.DataBind();
-                    pnlNoNotice.Visible = false;
-                }
-                else
-                {
-                    rptNotices.DataSource = null;
-                    rptNotices.DataBind();
-                    pnlNoNotice.Visible = true;
-                }
-
-            }
-        }
-
-
-        public string GetImportanceClass(string importance)
-        {
-            switch (importance.ToLower())
-            {
-                case "important": return "badge-important";
-                case "urgent": return "badge-urgent";
-                default: return "badge-normal";
-            }
-        }
-
-        protected void rptNotices_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "ViewDetails")
-            {
-                string noticeId = e.CommandArgument.ToString();
-                Response.Redirect("NoticeDetails.aspx?id=" + noticeId);
             }
         }
     }
