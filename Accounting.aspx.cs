@@ -40,7 +40,7 @@ namespace Society_management
                 txtToDateFilter.Text = toDate.Value.ToString("yyyy-MM-dd");
 
                 LoadIncome();
-                BindExpenseGrid();
+                LoadExpense();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
                 LoadBalanceSheet();
@@ -58,12 +58,12 @@ namespace Society_management
         //    //gvIncome.DataBind();
         //}
 
-        private void BindExpenseGrid()
-        {
-            DataTable dtExpense = GetTransactions("Expense");
-            gvExpense.DataSource = dtExpense;
-            gvExpense.DataBind();
-        }
+        //private void BindExpenseGrid()
+        //{
+        //    DataTable dtExpense = GetTransactions("Expense");
+        //    gvExpense.DataSource = dtExpense;
+        //    gvExpense.DataBind();
+        //}
 
         private DataTable GetTransactions(string transactionType)
         {
@@ -448,6 +448,153 @@ namespace Society_management
             }
         }
 
+        private void LoadExpense()
+        {
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+            {
+                DataTable dt = GetTransactions("Expense");
+
+                if (dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                        row["IsEditing"] = false;
+
+                    ViewState["ExpenseData"] = dt;
+                    rptExpense.DataSource = dt;
+                    rptExpense.DataBind();
+                    pnlNoExpense.Visible = false;
+                }
+                else
+                {
+                    rptExpense.DataSource = null;
+                    rptExpense.DataBind();
+                    pnlNoExpense.Visible = true;
+                }
+            }
+        }
+
+        protected void rptExpense_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+                LinkButton btnDelete = (LinkButton)e.Item.FindControl("btnDelete");
+                if (btnDelete != null)
+                {
+                    btnDelete.Attributes["data-uniqueid"] = btnDelete.UniqueID;
+                }
+            }
+        }
+
+        protected void rptExpense_ItemCommand(object source, RepeaterCommandEventArgs e)
+        {
+            DataTable dtExpense = ViewState["ExpenseData"] as DataTable;
+            if (dtExpense == null) return;
+
+            int transactionId = Convert.ToInt32(e.CommandArgument);
+            hdnActiveTab.Value = "expense-tab";
+
+            if (e.CommandName == "Edit")
+            {
+                foreach (DataRow row in dtExpense.Rows)
+                    row["IsEditing"] = (Convert.ToInt32(row["TransactionID"]) == transactionId);
+            }
+            else if (e.CommandName == "Cancel")
+            {
+                foreach (DataRow row in dtExpense.Rows)
+                    row["IsEditing"] = false;
+            }
+            else if (e.CommandName == "Update")
+            {
+                hdnActiveTab.Value = "expense-tab";
+                TextBox txtAmount = (TextBox)e.Item.FindControl("txtAmount");
+                TextBox txtDescription = (TextBox)e.Item.FindControl("txtDesc");
+
+                decimal amount;
+                decimal.TryParse(txtAmount.Text, out amount);
+                string description = txtDescription.Text.Trim();
+
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+                {
+                    string query = "UPDATE Transactions SET Amount = @Amount, Description = @Description WHERE TransactionID = @TransactionID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@Amount", amount);
+                    cmd.Parameters.AddWithValue("@Description", description);
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                foreach (DataRow row in dtExpense.Rows)
+                    row["IsEditing"] = false;
+                dtExpense = ViewState["ExpenseData"] as DataTable;
+                if (dtExpense != null)
+                {
+                    foreach (DataRow row in dtExpense.Rows)
+                    {
+                        row["IsEditing"] = false;
+                    }
+
+                    ViewState["ExpenseData"] = dtExpense;
+                    rptIncome.DataSource = dtExpense;
+                    rptIncome.DataBind();
+                }
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "updateExpenseSuccess", @"
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated',
+                    text: 'Expense record updated',
+                    confirmButtonColor: '#3085d6'
+                });", true);
+            }
+            else if (e.CommandName == "Delete")
+            {
+                hdnActiveTab.Value = "expense-tab";
+
+                // Delete from DB
+                using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString))
+                {
+                    string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@TransactionID", transactionId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Remove from ViewState-based DataTable
+                dtExpense = ViewState["ExpenseData"] as DataTable;
+                if (dtExpense != null)
+                {
+                    DataRow[] rowsToDelete = dtExpense.Select("TransactionID = " + transactionId);
+                    foreach (DataRow row in rowsToDelete)
+                    {
+                        dtExpense.Rows.Remove(row);
+                    }
+
+                    ViewState["ExpenseData"] = dtExpense;
+
+                    // Rebind updated data
+                    rptIncome.DataSource = dtExpense;
+                    rptIncome.DataBind();
+                }
+
+                // Show SweetAlert
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "deleteExpenseSuccess", @"
+        Swal.fire({
+            icon: 'success',
+            title: 'Deleted',
+            text: 'Expense record deleted successfully',
+            confirmButtonColor: '#d33'
+        }).then(() => {
+            window.location.hash = '#expense-tab';
+        });
+    ", true);
+                return;
+            }
+            ViewState["ExpenseData"] = dtExpense;
+            rptExpense.DataSource = dtExpense;
+            rptExpense.DataBind();
+        }
+
 
         protected void rptAssets_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
@@ -782,7 +929,7 @@ namespace Society_management
 
                 // Refresh all data
                 LoadIncome();
-                BindExpenseGrid();
+                LoadExpense();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
                 LoadBalanceSheet();
@@ -800,7 +947,7 @@ namespace Society_management
 
                 // Refresh all data
                 LoadIncome();
-                BindExpenseGrid();
+                LoadExpense();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
                 LoadBalanceSheet();
@@ -856,7 +1003,7 @@ namespace Society_management
 
                 // Refresh all data
                 LoadIncome();
-                BindExpenseGrid();
+                LoadExpense();
                 LoadIncomeSummary();
                 LoadExpenseSummary();
                 LoadBalanceSheet();
@@ -945,7 +1092,7 @@ namespace Society_management
                     txtPaidTo.Text = "";
 
                     // Refresh data
-                    BindExpenseGrid();
+                    LoadExpense();
                     LoadExpenseSummary();
                     LoadBalanceSheet();
                     SetDateRange(ddlProfitLossPeriod.SelectedValue);
@@ -1021,63 +1168,63 @@ namespace Society_management
         //    }
         //}
 
-        protected void gvExpense_RowDeleting(object sender, GridViewDeleteEventArgs e)
-        {
-            try
-            {
-                int transactionID = Convert.ToInt32(gvExpense.DataKeys[e.RowIndex].Value);
+        //protected void gvExpense_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        //{
+        //    try
+        //    {
+        //        int transactionID = Convert.ToInt32(gvExpense.DataKeys[e.RowIndex].Value);
 
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    // First get transaction details before deleting (for account adjustment)
-                    DataTable dtTransaction = GetTransactionDetails(transactionID);
+        //        using (SqlConnection con = new SqlConnection(connectionString))
+        //        {
+        //            // First get transaction details before deleting (for account adjustment)
+        //            DataTable dtTransaction = GetTransactionDetails(transactionID);
 
-                    // Delete the transaction
-                    string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@TransactionID", transactionID);
+        //            // Delete the transaction
+        //            string query = "DELETE FROM Transactions WHERE TransactionID = @TransactionID";
+        //            SqlCommand cmd = new SqlCommand(query, con);
+        //            cmd.Parameters.AddWithValue("@TransactionID", transactionID);
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
+        //            con.Open();
+        //            cmd.ExecuteNonQuery();
 
-                    // Update affected account balances
-                    if (dtTransaction.Rows.Count > 0)
-                    {
-                        string paymentMethod = dtTransaction.Rows[0]["PaymentMethod"].ToString();
-                        decimal amount = Convert.ToDecimal(dtTransaction.Rows[0]["Amount"]);
+        //            // Update affected account balances
+        //            if (dtTransaction.Rows.Count > 0)
+        //            {
+        //                string paymentMethod = dtTransaction.Rows[0]["PaymentMethod"].ToString();
+        //                decimal amount = Convert.ToDecimal(dtTransaction.Rows[0]["Amount"]);
 
-                        // Reverse the transaction effect on accounts
-                        if (paymentMethod == "Cash")
-                        {
-                            UpdateAccountBalance("CashInHand", amount); // Add back to cash
-                        }
-                        else // Bank transfer, cheque, etc.
-                        {
-                            UpdateAccountBalance("BankAccounts", amount); // Add back to bank
-                        }
-                    }
+        //                // Reverse the transaction effect on accounts
+        //                if (paymentMethod == "Cash")
+        //                {
+        //                    UpdateAccountBalance("CashInHand", amount); // Add back to cash
+        //                }
+        //                else // Bank transfer, cheque, etc.
+        //                {
+        //                    UpdateAccountBalance("BankAccounts", amount); // Add back to bank
+        //                }
+        //            }
 
-                    con.Close();
-                }
+        //            con.Close();
+        //        }
 
-                // Refresh all financial data
-                BindExpenseGrid();
-                LoadIncomeSummary();
-                LoadExpenseSummary();
-                LoadBalanceSheet();
-                LoadProfitLossStatement();
+        //        // Refresh all financial data
+        //        BindExpenseGrid();
+        //        LoadIncomeSummary();
+        //        LoadExpenseSummary();
+        //        LoadBalanceSheet();
+        //        LoadProfitLossStatement();
 
-                // Show success message
-                ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess",
-                    "showAlert('success', 'Expense record deleted successfully!');", true);
-            }
-            catch (Exception ex)
-            {
-                // Show error message
-                ScriptManager.RegisterStartupScript(this, GetType(), "showError",
-                    $"showAlert('error', 'Error deleting expense record: {ex.Message}');", true);
-            }
-        }
+        //        // Show success message
+        //        ScriptManager.RegisterStartupScript(this, GetType(), "showSuccess",
+        //            "showAlert('success', 'Expense record deleted successfully!');", true);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Show error message
+        //        ScriptManager.RegisterStartupScript(this, GetType(), "showError",
+        //            $"showAlert('error', 'Error deleting expense record: {ex.Message}');", true);
+        //    }
+        //}
 
         // Helper method to get transaction details
         private DataTable GetTransactionDetails(int transactionID)

@@ -132,13 +132,22 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Literal litIncomeTotal;
 
         /// <summary>
-        /// gvExpense control.
+        /// rptExpense control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvExpense;
+        protected global::System.Web.UI.WebControls.Repeater rptExpense;
+
+        /// <summary>
+        /// pnlNoExpense control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoExpense;
 
         /// <summary>
         /// rptExpenseSummary control.

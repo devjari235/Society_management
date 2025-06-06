@@ -198,6 +198,8 @@
         });
     </script>
 
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".delete-btn").forEach(function (btn) {
@@ -229,6 +231,36 @@
         });
     </script>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".delete-btn").forEach(function (btn) {
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const uniqueId = this.getAttribute("data-uniqueid");
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "This Expense Record will be deleted permanently.",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        customClass: {
+                            confirmButton: 'btn btn-danger me-2',
+                            cancelButton: 'btn btn-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            __doPostBack(uniqueId, '');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -682,19 +714,106 @@
                                 </button>--%>
                     </div>
                     <div class="table-responsive">
-                        <asp:GridView ID="gvExpense" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-hover"
-                            DataKeyNames="TransactionID" OnRowDeleting="gvExpense_RowDeleting" EmptyDataText="No expense records found.">
-                            <Columns>
-                                <asp:BoundField DataField="TransactionID" HeaderText="ID" Visible="false" />
-                                <asp:BoundField DataField="Date" HeaderText="Date" DataFormatString="{0:dd-MMM-yyyy}" ItemStyle-Width="100px" />
-                                <asp:BoundField DataField="CategoryName" HeaderText="Category" />
-                                <asp:BoundField DataField="Amount" HeaderText="Amount" DataFormatString="{0:C}" ItemStyle-HorizontalAlign="Right" />
-                                <asp:BoundField DataField="PaidTo" HeaderText="Paid To" />
-                                <asp:BoundField DataField="PaymentMethod" HeaderText="Payment Method" />
-                                <asp:BoundField DataField="Description" HeaderText="Description" />
-                                <asp:CommandField ShowDeleteButton="True" ButtonType="Button" ControlStyle-CssClass="btn btn-danger btn-sm" ItemStyle-Width="80px" />
-                            </Columns>
-                        </asp:GridView>
+                        <asp:Repeater ID="rptExpense" runat="server" OnItemCommand="rptExpense_ItemCommand">
+                            <HeaderTemplate>
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Category</th>
+                                            <th class="text-end">Amount</th>
+                                            <th>Paid To</th>
+                                            <th>Payment Method</th>
+                                            <th>Description</th>
+                                            <th class="text-end">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            </HeaderTemplate>
+
+                            <ItemTemplate>
+                                <tr>
+                                    <!-- Date -->
+                                    <td>
+                                        <asp:Label ID="lblDate" runat="server" Text='<%# Eval("Date", "{0:dd-MMM-yyyy}") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtDate" runat="server" Text='<%# Eval("Date", "{0:yyyy-MM-dd}") %>' TextMode="Date" CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Category -->
+                                    <td>
+                                        <asp:Label ID="lblCategory" runat="server" Text='<%# Eval("CategoryName") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtCategory" runat="server" Text='<%# Eval("CategoryName") %>' CssClass="form-control" Enabled="false" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Amount -->
+                                    <td class="text-end">
+                                        <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount", "{0:C}") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtAmount" runat="server" Text='<%# Eval("Amount") %>' CssClass="form-control text-end" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Paid To -->
+                                    <td>
+                                        <asp:Label ID="lblPaidTo" runat="server" Text='<%# Eval("PaidTo") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtPaidTo" runat="server" Text='<%# Eval("PaidTo") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Payment Method -->
+                                    <td>
+                                        <asp:Label ID="lblPaymentMethod" runat="server" Text='<%# Eval("PaymentMethod") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtPaymentMethod" runat="server" Text='<%# Eval("PaymentMethod") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Description -->
+                                    <td>
+                                        <asp:Label ID="lblDesc" runat="server" Text='<%# Eval("Description") %>' Visible='<%# !(bool)Eval("IsEditing") %>'></asp:Label>
+                                        <asp:TextBox ID="txtDesc" runat="server" Text='<%# Eval("Description") %>' CssClass="form-control" Visible='<%# (bool)Eval("IsEditing") %>'></asp:TextBox>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="text-end">
+                                        <!-- View Mode -->
+                                        <asp:LinkButton ID="btnEdit" runat="server" CssClass="btn btn-sm btn-success me-1"
+                                            CommandName="Edit" CommandArgument='<%# Eval("TransactionID") %>' Visible='<%# !(bool)Eval("IsEditing") %>'>
+                                            Edit
+                                        </asp:LinkButton>
+
+                                        <asp:LinkButton ID="btnDelete" runat="server" CssClass="btn btn-sm btn-danger delete-btn"
+                                            CommandName="Delete" CommandArgument='<%# Eval("TransactionID") %>'
+                                            data-uniqueid='<%# ((LinkButton)Container.FindControl("btnDelete")).UniqueID %>'
+                                            OnClientClick="return false;"
+                                            Visible='<%# !(bool)Eval("IsEditing") %>'>
+                                            Delete
+                                        </asp:LinkButton>
+
+
+                                        <!-- Edit Mode -->
+                                        <div class="d-inline-flex gap-1" runat="server" visible='<%# (bool)Eval("IsEditing") %>'>
+                                            <asp:LinkButton ID="btnUpdate" runat="server" CssClass="btn btn-sm btn-primary"
+                                                CommandName="Update" CommandArgument='<%# Eval("TransactionID") %>'>
+                                                Update
+                                            </asp:LinkButton>
+
+                                            <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-sm btn-secondary"
+                                                CommandName="Cancel" CommandArgument='<%# Eval("TransactionID") %>'>
+                                                Cancel
+                                            </asp:LinkButton>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ItemTemplate>
+
+                            <FooterTemplate>
+                                    </tbody>
+                                </table>
+                            </FooterTemplate>
+                        </asp:Repeater>
+
+                        <asp:Panel ID="pnlNoExpense" runat="server" Visible="false">
+                            <div class="border rounded p-3 text-center text-muted bg-light fw-semibold">
+                                No expense records found.
+                            </div>
+                        </asp:Panel>
+
                     </div>
                     <div class="card mt-3">
                         <div class="card-header bg-light">
