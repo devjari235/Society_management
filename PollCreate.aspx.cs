@@ -15,7 +15,7 @@ namespace Society_management
             if (!IsPostBack)
             {
                 pnlAdmin.Visible = true;
-                cvExpireDate.ValueToCompare = DateTime.Now.ToString("yyyy-MM-dd");
+               
                 DataBind();
             }
         }

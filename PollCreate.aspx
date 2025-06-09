@@ -234,10 +234,6 @@
                     <asp:RequiredFieldValidator ID="rfvExpireDate" runat="server" ControlToValidate="txtExpireDate"
                         ErrorMessage="Expire date is required."
                         CssClass="validation-error" Display="Dynamic" SetFocusOnError="True" />
-                    <asp:CompareValidator ID="cvExpireDate" runat="server" ControlToValidate="txtExpireDate"
-                        Operator="GreaterThan" Type="Date" 
-                        ErrorMessage="Expire date must be a future date."
-                        CssClass="validation-error" Display="Dynamic" SetFocusOnError="True" />
                 </div>
 
                 <!-- Poll Options -->
