@@ -118,7 +118,7 @@ namespace Society_management
             if (Request.QueryString["id"] != null && Page.IsValid)
             {
                 int complaintId = Convert.ToInt32(Request.QueryString["id"]);
-                int adminId = Convert.ToInt32(Session["AdminID"]); // Assuming admin ID is stored in session
+                int adminId = Convert.ToInt32(Session["A_id"]); // Assuming admin ID is stored in session
                 string remarkText = txtRemark.Text.Trim();
 
                 string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;

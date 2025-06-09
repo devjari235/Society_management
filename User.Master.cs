@@ -20,8 +20,51 @@ namespace Society_management
             {
                 IsCommitteeMember();
                 visibleForCommitteeMember();
+                ShowUnreadRemarkCount();
+                MarkRemarksAsSeen(Convert.ToInt32(Session["U_id"]));
             }
         }
+
+        private void MarkRemarksAsSeen(int userId)
+        {
+            string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = @"UPDATE r
+                         SET IsSeenByUser = 1
+                         FROM tblRemarks r
+                         INNER JOIN tblComplaint c ON r.Complaint_id = c.Complaint_id
+                         WHERE c.User_id = @UserID AND r.IsSeenByUser = 0";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserID", userId);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void ShowUnreadRemarkCount()
+        {
+            int userId = Convert.ToInt32(Session["User_id"]); // Ensure this session is set at login
+
+            string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            using (SqlConnection con = new SqlConnection(cs))
+            {
+                string query = @"
+            SELECT COUNT(*) FROM tblRemarks r
+            INNER JOIN tblComplaint c ON r.Complaint_id = c.Complaint_id
+            WHERE r.IsSeenByUser = 0 AND c.User_id = @UserID";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@UserID", Session["U_id"].ToString());
+                con.Open();
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+
+                lblRemarkCount.Visible = (count > 0);
+                lblRemarkCount.Text = count.ToString();
+            }
+        }
+
         string name;
         string img;
 

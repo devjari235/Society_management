@@ -196,10 +196,6 @@
                             Visible='<%# !string.IsNullOrEmpty(Eval("FilePaths").ToString()) %>' />
                     </td>
                 </tr>
-                <tr>
-                    <th>Add Remark</th>
-                    <td></td>
-                </tr>
             </table>
             
             <!-- Remarks Section -->

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Configuration;
 
 namespace Society_management
 {
@@ -26,11 +27,24 @@ namespace Society_management
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = @"SELECT Complaint_id,Complaint_type, Priority, Status, Create_date, Resolve_date 
-                           FROM tblComplaint 
-                           WHERE User_id = @UserId
-                           ORDER BY Create_date DESC";
-
+                string query = @"
+            SELECT 
+                c.Complaint_id,
+                c.Complaint_type,
+                c.Priority,
+                c.Status,
+                c.Create_date,
+                c.Resolve_date,
+                ISNULL(UnreadCount.UnreadRemarks, 0) AS UnreadRemarks
+            FROM tblComplaint c
+            LEFT JOIN (
+                SELECT Complaint_id, COUNT(*) AS UnreadRemarks
+                FROM tblRemarks
+                WHERE IsSeenByUser = 0
+                GROUP BY Complaint_id
+            ) AS UnreadCount
+            ON c.Complaint_id = UnreadCount.Complaint_id
+            WHERE c.User_id = @UserID";
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);

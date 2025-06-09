@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -15,10 +16,12 @@ namespace Society_management
         {
             if (Request.QueryString["id"] != null)
             {
+
                 int noticeId;
                 if (int.TryParse(Request.QueryString["id"], out noticeId))
                 {
                     LoadComplaintDetails(noticeId);
+                    LoadRemarks(noticeId);
                 }
                 else
                 {
@@ -28,6 +31,32 @@ namespace Society_management
             else
             {
                 lblMessage.Text = "No notice selected.";
+            }
+        }
+
+        private void LoadRemarks(int complaintId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT r.*, a.name AS AdminName 
+                        FROM tblRemarks r
+                        JOIN tblAdmin a ON r.admin_id = a.admin_id
+                        WHERE r.Complaint_id = @ComplaintId
+                        ORDER BY r.RemarkDate DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@ComplaintId", complaintId);
+
+                    con.Open();
+                    DataTable dt = new DataTable();
+                    dt.Load(cmd.ExecuteReader());
+
+                    rptRemarks.DataSource = dt;
+                    rptRemarks.DataBind();
+                }
             }
         }
         private void LoadComplaintDetails(int id)

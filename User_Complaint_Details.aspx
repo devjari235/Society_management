@@ -112,6 +112,33 @@
             text-align: center;
         }
     }
+    .remarks-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid #eee;
+}
+
+.remark-item {
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    border-left: 4px solid #007bff;
+}
+
+.remark-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.remark-text {
+    padding: 10px;
+    background-color: white;
+    border-radius: 4px;
+}
 </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -149,8 +176,31 @@
                       </td>
             </tr>
         </table>
+        <div class="remarks-section">
+            <h3>Admin Remarks</h3>
+            
+            <asp:Repeater ID="rptRemarks" runat="server">
+                <ItemTemplate>
+                    <div class="remark-item">
+                        <div class="remark-header">
+                            <span>By: Admin</span>
+                            <span>On: <%# Eval("RemarkDate", "{0:dd MMM yyyy hh:mm tt}") %></span>
+                        </div>
+                        <div class="remark-text">
+                            <%# Eval("RemarkText") %>
+                        </div>
+                    </div>
+                </ItemTemplate>
+                <FooterTemplate>
+                    <asp:Label ID="lblEmptyRemarks" runat="server" 
+                        Text="No remarks yet." 
+                        Visible='<%# ((Repeater)Container.NamingContainer).Items.Count == 0 %>' />
+                </FooterTemplate>
+            </asp:Repeater>
+        </div>
     </asp:Panel>
     <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
+
 </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
