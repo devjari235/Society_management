@@ -308,32 +308,32 @@
     <div class="dashboard-container">
         <!-- Dashboard Cards -->
         <div class="dashboard-cards">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Maintenance Due</div>
-                    <div class="card-badge">1 Pending</div>
-                </div>
-                <div class="card-content">
-                    Your monthly maintenance payment of ₹<asp:Label ID="lblMaintenanceAmount" runat="server" Text="2,500"></asp:Label> is due on <asp:Label ID="lblDueDate" runat="server" Text="25th June 2025"></asp:Label>.
-                </div>
-                <div class="card-footer">
-                    <span><i class="far fa-clock me-1"></i> <asp:Label ID="lblDaysLeft" runat="server" Text="3 days left"></asp:Label></span>
-                    <asp:Label ID="lblPaymentStatus" runat="server" Font-Bold="true" />
+           <div class="card">
+    <div class="card-header">
+        <div class="card-title">Maintenance Due</div>
+        <div class="card-badge"><asp:Literal ID="litBadgeText" runat="server" Text="1 Pending" /></div>
+    </div>
+    <div class="card-content">
+        <asp:Panel ID="pnlDueMessage" runat="server">
+            Your monthly maintenance payment of ₹<asp:Label ID="lblMaintenanceAmount" runat="server" Text="2,500"></asp:Label> 
+            is due on <asp:Label ID="lblDueDate" runat="server" Text="25th June 2025"></asp:Label>.
+        </asp:Panel>
+        <asp:Label ID="lblPaymentStatus" runat="server" Font-Bold="true" />
+    </div>
+    <div class="card-footer">
+        <span id="spanDaysLeft" runat="server"><i class="far fa-clock me-1"></i> <asp:Label ID="lblDaysLeft" runat="server" Text="3 days left"></asp:Label></span>
+        
+        <asp:Button ID="btnPayNow" runat="server" Text="Pay Now" CssClass="btn btn-primary"
+            OnClick="btnPayNow_Click" Visible="false" />
 
-                    <asp:Button ID="btnPayNow" runat="server" Text="Pay Now" CssClass="btn btn-primary"
-                        OnClick="btnPayNow_Click" Visible="false" />
+        <asp:Button ID="btnViewReceipt" runat="server" Text="View Receipt" CssClass="btn btn-success"
+            OnClick="btnViewReceipt_Click" Visible="false" />
 
-                    <asp:Button ID="btnViewReceipt" runat="server" Text="View Receipt" CssClass="btn btn-success"
-                        OnClick="btnViewReceipt_Click" Visible="false" />
-
-                    <asp:HiddenField ID="hdnUserId" runat="server" />
-                    <asp:HiddenField ID="hdnMonth" runat="server" />
-                    <asp:HiddenField ID="hdnYear" runat="server" />
-
-
-
-                </div>
-            </div>
+        <asp:HiddenField ID="hdnUserId" runat="server" />
+        <asp:HiddenField ID="hdnMonth" runat="server" />
+        <asp:HiddenField ID="hdnYear" runat="server" />
+    </div>
+</div>
 
             <div class="card">
                 <div class="card-header">
@@ -377,7 +377,7 @@
                 <i class="fas fa-file-alt"></i>
                 <span>Raise Complaint</span>
             </asp:HyperLink>
-            <asp:HyperLink ID="lnkMakePayment" runat="server" CssClass="action-btn" NavigateUrl="~/Payments.aspx">
+            <asp:HyperLink ID="lnkMakePayment" runat="server" CssClass="action-btn" NavigateUrl="~/MaintenanceList.aspx">
                 <i class="fas fa-rupee-sign"></i>
                 <span>Make Payment</span>
             </asp:HyperLink>

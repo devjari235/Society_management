@@ -56,9 +56,9 @@ namespace Society_management
 
                 // Get flat and maintenance info
                 string query = @"SELECT f.Mentanance, o.Allotment_Date 
-                         FROM tblOwner o 
-                         JOIN tblFlat f ON o.Flate_id = f.Flate_id 
-                         WHERE o.Owner_id = @OwnerId";
+                   FROM tblOwner o 
+                   JOIN tblFlat f ON o.Flate_id = f.Flate_id 
+                   WHERE o.Owner_id = @OwnerId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@OwnerId", ownerId);
@@ -82,7 +82,7 @@ namespace Society_management
                         // Update UI
                         lblMaintenanceAmount.Text = maintenanceAmount.ToString("N0");
                         lblDueDate.Text = dueDate.ToString("dd MMMM yyyy");
-                        lblDaysLeft.Text = $"{daysLeft} days left";
+                        lblDaysLeft.Text = daysLeft == 1 ? "1 day left" : $"{daysLeft} days left";
                     }
                 }
 
@@ -91,7 +91,7 @@ namespace Society_management
                 int currentYear = DateTime.Now.Year;
 
                 string paymentStatusQuery = @"SELECT Status FROM MaintenancePayments 
-                                      WHERE User_id = @UserId AND Month = @Month AND Year = @Year";
+                                WHERE User_id = @UserId AND Month = @Month AND Year = @Year";
 
                 SqlCommand paymentCmd = new SqlCommand(paymentStatusQuery, con);
                 paymentCmd.Parameters.AddWithValue("@UserId", userId);
@@ -101,10 +101,13 @@ namespace Society_management
                 object statusObj = paymentCmd.ExecuteScalar();
                 string status = statusObj != null ? statusObj.ToString().Trim().ToLower() : "pending";
 
-                // Update button visibility and message
+                // Update UI based on payment status
                 if (status == "completed")
                 {
-                    lblPaymentStatus.Text = "✅ Maintenance Paid for this Month";
+                    pnlDueMessage.Visible = false;
+                    spanDaysLeft.Visible = false;
+                    litBadgeText.Text = "Paid";
+                    lblPaymentStatus.Text = "Maintenance Paid for this Month";
                     lblPaymentStatus.ForeColor = System.Drawing.Color.Green;
 
                     btnPayNow.Visible = false;
@@ -112,7 +115,10 @@ namespace Society_management
                 }
                 else
                 {
-                    lblPaymentStatus.Text = "❌ Maintenance Pending";
+                    pnlDueMessage.Visible = true;
+                    spanDaysLeft.Visible = true;
+                    litBadgeText.Text = "1 Pending";
+                    lblPaymentStatus.Text = "Maintenance Pending";
                     lblPaymentStatus.ForeColor = System.Drawing.Color.Red;
 
                     btnPayNow.Visible = true;

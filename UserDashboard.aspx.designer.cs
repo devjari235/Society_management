@@ -15,6 +15,24 @@ namespace Society_management
     {
 
         /// <summary>
+        /// litBadgeText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litBadgeText;
+
+        /// <summary>
+        /// pnlDueMessage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDueMessage;
+
+        /// <summary>
         /// lblMaintenanceAmount control.
         /// </summary>
         /// <remarks>
@@ -33,15 +51,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Label lblDueDate;
 
         /// <summary>
-        /// lblDaysLeft control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDaysLeft;
-
-        /// <summary>
         /// lblPaymentStatus control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblPaymentStatus;
+
+        /// <summary>
+        /// spanDaysLeft control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanDaysLeft;
+
+        /// <summary>
+        /// lblDaysLeft control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDaysLeft;
 
         /// <summary>
         /// btnPayNow control.
