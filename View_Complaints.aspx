@@ -297,6 +297,11 @@
     OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
     OnRowCommand="gvDisplay_RowCommand">
     <Columns>
+        <asp:TemplateField HeaderText="Create Date">
+            <ItemTemplate>
+                <asp:Label Text='<%# Eval("Create_date", "{0:dd/MM/yyyy}") %>' runat="server" />
+            </ItemTemplate>
+        </asp:TemplateField>
         <asp:TemplateField HeaderText="User Name">
             <ItemTemplate>
                 <asp:Label Text='<%# Eval("User_name") %>' runat="server" />

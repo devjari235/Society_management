@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Complaint_Details.aspx.cs" Inherits="Society_management.complaint_Details" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-           <style>
+    <style>
         table {
             width: 90%;
             margin: 30px auto;
@@ -32,8 +32,63 @@
             width: 90%;
             background-color: #fff;
         }
+        
+        .remarks-section {
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .remark-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .remark-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .remark-text {
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+        }
+        
+        .add-remark {
+            margin-top: 20px;
+        }
+        
+        .remark-textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        
+        .btn-add-remark {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .btn-add-remark:hover {
+            background-color: #0069d9;
+        }
     </style>
-        <style>
+    <style>
     /* Button Group Container */
     .action-button-group {
         display: flex;
@@ -71,8 +126,6 @@
         text-decoration:none;
         color: white;
     }
-
-
 
     /* Icons */
     .btn-register-notice i{
@@ -115,39 +168,78 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-        <div class="action-button-group">
-<a href="View_Complaints.aspx" class="btn-register-notice">
-    <i class="fas fa-arrow-left"></i> Back to Details
-</a>
-        </div>
+    <div class="action-button-group">
+        <a href="View_Complaints.aspx" class="btn-register-notice">
+            <i class="fas fa-arrow-left"></i> Back to Details
+        </a>
+    </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-              <div class="card">
-           <h2>Complaint Details</h2>
-           <asp:Panel ID="pnlNotice" runat="server" Visible="false">
-               <table>
-                   <tr><th>Complaint Type</th><td><asp:Label ID="lbltype" runat="server" /></td></tr>
-                   <tr><th>Description</th><td><asp:Label ID="lblDescription" runat="server" /></td></tr>
-                   <tr><th>Block Name</th><td><asp:Label ID="lblblock" runat="server" /></td></tr>
-                   <tr><th>Flat No</th><td><asp:Label ID="lblNo" runat="server" /></td></tr>
-                   <tr><th>Complaint By</th><td><asp:Label ID="lblBy" runat="server" /></td></tr>
-                   <tr><th>Complaint Date</th><td><asp:Label ID="lblCDate" runat="server" /></td></tr>
-                   <tr><th>Resolve Date</th><td><asp:Label ID="lblRDate" runat="server" /></td></tr>
-                   <tr><th>Status</th><td><asp:Label ID="lblStatus" runat="server" /></td></tr>
-                   <tr><th>Priority</th><td><asp:Label ID="lblPriority" runat="server" /></td></tr>
-                   <tr><th>Attachment</th>
-                             <td>
-                                 <asp:HyperLink runat="server" ID="hlAttachment" NavigateUrl='<%# Eval("FilePath") %>'
-                                     Text="📎 View Attachment" Target="_blank"
-                                     CssClass="btn btn-sm btn-outline-secondary mt-2"
-                                     Visible='<%# !string.IsNullOrEmpty(Eval("FilePaths").ToString()) %>' />
-
-                             </td>
-                   </tr>
-               </table>
-           </asp:Panel>
-           <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
-       </div>
+    <div class="card">
+        <h2>Complaint Details</h2>
+        <asp:Panel ID="pnlNotice" runat="server" Visible="false">
+            <table>
+                <tr><th>Complaint Type</th><td><asp:Label ID="lbltype" runat="server" /></td></tr>
+                <tr><th>Description</th><td><asp:Label ID="lblDescription" runat="server" /></td></tr>
+                <tr><th>Block Name</th><td><asp:Label ID="lblblock" runat="server" /></td></tr>
+                <tr><th>Flat No</th><td><asp:Label ID="lblNo" runat="server" /></td></tr>
+                <tr><th>Complaint By</th><td><asp:Label ID="lblBy" runat="server" /></td></tr>
+                <tr><th>Complaint Date</th><td><asp:Label ID="lblCDate" runat="server" /></td></tr>
+                <tr><th>Resolve Date</th><td><asp:Label ID="lblRDate" runat="server" /></td></tr>
+                <tr><th>Status</th><td><asp:Label ID="lblStatus" runat="server" /></td></tr>
+                <tr><th>Priority</th><td><asp:Label ID="lblPriority" runat="server" /></td></tr>
+                <tr><th>Attachment</th>
+                    <td>
+                        <asp:HyperLink runat="server" ID="hlAttachment" NavigateUrl='<%# Eval("FilePath") %>'
+                            Text="📎 View Attachment" Target="_blank"
+                            CssClass="btn btn-sm btn-outline-secondary mt-2"
+                            Visible='<%# !string.IsNullOrEmpty(Eval("FilePaths").ToString()) %>' />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Add Remark</th>
+                    <td></td>
+                </tr>
+            </table>
+            
+            <!-- Remarks Section -->
+            <div class="remarks-section">
+                <h3>Remarks</h3>
+                
+                <asp:Repeater ID="rptRemarks" runat="server">
+                    <ItemTemplate>
+                        <div class="remark-item">
+                            <div class="remark-header">
+                                <span>By: <%# Eval("AdminName") %></span>
+                                <span>On: <%# Eval("RemarkDate", "{0:dd MMM yyyy hh:mm tt}") %></span>
+                            </div>
+                            <div class="remark-text">
+                                <%# Eval("RemarkText") %>
+                            </div>
+                        </div>
+                    </ItemTemplate>
+                    <FooterTemplate>
+                        <asp:Label ID="lblEmptyRemarks" runat="server" 
+                            Text="No remarks yet." 
+                            Visible='<%# ((Repeater)Container.NamingContainer).Items.Count == 0 %>' />
+                    </FooterTemplate>
+                </asp:Repeater>
+                
+                <div class="add-remark">
+                    <h4>Add Remark</h4>
+                    <asp:TextBox ID="txtRemark" runat="server" TextMode="MultiLine" CssClass="remark-textarea"></asp:TextBox>
+                    <asp:RequiredFieldValidator ID="rfvRemark" runat="server" 
+                        ControlToValidate="txtRemark" 
+                        ErrorMessage="Remark is required" 
+                        Display="Dynamic" 
+                        ForeColor="Red"></asp:RequiredFieldValidator>
+                    <asp:Button ID="btnAddRemark" runat="server" Text="Add Remark" 
+                        CssClass="btn-add-remark" OnClick="btnAddRemark_Click" />
+                </div>
+            </div>
+        </asp:Panel>
+        <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>
