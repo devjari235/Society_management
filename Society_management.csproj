@@ -2243,6 +2243,7 @@
     <Content Include="Images\U_bg.jpg" />
     <Content Include="LiveNotice.aspx" />
     <Content Include="Login.aspx" />
+    <Content Include="MaintenanceList.aspx" />
     <Content Include="MemberApproval.aspx" />
     <Content Include="MemberSchedule.aspx" />
     <Content Include="MyFlat.aspx" />
@@ -2253,6 +2254,7 @@
     <Content Include="Owner.aspx" />
     <Content Include="Owner_Membr.aspx" />
     <Content Include="Past_Committee.aspx" />
+    <Content Include="Payment.aspx" />
     <Content Include="Pending_Complaints.aspx" />
     <Content Include="PhotoGallery.aspx" />
     <Content Include="PollCreate.aspx" />
@@ -2498,6 +2500,13 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="MaintenanceList.aspx.cs">
+      <DependentUpon>MaintenanceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MaintenanceList.aspx.designer.cs">
+      <DependentUpon>MaintenanceList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MemberApproval.aspx.cs">
       <DependentUpon>MemberApproval.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2567,6 +2576,13 @@
     </Compile>
     <Compile Include="Past_Committee.aspx.designer.cs">
       <DependentUpon>Past_Committee.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Payment.aspx.cs">
+      <DependentUpon>Payment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Payment.aspx.designer.cs">
+      <DependentUpon>Payment.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pending_Complaints.aspx.cs">
       <DependentUpon>Pending_Complaints.aspx</DependentUpon>

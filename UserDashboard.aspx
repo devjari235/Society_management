@@ -318,7 +318,7 @@
                 </div>
                 <div class="card-footer">
                     <span><i class="far fa-clock me-1"></i> <asp:Label ID="lblDaysLeft" runat="server" Text="3 days left"></asp:Label></span>
-                    <asp:HyperLink ID="lnkPayNow" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/MaintenanceDues.aspx">Pay Now</asp:HyperLink>
+                    <asp:HyperLink ID="lnkPayNow" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/MaintenanceList.aspx">Pay Now</asp:HyperLink>
                 </div>
             </div>
 
@@ -402,28 +402,17 @@
                                         Text="📎 View Attachment" Target="_blank"
                                         CssClass="btn btn-sm btn-outline-secondary mt-2"
                                         Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                                </asp:LinkButton>
-                            </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                    <asp:Panel ID="pnlNoNotice" runat="server" Visible="false">
+                                </asp:LinkButton></div></ItemTemplate></asp:Repeater><asp:Panel ID="pnlNoNotice" runat="server" Visible="false">
                         <div class="swiper-slide d-flex align-items-center justify-content-center" style="height: 300px;">
                             <div class="text-center p-4">
                                 <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Notices" style="width: 80px;" />
-                                <h5 class="mt-3 fw-bold text-secondary">No Notice Available</h5>
-                                <p class="text-muted">Stay tuned! New notices will appear here soon.</p>
-                            </div>
-                        </div>
-                    </asp:Panel>
-                </div>
-                <div class="swiper-pagination"></div>
+                                <h5 class="mt-3 fw-bold text-secondary">No Notice Available</h5><p class="text-muted">Stay tuned! New notices will appear here soon.</p></div></div></asp:Panel></div><div class="swiper-pagination"></div>
             </div>
             <div class="swiper-button-next"></div>
         </div>
 
         <!-- Upcoming Events -->
-        <h3 class="mb-3">Upcoming Events</h3>
-        <asp:Repeater ID="rptEvents" runat="server">
+        <h3 class="mb-3">Upcoming Events</h3><asp:Repeater ID="rptEvents" runat="server">
             <ItemTemplate>
                 <div class="event-item">
                     <div class="event-date">
@@ -432,47 +421,18 @@
                     </div>
                     <div class="event-details">
                         <div class="event-title"><%# Eval("EventName") %></div>
-                        <div class="event-time"><%# Eval("StartTime", "{0:hh:mm tt}") %> - <%# Eval("EndTime", "{0:hh:mm tt}") %></div>
-                    </div>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-        <asp:Panel ID="pnlNoEvents" runat="server" Visible="false" CssClass="text-center py-4">
+                        <div class="event-time"><%# Eval("StartTime", "{0:hh:mm tt}") %> - <%# Eval("EndTime", "{0:hh:mm tt}") %></div></div></div></ItemTemplate></asp:Repeater><asp:Panel ID="pnlNoEvents" runat="server" Visible="false" CssClass="text-center py-4">
             <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">No Upcoming Events</h5>
-            <p>Check back later for scheduled events</p>
-        </asp:Panel>
-    </div>
-
-    <!-- Quick Help Modal -->
-    <div class="modal fade" id="quickHelpModal" tabindex="-1" aria-labelledby="quickHelpModalLabel" aria-hidden="true">
+            <h5 class="text-muted">No Upcoming Events</h5><p>Check back later for scheduled events</p></asp:Panel></div><!-- Quick Help Modal --><div class="modal fade" id="quickHelpModal" tabindex="-1" aria-labelledby="quickHelpModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="quickHelpModalLabel">Dashboard Help</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="quickHelpModalLabel">Dashboard Help</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Dashboard Overview</h6>
-                    <p>Your dashboard provides quick access to important society information and actions:</p>
-                    <ul>
-                        <li><strong>Cards:</strong> Summary of pending actions and important dates</li>
-                        <li><strong>Quick Actions:</strong> One-click access to common tasks</li>
-                        <li><strong>Announcements:</strong> Swipe through latest society notices</li>
-                        <li><strong>Events:</strong> View upcoming society events</li>
-                    </ul>
-                    <p>For more detailed information, use the menu to navigate to specific sections.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <asp:HyperLink ID="lnkFullHelp" runat="server" CssClass="btn btn-primary" NavigateUrl="~/Help.aspx">Full Help Guide</asp:HyperLink>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container for Notifications -->
-    <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999"></div>
+                    <h6>Dashboard Overview</h6><p>Your dashboard provides quick access to important society information and actions:</p><ul>
+                        <li><strong>Cards:</strong> Summary of pending actions and important dates</li><li><strong>Quick Actions:</strong> One-click access to common tasks</li><li><strong>Announcements:</strong> Swipe through latest society notices</li><li><strong>Events:</strong> View upcoming society events</li></ul><p>For more detailed information, use the menu to navigate to specific sections.</p></div><div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button><asp:HyperLink ID="lnkFullHelp" runat="server" CssClass="btn btn-primary" NavigateUrl="~/Help.aspx">Full Help Guide</asp:HyperLink></div></div></div></div><!-- Toast Container for Notifications --><div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 9999"></div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
