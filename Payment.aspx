@@ -171,9 +171,12 @@
             </div>
         </div>
 
-        <asp:HiddenField ID="hdnUserID" runat="server" />
-        <asp:HiddenField ID="hdnMonth" runat="server" />
-        <asp:HiddenField ID="hdnYear" runat="server" />
+<asp:HiddenField ID="hdnUserID" runat="server" />
+<asp:HiddenField ID="hdnMonth" runat="server" />
+<asp:HiddenField ID="hdnYear" runat="server" />
+<asp:HiddenField ID="hdnFlatID" runat="server" />  <%-- Add this line --%>
+<asp:HiddenField ID="HiddenField1" runat="server" />
+
 
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
