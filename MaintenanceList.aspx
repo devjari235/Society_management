@@ -39,8 +39,19 @@
                     </asp:TemplateField>
                     <asp:TemplateField>
                         <ItemTemplate>
-                            <asp:LinkButton runat="server" CommandName="Pay" CommandArgument='<%# Eval("UserID") + "|" + Eval("Month") + "|" + Eval("Year") %>' 
-                                Text="Pay Now" CssClass="btn btn-primary btn-sm" Visible='<%# Eval("Status").ToString() == "Pending" %>' />
+                            <%-- Pay Now Button --%>
+                            <asp:LinkButton ID="lnkPayNow" runat="server"
+                                CommandName="Pay"
+                                CommandArgument='<%# Eval("UserID") + "|" + Eval("Month") + "|" + Eval("Year") %>'
+                                Text="Pay Now" CssClass="btn btn-primary btn-sm"
+                                Visible='<%# Eval("Status").ToString() == "Pending" %>' />
+
+                            <%-- View Receipt Button --%>
+                            <asp:LinkButton ID="lnkViewReceipt" runat="server"
+                                CommandName="ViewReceipt"
+                                CommandArgument='<%# Eval("UserID") + "|" + Eval("Month") + "|" + Eval("Year") %>'
+                                Text="View Receipt" CssClass="btn btn-success btn-sm"
+                                Visible='<%# Eval("Status").ToString() == "Paid" %>' />
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>

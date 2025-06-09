@@ -46,19 +46,19 @@ namespace Society_management
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                con.Open();
+
                 // Get owner_id from tblUser
                 string ownerQuery = "SELECT Owner_id FROM tblUser WHERE User_id = @UserId";
                 SqlCommand ownerCmd = new SqlCommand(ownerQuery, con);
                 ownerCmd.Parameters.AddWithValue("@UserId", userId);
-
-                con.Open();
                 int ownerId = Convert.ToInt32(ownerCmd.ExecuteScalar());
 
                 // Get flat and maintenance info
                 string query = @"SELECT f.Mentanance, o.Allotment_Date 
-                                FROM tblOwner o 
-                                JOIN tblFlat f ON o.Flate_id = f.Flate_id 
-                                WHERE o.Owner_id = @OwnerId";
+                         FROM tblOwner o 
+                         JOIN tblFlat f ON o.Flate_id = f.Flate_id 
+                         WHERE o.Owner_id = @OwnerId";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@OwnerId", ownerId);
@@ -70,14 +70,13 @@ namespace Society_management
                         decimal maintenanceAmount = Convert.ToDecimal(reader["Mentanance"]);
                         DateTime allotmentDate = Convert.ToDateTime(reader["Allotment_Date"]);
 
-                        // Calculate due date (25th of current month)
+                        // Calculate due date
                         DateTime dueDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 25);
                         if (DateTime.Now.Day > 25)
                         {
                             dueDate = dueDate.AddMonths(1);
                         }
 
-                        // Calculate days left
                         int daysLeft = (dueDate - DateTime.Now).Days;
 
                         // Update UI
@@ -86,8 +85,56 @@ namespace Society_management
                         lblDaysLeft.Text = $"{daysLeft} days left";
                     }
                 }
+
+                // Now check if current month's payment is done
+                int currentMonth = DateTime.Now.Month;
+                int currentYear = DateTime.Now.Year;
+
+                string paymentStatusQuery = @"SELECT Status FROM MaintenancePayments 
+                                      WHERE User_id = @UserId AND Month = @Month AND Year = @Year";
+
+                SqlCommand paymentCmd = new SqlCommand(paymentStatusQuery, con);
+                paymentCmd.Parameters.AddWithValue("@UserId", userId);
+                paymentCmd.Parameters.AddWithValue("@Month", currentMonth);
+                paymentCmd.Parameters.AddWithValue("@Year", currentYear);
+
+                object statusObj = paymentCmd.ExecuteScalar();
+                string status = statusObj != null ? statusObj.ToString().Trim().ToLower() : "pending";
+
+                // Update button visibility and message
+                if (status == "completed")
+                {
+                    lblPaymentStatus.Text = "✅ Maintenance Paid for this Month";
+                    lblPaymentStatus.ForeColor = System.Drawing.Color.Green;
+
+                    btnPayNow.Visible = false;
+                    btnViewReceipt.Visible = true;
+                }
+                else
+                {
+                    lblPaymentStatus.Text = "❌ Maintenance Pending";
+                    lblPaymentStatus.ForeColor = System.Drawing.Color.Red;
+
+                    btnPayNow.Visible = true;
+                    btnViewReceipt.Visible = false;
+                }
+
+                // Store hidden values for redirect
+                hdnUserId.Value = userId.ToString();
+                hdnMonth.Value = currentMonth.ToString();
+                hdnYear.Value = currentYear.ToString();
             }
         }
+        protected void btnPayNow_Click(object sender, EventArgs e)
+        {
+            Response.Redirect($"~/Payment.aspx?userid={hdnUserId.Value}&month={hdnMonth.Value}&year={hdnYear.Value}");
+        }
+
+        protected void btnViewReceipt_Click(object sender, EventArgs e)
+        {
+            Response.Redirect($"~/Payment.aspx?userid={hdnUserId.Value}&month={hdnMonth.Value}&year={hdnYear.Value}");
+        }
+
 
         private void LoadVisitorData(int userId)
         {

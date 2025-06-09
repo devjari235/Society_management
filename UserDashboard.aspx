@@ -318,7 +318,20 @@
                 </div>
                 <div class="card-footer">
                     <span><i class="far fa-clock me-1"></i> <asp:Label ID="lblDaysLeft" runat="server" Text="3 days left"></asp:Label></span>
-                    <asp:HyperLink ID="lnkPayNow" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/MaintenanceList.aspx">Pay Now</asp:HyperLink>
+                    <asp:Label ID="lblPaymentStatus" runat="server" Font-Bold="true" />
+
+                    <asp:Button ID="btnPayNow" runat="server" Text="Pay Now" CssClass="btn btn-primary"
+                        OnClick="btnPayNow_Click" Visible="false" />
+
+                    <asp:Button ID="btnViewReceipt" runat="server" Text="View Receipt" CssClass="btn btn-success"
+                        OnClick="btnViewReceipt_Click" Visible="false" />
+
+                    <asp:HiddenField ID="hdnUserId" runat="server" />
+                    <asp:HiddenField ID="hdnMonth" runat="server" />
+                    <asp:HiddenField ID="hdnYear" runat="server" />
+
+
+
                 </div>
             </div>
 

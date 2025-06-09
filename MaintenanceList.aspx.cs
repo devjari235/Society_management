@@ -43,20 +43,20 @@ namespace Society_management
                                 SELECT 10, 'October' UNION ALL SELECT 11, 'November' UNION ALL
                                 SELECT 12, 'December'
                             )
-                            SELECT 
-                                m.MonthNumber AS Month,
-                                @Year AS Year,
-                                m.MonthName,
-                                f.Mentanance AS Amount,
-                                CASE WHEN p.PaymentID IS NOT NULL THEN 'Paid' ELSE 'Pending' END AS Status,
-                                @UserID AS UserID
-                            FROM Months m
-                            CROSS JOIN tblUser u
-                            INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
-                            INNER JOIN tblFlat f ON o.Flate_id = f.Flate_id
-                            LEFT JOIN MaintenancePayments p ON u.User_id = p.User_id AND m.MonthNumber = p.Month AND @Year = p.Year
-                            WHERE u.User_id = @UserID
-                            ORDER BY m.MonthNumber";
+                SELECT 
+                    m.MonthNumber AS Month,
+                    @Year AS Year,
+                    m.MonthName,
+                    f.Mentanance AS Amount,
+                    CASE WHEN p.PaymentID IS NOT NULL THEN 'Paid' ELSE 'Pending' END AS Status,
+                    u.User_id AS UserID
+                FROM Months m
+                CROSS JOIN tblUser u
+                INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                INNER JOIN tblFlat f ON o.Flate_id = f.Flate_id
+                LEFT JOIN MaintenancePayments p ON o.Flate_id = p.Flate_id AND m.MonthNumber = p.Month AND @Year = p.Year
+                WHERE u.User_id = @UserID
+                ORDER BY m.MonthNumber";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -74,12 +74,21 @@ namespace Society_management
 
         protected void gvMaintenance_RowCommand(object sender, System.Web.UI.WebControls.GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Pay")
+            string[] args = e.CommandArgument.ToString().Split('|');
+            if (args.Length == 3)
             {
-                string[] args = e.CommandArgument.ToString().Split('|');
-                if (args.Length == 3)
+                int userId = Convert.ToInt32(args[0]);
+                int month = Convert.ToInt32(args[1]);
+                int year = Convert.ToInt32(args[2]);
+
+                if (e.CommandName == "Pay")
                 {
-                    Response.Redirect($"~/Payment.aspx?userid={args[0]}&month={args[1]}&year={args[2]}");
+                    Response.Redirect($"~/Payment.aspx?userid={userId}&month={month}&year={year}");
+                }
+                else if (e.CommandName == "ViewReceipt")
+                {
+                    // Redirect to same page, receipt view logic will auto-show it based on paid status
+                    Response.Redirect($"~/Payment.aspx?userid={userId}&month={month}&year={year}");
                 }
             }
         }
