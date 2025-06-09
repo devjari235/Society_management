@@ -59,7 +59,7 @@ namespace Society_management
                 //               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
                 //               ORDER BY Posted_date DESC";
 
-                string selectQuery = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n";
+                string selectQuery = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status,c.Create_date from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n";
                 SqlCommand cmd = new SqlCommand(selectQuery, conn);
                 cmd.Parameters.AddWithValue("@id", Session["A_id"]);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

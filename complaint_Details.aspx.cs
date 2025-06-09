@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -21,6 +22,7 @@ namespace Society_management
                     if (int.TryParse(Request.QueryString["id"], out noticeId))
                     {
                         LoadComplaintDetails(noticeId);
+                        LoadRemarks(noticeId);
                     }
                     else
                     {
@@ -31,6 +33,7 @@ namespace Society_management
                 {
                     lblMessage.Text = "No notice selected.";
                 }
+                
             }
         }
         private void LoadComplaintDetails(int id)
@@ -81,6 +84,66 @@ namespace Society_management
                 else
                 {
                     lblMessage.Text = "Notice not found.";
+                }
+            }
+        }
+        private void LoadRemarks(int complaintId)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string query = @"SELECT r.*, a.name AS AdminName 
+                                FROM tblRemarks r
+                                JOIN tblAdmin a ON r.admin_id = a.admin_id
+                                WHERE r.Complaint_id = @ComplaintId
+                                ORDER BY r.RemarkDate DESC";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@ComplaintId", complaintId);
+
+                    con.Open();
+                    DataTable dt = new DataTable();
+                    dt.Load(cmd.ExecuteReader());
+
+                    rptRemarks.DataSource = dt;
+                    rptRemarks.DataBind();
+                }
+            }
+        }
+
+        protected void btnAddRemark_Click(object sender, EventArgs e)
+        {
+            if (Request.QueryString["id"] != null && Page.IsValid)
+            {
+                int complaintId = Convert.ToInt32(Request.QueryString["id"]);
+                int adminId = Convert.ToInt32(Session["AdminID"]); // Assuming admin ID is stored in session
+                string remarkText = txtRemark.Text.Trim();
+
+                string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = @"INSERT INTO tblRemarks (Complaint_id, admin_id, RemarkText) 
+                                    VALUES (@ComplaintId, @AdminId, @RemarkText)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@ComplaintId", complaintId);
+                        cmd.Parameters.AddWithValue("@AdminId", adminId);
+                        cmd.Parameters.AddWithValue("@RemarkText", remarkText);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+
+                        // Clear the textbox and reload remarks
+                        txtRemark.Text = "";
+                        LoadRemarks(complaintId);
+
+                        // Optionally update complaint status if needed
+                        // UpdateComplaintStatus(complaintId);
+                    }
                 }
             }
         }

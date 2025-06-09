@@ -318,7 +318,7 @@
                 </div>
                 <div class="card-footer">
                     <span><i class="far fa-clock me-1"></i> <asp:Label ID="lblDaysLeft" runat="server" Text="3 days left"></asp:Label></span>
-                    <asp:HyperLink ID="lnkPayNow" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/MaintenanceDues.aspx">Pay Now</asp:HyperLink>
+                    <asp:HyperLink ID="lnkPayNow" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/MaintenancePayment.aspx">Pay Now</asp:HyperLink>
                 </div>
             </div>
 
