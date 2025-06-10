@@ -116,7 +116,7 @@
                         </div>
                         <div class="card-title">PENDING PAYMENTS</div>
                         <div class="card-value"><asp:Label ID="lblPendingPayments" runat="server" Text="0" /></div>
-                        <a href="Payments.aspx?status=pending" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
+                        <a href="AdminMaintenanceList.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
