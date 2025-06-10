@@ -3,6 +3,17 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- jQuery (required for Bootstrap dropdowns) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome (for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .payment-card {
             transition: all 0.3s;
@@ -26,6 +37,83 @@
             border: 1px solid #ddd;
             padding: 20px;
         }
+                       
+    /* Button Group Container */
+    .action-button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+       
+        width: 100%;
+    }
+
+    /* Base Button Styles */
+    .btn-register-notice{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        text-decoration: none;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Register Button */
+    .btn-register-notice {
+        background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
+        color: white;
+    }
+
+    .btn-register-notice:hover {
+        background-color: #2980b9;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        text-decoration:none;
+        color: white;
+    }
+
+
+
+    /* Icons */
+    .btn-register-notice i{
+        margin-right: 10px;
+        font-size: 18px;
+    }
+
+    /* Active State */
+    .btn-register-notice:active{
+        transform: scale(0.98);
+    }
+
+    /* Focus State */
+    .btn-register-notice:focus{
+        outline: none;
+    }
+
+    .btn-register-notice:focus {
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .action-button-group {
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+        }
+        
+        .btn-register-notice{
+            width: 100%;
+            max-width: 300px;
+            padding: 15px 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -33,9 +121,14 @@
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
+         <div class="action-button-group">
+     <a href="UserDashboard.aspx" class="btn-register-notice">
+         <i class="fas fa-arrow-left"></i>Back to Details
+     </a>
+ </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container py-5">
+    <div class="container py-2">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card shadow">
