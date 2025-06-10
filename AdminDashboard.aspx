@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="Admin Dashboard" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="AdminDashboard.aspx.cs" Inherits="Society_management.AdminDashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style type="text/css">
         .dashboard-card {
             transition: all 0.3s ease;
@@ -43,13 +45,12 @@
             text-decoration: none;
             background-color: rgba(255, 255, 255, 0.1);
         }
-        .card-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .card-2 { background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%); }
-        .card-3 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
-        .card-4 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
-        .card-5 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
-        .card-6 { background: linear-gradient(135deg, #a6c1ee 0%, #fbc2eb 100%); }
-        
+.card-1 { background: linear-gradient(135deg, #5c4bdf 0%, #8a2be2 100%); }
+.card-2 { background: linear-gradient(135deg, #ff6b6b 0%, #ffa3a3 100%); }
+.card-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.card-4 { background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%); }
+.card-5 { background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); }
+.card-6 { background: linear-gradient(135deg, #9b59b6 0%, #e74c3c 100%); }        
         .recent-activity {
             max-height: 400px;
             overflow-y: auto;
@@ -136,7 +137,7 @@
         </div>
         
         <!-- Charts and Activity Row -->
-            <%--       <div class="row">
+                   <div class="row">
             <!-- Payment Status Chart -->
             <div class="col-xl-8 col-lg-7">
                 <div class="card shadow mb-4">
@@ -170,10 +171,10 @@
                 </div>
             </div>
         </div>
-        --%>
+        
 
         <!--Quick Actions-->
-            <%--       <div class="row mt-4">
+                   <div class="row mt-4">
             <div class="col-12">
                 <div class="card shadow">
                     <div class="card-header py-3">
@@ -222,70 +223,87 @@
                 </div>
             </div>
         </div>
-    </div>--%>
+    </div>
 </asp:Content>
 
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
     <!-- Chart.js -->
-   <%-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <script type="text/javascript">
-        // Initialize payment chart
-        function initPaymentChart() {
-            var ctx = document.getElementById('paymentChart').getContext('2d');
-            var paymentChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [{
+    <!-- Chart.js and jQuery already included -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    let paymentChart;
+
+    function initPaymentChart() {
+        $.ajax({
+            type: "POST",
+            url: "AdminDashboard.aspx/GetCurrentYearMaintenanceData",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                const data = response.d;
+                renderChart(data.months, data.paid, data.pending);
+            },
+            error: function (err) {
+                console.error("Error fetching chart data:", err);
+            }
+        });
+    }
+
+    function renderChart(months, paidData, pendingData) {
+        var ctx = document.getElementById('paymentChart').getContext('2d');
+        if (paymentChart) paymentChart.destroy();
+
+        paymentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [
+                    {
                         label: 'Paid',
-                        data: [12000, 19000, 15000, 18000, 16000, 21000, 22000, 19000, 23000, 20000, 18000, 24000],
+                        data: paidData,
                         backgroundColor: 'rgba(54, 185, 204, 0.7)',
                         borderColor: 'rgba(54, 185, 204, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Pending',
-                        data: [3000, 5000, 4000, 2000, 3000, 4000, 3000, 5000, 2000, 3000, 4000, 1000],
+                        data: pendingData,
                         backgroundColor: 'rgba(255, 99, 132, 0.7)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '₹' + value;
-                                }
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function (value) {
+                                return '₹' + value;
                             }
                         }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ₹' + context.raw;
-                                }
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.dataset.label + ': ₹' + context.raw;
                             }
                         }
                     }
                 }
-            });
-        }
-
-        // Initialize charts when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initPaymentChart();
+            }
         });
+    }
 
-        // Refresh data every 60 seconds
-        setInterval(function() {
-            // You can add AJAX call here to refresh data
-            console.log("Refreshing dashboard data...");
-        }, 60000);
-    </script>--%>
+    document.addEventListener('DOMContentLoaded', initPaymentChart);
+    setInterval(initPaymentChart, 60000); // Refresh every 60s
+</script>
+
+
 </asp:Content>
