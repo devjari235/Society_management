@@ -278,6 +278,7 @@ namespace Society_management
         {
             BindPayments();
             CalculateTotals();
+    
         }
 
         protected void btnReset_Click(object sender, EventArgs e)
