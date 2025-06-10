@@ -177,27 +177,27 @@
             </tr>
         </table>
         <div class="remarks-section">
-            <h3>Admin Remarks</h3>
-            
-            <asp:Repeater ID="rptRemarks" runat="server">
-                <ItemTemplate>
-                    <div class="remark-item">
-                        <div class="remark-header">
-                            <span>By: Admin</span>
-                            <span>On: <%# Eval("RemarkDate", "{0:dd MMM yyyy hh:mm tt}") %></span>
-                        </div>
-                        <div class="remark-text">
-                            <%# Eval("RemarkText") %>
-                        </div>
-                    </div>
-                </ItemTemplate>
-                <FooterTemplate>
-                    <asp:Label ID="lblEmptyRemarks" runat="server" 
-                        Text="No remarks yet." 
-                        Visible='<%# ((Repeater)Container.NamingContainer).Items.Count == 0 %>' />
-                </FooterTemplate>
-            </asp:Repeater>
-        </div>
+    <h3>Remarks</h3>
+    
+    <asp:Repeater ID="rptRemarks" runat="server">
+        <ItemTemplate>
+            <div class="remark-item">
+                <div class="remark-header">
+                    <span>By: <%# Eval("AdminName") %></span>
+                    <span>On: <%# Eval("RemarkDate", "{0:dd MMM yyyy hh:mm tt}") %></span>
+                </div>
+                <div class="remark-text">
+                    <%# Eval("RemarkText") %>
+                </div>
+            </div>
+        </ItemTemplate>
+        <FooterTemplate>
+            <asp:Label ID="lblEmptyRemarks" runat="server" 
+                Text="No remarks yet." 
+                Visible='<%# ((Repeater)Container.NamingContainer).Items.Count == 0 %>' />
+        </FooterTemplate>
+    </asp:Repeater>
+</div>
     </asp:Panel>
     <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
 

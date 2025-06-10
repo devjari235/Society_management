@@ -233,10 +233,7 @@
                             <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i> Events</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="Payments.aspx"><i class="fas fa-rupee-sign"></i> Payments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="Noticeboard.aspx"><i class="fas fa-bullhorn"></i> Notices</a>
+                            <a class="nav-link" href="MaintenanceList.aspx"><i class="fas fa-rupee-sign"></i> Payments</a>
                         </li>
                     </ul>
 
