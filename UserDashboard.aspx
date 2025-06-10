@@ -311,7 +311,7 @@
            <div class="card">
     <div class="card-header">
         <div class="card-title">Maintenance Due</div>
-        <div class="card-badge"><asp:Literal ID="litBadgeText" runat="server" Text="1 Pending" /></div>
+        <div class="card-badge" id="cardBadgeDiv" runat="server" ><asp:Literal ID="litBadgeText" runat="server" Text="1 Pending" /></div>
     </div>
     <div class="card-content">
         <asp:Panel ID="pnlDueMessage" runat="server">

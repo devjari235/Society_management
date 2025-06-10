@@ -19,7 +19,7 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container py-5">
+    <div class="container py-2">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2>Your Maintenance Charges</h2>
                 <asp:DropDownList ID="ddlYear" runat="server" CssClass="form-select w-auto" AutoPostBack="true" OnSelectedIndexChanged="ddlYear_SelectedIndexChanged"></asp:DropDownList>

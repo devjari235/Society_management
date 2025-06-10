@@ -107,6 +107,19 @@ namespace Society_management
                     pnlDueMessage.Visible = false;
                     spanDaysLeft.Visible = false;
                     litBadgeText.Text = "Paid";
+                    string badgeText = litBadgeText.Text; // or set it here if you want
+
+                    if (badgeText.Contains("Paid")) // check if text contains "pay" (case-insensitive)
+                    {
+                        // Change color of the div containing the literal text
+                        cardBadgeDiv.Style["background-color"] = "Green";
+                        cardBadgeDiv.Style["color"] = "White"; // Or any color you want
+                    }
+                    else
+                    {
+                        // Default color (or remove style)
+                        cardBadgeDiv.Style["color"] = ""; // clears inline style, falls back to CSS var(--white)
+                    }
                     lblPaymentStatus.Text = "Maintenance Paid for this Month";
                     lblPaymentStatus.ForeColor = System.Drawing.Color.Green;
 
