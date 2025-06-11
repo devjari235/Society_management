@@ -270,7 +270,7 @@ footer a:hover {
             <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="/">
-                       <i class="fas fa-building me-2"></i>Society Management
+                       <i class="fas fa-building me-2"></i> Society Management
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -278,7 +278,7 @@ footer a:hover {
                     <div class="collapse navbar-collapse" id="navbarNav">
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="AdminDashboard.aspx"><i class="fas fa-home"></i>Home</a>
+                                <a class="nav-link" href="AdminDashboard.aspx"><i class="fas fa-home"></i> Home</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#resident" id="residentsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -288,6 +288,9 @@ footer a:hover {
                                     <li><a class="dropdown-item" href="/View_Owner.aspx">All Members</a></li>
                                     <li><a class="dropdown-item" href="/Owner.aspx">Add Owner</a></li>
                                 </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="AdminMaintenanceList.aspx"><i class="bi bi-currency-rupee"></i>Maintenance</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="Accounting.aspx"> <i class="fas fa-money-bill-wave"></i> Finance</a>
