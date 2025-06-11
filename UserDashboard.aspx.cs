@@ -90,11 +90,25 @@ namespace Society_management
                 int currentMonth = DateTime.Now.Month;
                 int currentYear = DateTime.Now.Year;
 
+                //string paymentStatusQuery = @"SELECT Status FROM MaintenancePayments 
+                //                WHERE User_id = @UserId AND Month = @Month AND Year = @Year";
+
+                //SqlCommand paymentCmd = new SqlCommand(paymentStatusQuery, con);
+                //paymentCmd.Parameters.AddWithValue("@UserId", userId);
+                //paymentCmd.Parameters.AddWithValue("@Month", currentMonth);
+                //paymentCmd.Parameters.AddWithValue("@Year", currentYear);
+
+                // Get Flate_id from owner
+                string flatQuery = "SELECT Flate_id FROM tblOwner WHERE Owner_id = @OwnerId";
+                SqlCommand flatCmd = new SqlCommand(flatQuery, con);
+                flatCmd.Parameters.AddWithValue("@OwnerId", ownerId);
+                int flatId = Convert.ToInt32(flatCmd.ExecuteScalar());
+
                 string paymentStatusQuery = @"SELECT Status FROM MaintenancePayments 
-                                WHERE User_id = @UserId AND Month = @Month AND Year = @Year";
+                WHERE Flate_id = @FlateId AND Month = @Month AND Year = @Year";
 
                 SqlCommand paymentCmd = new SqlCommand(paymentStatusQuery, con);
-                paymentCmd.Parameters.AddWithValue("@UserId", userId);
+                paymentCmd.Parameters.AddWithValue("@FlateId", flatId);
                 paymentCmd.Parameters.AddWithValue("@Month", currentMonth);
                 paymentCmd.Parameters.AddWithValue("@Year", currentYear);
 
