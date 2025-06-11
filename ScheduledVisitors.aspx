@@ -150,7 +150,7 @@
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <!-- ADD ScriptManager here -->
-    <asp:ScriptManager ID="ScriptManager1" runat="server" />
+<%--    <asp:ScriptManager ID="ScriptManager1" runat="server" />--%>
 
     <asp:GridView ID="gvScheduledVisitors" runat="server" AutoGenerateColumns="False"
         CssClass="table table-bordered"
