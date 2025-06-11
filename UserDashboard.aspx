@@ -285,6 +285,32 @@
                 height: 30px;
             }
         }
+        .quick-actions {
+    width: 100%;
+    margin: 0;
+    padding: 0 1rem; /* Match Bootstrap card padding if needed */
+    direction: rtl;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.quick-actions .action-btn {
+    direction: ltr;
+    flex: 1 1 150px;
+    padding: 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.quick-actions .action-btn i {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+
+
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -368,6 +394,7 @@
         </div>
 
         <!-- Quick Actions -->
+
         <div class="quick-actions">
             <asp:HyperLink ID="lnkAddVisitor" runat="server" CssClass="action-btn" NavigateUrl="~/MemberSchedule.aspx">
                 <i class="fas fa-plus-circle"></i>
@@ -396,6 +423,7 @@
         </div>
 
         <!-- Announcements Swiper -->
+        <h3 class="mb-3">&nbsp;</h3>
         <h3 class="mb-3">Latest Announcements</h3>
         <div class="swiper-container-wrapper">
             <div class="swiper-button-prev"></div>
