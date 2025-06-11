@@ -1,6 +1,17 @@
 ﻿<%@ Page Title="Admin Dashboard" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="AdminDashboard.aspx.cs" Inherits="Society_management.AdminDashboard" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery (required for Bootstrap dropdowns) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Font Awesome (for icons) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style type="text/css">
         .dashboard-card {
@@ -152,25 +163,31 @@
                 </div>
             </div>
             
-            <div class="col-xl-4 col-lg-5">
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
-                    </div>
-                    <div class="card-body recent-activity">
-                        <asp:Repeater ID="rptRecentActivity" runat="server">
-                            <ItemTemplate>
-                                <div class="activity-item">
-                                    <div class="activity-text"><%# Eval("ActivityText") %></div>
-                                    <div class="activity-time"><i class="far fa-clock"></i> <%# Eval("ActivityTime") %></div>
+                    <div class="col-xl-4 col-lg-5">
+                            <div class="card shadow mb-4">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary">Recent Activity</h6>
                                 </div>
-                            </ItemTemplate>
-                        </asp:Repeater>
-                        <asp:Label ID="lblNoActivity" runat="server" Text="No recent activity found." Visible="false" CssClass="text-muted" />
-                    </div>
-                </div>
-            </div>
-        </div>
+                                <div class="card-body recent-activity">
+                                    <asp:Repeater ID="rptRecentActivity" runat="server">
+                                        <ItemTemplate>
+                                            <div class="activity-item mb-2" 
+                                                 onclick='window.location.href="<%# GetModuleUrl(Eval("Module").ToString()) %>";'
+                                                 style="cursor:pointer; padding:8px; border-bottom:1px solid #eee;">
+                                                <div class="activity-text">
+                                                    <i class='<%# Eval("Icon") %>'></i> <%# Eval("Text") %>
+                                                </div>
+                                                <div class="activity-time small text-muted">
+                                                    <i class="far fa-clock"></i> <%# ((DateTime)Eval("Time")).ToString("hh:mm tt | MMM dd") %>
+                                                </div>
+                                            </div>
+                                        </ItemTemplate>
+                                    </asp:Repeater>
+                                    <asp:Label ID="lblNoActivity" runat="server" Text="No recent activity found." Visible="false" CssClass="text-muted"></asp:Label>
+                                </div>
+                            </div>
+                        </div>
+
         
 
         <!--Quick Actions-->
@@ -305,5 +322,22 @@
     setInterval(initPaymentChart, 60000); // Refresh every 60s
 </script>
 
-
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // Track page navigation
+            $('a:not([href^="#"]):not([href^="javascript"])').click(function () {
+                var pageTitle = $(this).text().trim() || $(this).attr('title') || 'Unknown Page';
+                $.ajax({
+                    type: "POST",
+                    url: "AdminDashboard.aspx/TrackPageNavigation",
+                    data: JSON.stringify({ pageTitle: pageTitle }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+            });
+        });
+    </script>
 </asp:Content>

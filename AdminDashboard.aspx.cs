@@ -13,78 +13,201 @@ namespace Society_management
     public partial class AdminDashboard : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                LoadRecentActivities();
+
+                // Load all data
+                BindRecentActivities();
                 SocietyID();
                 lblTotalResidents.Text = GetTotalResident().ToString();
                 lblTotalFlats.Text = GetTotalFlats().ToString();
-                lblActiveComplaints.Text=GetTotalActiveComplaint().ToString();
+                lblActiveComplaints.Text = GetTotalActiveComplaint().ToString();
+                lblPendingPayments.Text = GetTotalPendingPayments().ToString();
             }
-
         }
-        [WebMethod]
-        public static object GetFlatWiseMaintenanceData()
+
+        [WebMethod(EnableSession = true)]
+        public static void TrackPageNavigation(string pageTitle)
         {
-            List<string> flatNumbers = new List<string>();
-            decimal[] totalMaintenance = new decimal[0];
-            decimal[] paidAmounts = new decimal[0];
-            decimal[] pendingAmounts = new decimal[0];
+            HttpContext context = HttpContext.Current;
 
-            string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+            // Get or create activity list
+            List<Activity> activities = context.Session["RecentActivities"] as List<Activity> ?? new List<Activity>();
 
-            using (SqlConnection con = new SqlConnection(connStr))
+            // Check if same as last activity and within 5 minutes
+            bool shouldAdd = true;
+            if (activities.Count > 0)
             {
-                string query = @"
-        SELECT 
-            f.Flate_no AS FlatNumber,
-            f.Mentanance AS TotalMaintenance,
-            ISNULL(SUM(CASE WHEN mp.[Status] = 'Completed' THEN mp.Amount ELSE 0 END), 0) AS PaidAmount,
-            f.Mentanance - ISNULL(SUM(CASE WHEN mp.[Status] = 'Completed' THEN mp.Amount ELSE 0 END), 0) AS PendingAmount
-        FROM tblFlat f
-        LEFT JOIN MaintenancePayments mp ON f.Block_id = (
-            SELECT Block_id FROM tblOwner WHERE Owner_id = (
-                SELECT Owner_id FROM tblUser WHERE User_id = mp.User_id
-            )
-        )
-        AND mp.[Year] = YEAR(GETDATE())
-        GROUP BY f.Flate_no, f.Mentanance
-        ORDER BY f.Flate_no";
-
-                using (SqlCommand cmd = new SqlCommand(query, con))
+                var lastActivity = activities.First();
+                if (lastActivity.Module.Equals(pageTitle, StringComparison.OrdinalIgnoreCase) &&
+                    (DateTime.Now - lastActivity.Time).TotalMinutes < 5)
                 {
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    List<decimal> tempTotal = new List<decimal>();
-                    List<decimal> tempPaid = new List<decimal>();
-                    List<decimal> tempPending = new List<decimal>();
-
-                    while (reader.Read())
-                    {
-                        flatNumbers.Add(reader["FlatNumber"].ToString());
-                        tempTotal.Add(Convert.ToDecimal(reader["TotalMaintenance"]));
-                        tempPaid.Add(Convert.ToDecimal(reader["PaidAmount"]));
-                        tempPending.Add(Convert.ToDecimal(reader["PendingAmount"]));
-                    }
-
-                    totalMaintenance = tempTotal.ToArray();
-                    paidAmounts = tempPaid.ToArray();
-                    pendingAmounts = tempPending.ToArray();
+                    shouldAdd = false;
                 }
             }
 
-            return new
+            if (shouldAdd)
             {
-                flats = flatNumbers,
-                total = totalMaintenance,
-                paid = paidAmounts,
-                pending = pendingAmounts
-            };
+                activities.Insert(0, new Activity
+                {
+                    Text = pageTitle,
+                    Time = DateTime.Now,
+                    Module = pageTitle,
+                    Icon = GetModuleIconStatic(pageTitle)
+                });
+
+                while (activities.Count > 5)
+                    activities.RemoveAt(activities.Count - 1);
+
+                context.Session["RecentActivities"] = activities;
+            }
+
+            context.Session["LastPageTitle"] = pageTitle;
         }
 
+        // Because static method can't access non-static method
+        private static string GetModuleIconStatic(string moduleName)
+        {
+            if (string.IsNullOrEmpty(moduleName)) return "fas fa-circle";
+
+            moduleName = moduleName.ToLower();
+
+            if (moduleName.Contains("flat")) return "bi bi-house-fill";
+            if (moduleName.Contains("owner") || moduleName.Contains("resident")) return "fas fa-users";
+            if (moduleName.Contains("committee")) return "fas fa-users-cog";
+            if (moduleName.Contains("visitor")) return "bi bi-person-vcard-fill";
+            if (moduleName.Contains("notice")) return "bi bi-envelope-fill";
+            if (moduleName.Contains("poll")) return "bi bi-bar-chart-fill";
+            if (moduleName.Contains("document")) return "fas fa-file-alt";
+            if (moduleName.Contains("gallery")) return "bi bi-images";
+            if (moduleName.Contains("complaint")) return "fas fa-exclamation-circle";
+            if (moduleName.Contains("event")) return "fas fa-calendar-alt";
+            if (moduleName.Contains("finance")) return "fas fa-money-bill-wave";
+
+            return "fas fa-circle";
+        }
+
+
+        private void BindRecentActivities()
+        {
+            List<Activity> activities = Session["RecentActivities"] as List<Activity>;
+
+            if (activities != null && activities.Count > 0)
+            {
+                rptRecentActivity.DataSource = activities;
+                rptRecentActivity.DataBind();
+                lblNoActivity.Visible = false;
+            }
+            else
+            {
+                lblNoActivity.Visible = true;
+            }
+        }
+
+        protected string GetModuleUrl(string moduleName)
+        {
+            if (string.IsNullOrEmpty(moduleName)) return "#";
+
+            moduleName = moduleName.ToLower();
+
+            //if (moduleName.Contains("dashboard")) return "AdminDashboard.aspx";
+            if (moduleName.Contains("flat")) return "View_flat.aspx";
+            if (moduleName.Contains("owner") || moduleName.Contains("resident")) return "View_Owner.aspx";
+            if (moduleName.Contains("committee")) return "View_commiteeMember.aspx";
+            if (moduleName.Contains("visitor")) return "VisitorApproval.aspx";
+            if (moduleName.Contains("notice")) return "NoticeDashboard.aspx";
+            if (moduleName.Contains("poll")) return "Poll_Result.aspx";
+            if (moduleName.Contains("document")) return "View_Document.aspx";
+            if (moduleName.Contains("gallery")) return "PhotoGallery.aspx";
+            if (moduleName.Contains("complaint")) return "View_Complaints.aspx";
+            if (moduleName.Contains("event")) return "ViewEvents.aspx";
+            if (moduleName.Contains("finance")) return "Accounting.aspx";
+
+            return "#";
+        }
+
+        // Add this new method to get pending payments count
+        public int GetTotalPendingPayments()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string query = @"SELECT COUNT(*) 
+                            FROM MaintenancePayments mp
+                            JOIN tblUser u ON mp.User_id = u.User_id
+                            JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                            JOIN tblBlock b ON o.Block_id = b.Block_id
+                            JOIN tblSociety s ON s.Society_id = b.Society_id
+                            WHERE s.admin_id = @id AND mp.Status = 'Pending'";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        // Your existing methods
+        string name;
+        public void SocietyID()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string Query = "Select Society_name from tblSociety where admin_id=@a_id";
+            SqlCommand cmd = new SqlCommand(Query, con);
+            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                name = reader["Society_name"].ToString();
+            }
+            lblAdminName.Text = name;
+        }
+
+        public int GetTotalResident()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string query = @"SELECT COUNT(*)
+                            FROM tblBlock b
+                            JOIN tblFlat f ON b.Block_id = f.Block_id
+                            JOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id
+                            JOIN tblSociety s ON s.Society_id = b.Society_id
+                            JOIN tblUser u ON o.Owner_id = u.Owner_id 
+                            WHERE s.admin_id = @id";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public int GetTotalFlats()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string query = @"SELECT COUNT(*) 
+                            FROM tblBlock b 
+                            JOIN tblFlat f ON b.Block_id = f.Block_id 
+                            JOIN tblSociety s ON s.Society_id = b.Society_id 
+                            WHERE admin_id = @id";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        public int GetTotalActiveComplaint()
+        {
+            SqlConnection con = new SqlConnection(strcon);
+            con.Open();
+            string query = @"SELECT COUNT(*) 
+                            FROM tblComplaint c
+                            JOIN tblUser u ON c.User_id = u.User_id
+                            JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                            JOIN tblBlock b ON o.Block_id = b.Block_id
+                            JOIN tblSociety s ON s.Society_id = b.Society_id
+                            WHERE s.admin_id = @id";
+            SqlCommand cmd = new SqlCommand(query, con);
+            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
 
         [WebMethod]
         public static object GetCurrentYearMaintenanceData()
@@ -101,22 +224,21 @@ namespace Society_management
             {
                 con.Open();
 
-                // Get month-wise expected total maintenance
                 string totalQuery = @"
-        SELECT 
-            m.number AS [Month],
-            SUM(f.Mentanance) AS MonthlyMaintenance
-        FROM (
-            SELECT DISTINCT Flate_id, Mentanance
-            FROM tblFlat
-        ) f
-        CROSS JOIN (
-            SELECT number
-            FROM master..spt_values
-            WHERE type = 'P' AND number BETWEEN 1 AND 12
-        ) m
-        GROUP BY m.number
-        ORDER BY m.number";
+                    SELECT 
+                        m.number AS [Month],
+                        SUM(f.Mentanance) AS MonthlyMaintenance
+                    FROM (
+                        SELECT DISTINCT Flate_id, Mentanance
+                        FROM tblFlat
+                    ) f
+                    CROSS JOIN (
+                        SELECT number
+                        FROM master..spt_values
+                        WHERE type = 'P' AND number BETWEEN 1 AND 12
+                    ) m
+                    GROUP BY m.number
+                    ORDER BY m.number";
 
                 using (SqlCommand cmd = new SqlCommand(totalQuery, con))
                 {
@@ -129,15 +251,14 @@ namespace Society_management
                     reader.Close();
                 }
 
-                // Get month-wise paid amount
                 string paidQuery = @"
-        SELECT 
-            [Month],
-            SUM([Amount]) AS PaidAmount
-        FROM MaintenancePayments
-        WHERE [Status] = 'Completed' AND [Year] = YEAR(GETDATE())
-        GROUP BY [Month]
-        ORDER BY [Month]";
+                    SELECT 
+                        [Month],
+                        SUM([Amount]) AS PaidAmount
+                    FROM MaintenancePayments
+                    WHERE [Status] = 'Completed' AND [Year] = YEAR(GETDATE())
+                    GROUP BY [Month]
+                    ORDER BY [Month]";
 
                 using (SqlCommand cmd = new SqlCommand(paidQuery, con))
                 {
@@ -154,75 +275,12 @@ namespace Society_management
             return new { months, total = totalMaintenance, paid, pending };
         }
 
-        private void LoadRecentActivities()
-        {
-            // Sample data (replace with actual data from your database)
-            var activities = new List<Activity>
-    {
-        new Activity { ActivityText = "User logged in", ActivityTime = DateTime.Now.AddMinutes(-30) },
-        new Activity { ActivityText = "Profile updated", ActivityTime = DateTime.Now.AddMinutes(-15) }
-    };
-
-            rptRecentActivity.DataSource = activities;
-            rptRecentActivity.DataBind();
-
-            lblNoActivity.Visible = activities.Count == 0;
-        }
-
         public class Activity
         {
-            public string ActivityText { get; set; }
-            public DateTime ActivityTime { get; set; }
-        }
-
-
-
-
-        string name;
-        public void SocietyID()
-        {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string Query = "Select Society_name from tblSociety where admin_id=@a_id";
-            SqlCommand cmd = new SqlCommand(Query, con);
-            cmd.Parameters.AddWithValue("@a_id", Session["A_id"].ToString());
-            SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
-            {
-                name = reader["Society_name"].ToString();
-            }
-            lblAdminName.Text = name;
-        }
-         public int GetTotalResident()
-        {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            // string query = "SELECT COUNT(*) \r\nFROM tblBlock b \r\nJOIN tblFlat f ON b.Block_id = f.Block_id \r\nJOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id \r\nJOIN tblSociety s ON s.Society_id = b.Society_id \r\nWHERE s.admin_id = @id";
-            string query = "SELECT COUNT(*)\r\nFROM tblBlock b\r\nJOIN tblFlat f ON b.Block_id = f.Block_id\r\nJOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nJOIN tblUser u ON o.Owner_id = u.Owner_id WHERE s.admin_id = @id;\r\n";
-            SqlCommand cmd=new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            return Convert.ToInt32(cmd.ExecuteScalar());
-
-        }
-        public int GetTotalFlats()
-        {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string query = "select COUNT(*) from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            return Convert.ToInt32(cmd.ExecuteScalar());
-
-        }
-        public int GetTotalActiveComplaint()
-        {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string query = "SELECT COUNT(*) \r\nFROM tblComplaint c\r\nJOIN tblUser u ON c.User_id = u.User_id\r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            return Convert.ToInt32(cmd.ExecuteScalar());
-
+            public string Text { get; set; }
+            public DateTime Time { get; set; }
+            public string Module { get; set; }
+            public string Icon { get; set; }
         }
     }
 }
