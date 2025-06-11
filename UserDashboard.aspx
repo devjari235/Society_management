@@ -385,14 +385,14 @@
                 <i class="fas fa-vote-yea"></i>
                 <span>Vote in Poll</span>
             </asp:HyperLink>
-            <asp:HyperLink ID="lnkBookFacility" runat="server" CssClass="action-btn" NavigateUrl="~/Facilities.aspx">
+<%--            <asp:HyperLink ID="lnkBookFacility" runat="server" CssClass="action-btn" NavigateUrl="~/Facilities.aspx">
                 <i class="fas fa-calendar-plus"></i>
                 <span>Book Facility</span>
             </asp:HyperLink>
             <asp:HyperLink ID="lnkSetReminder" runat="server" CssClass="action-btn" NavigateUrl="~/Reminders.aspx">
                 <i class="fas fa-bell"></i>
                 <span>Set Reminder</span>
-            </asp:HyperLink>
+            </asp:HyperLink>--%>
         </div>
 
         <!-- Announcements Swiper -->
