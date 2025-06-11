@@ -219,7 +219,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="UserDashboard.aspx"><i class="fas fa-home"></i> Home</a>
                         </li>
-
+                        <li class="nav-item">
+                            <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i> Events</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="complaintsDropdown" role="button" data-bs-toggle="dropdown">
                                 <i class="fas fa-exclamation-circle"></i> Complaints
@@ -229,9 +231,7 @@
                                 <li><a class="dropdown-item" href="Complaint.aspx"> New Complaint</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="User_view_Events.aspx"><i class="fas fa-calendar-alt"></i> Events</a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="MaintenanceList.aspx"><i class="fas fa-rupee-sign"></i> Payments</a>
                         </li>
