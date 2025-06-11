@@ -1,7 +1,9 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -25,7 +27,7 @@ namespace Society_management
                 lblTotalResidents.Text = GetTotalResident().ToString();
                 lblTotalFlats.Text = GetTotalFlats().ToString();
                 lblActiveComplaints.Text = GetTotalActiveComplaint().ToString();
-                lblPendingPayments.Text = GetTotalPendingPayments().ToString();
+                GetTotalPendingMaintainance();
             }
         }
 
@@ -130,20 +132,27 @@ namespace Society_management
         }
 
         // Add this new method to get pending payments count
-        public int GetTotalPendingPayments()
+        public void GetTotalPendingMaintainance()
         {
             SqlConnection con = new SqlConnection(strcon);
+
+            string pendingQuery = @"SELECT ISNULL(SUM(f.Mentanance), 0) 
+                                      FROM tblFlat f
+                                      WHERE NOT EXISTS (
+                                          SELECT 1 FROM MaintenancePayments mp 
+                                          WHERE mp.Flate_id = f.Flate_id 
+                                          AND mp.Month = @Month 
+                                          AND mp.Status = 'Completed'
+                                      )";
             con.Open();
-            string query = @"SELECT COUNT(*) 
-                            FROM MaintenancePayments mp
-                            JOIN tblUser u ON mp.User_id = u.User_id
-                            JOIN tblOwner o ON u.Owner_id = o.Owner_id
-                            JOIN tblBlock b ON o.Block_id = b.Block_id
-                            JOIN tblSociety s ON s.Society_id = b.Society_id
-                            WHERE s.admin_id = @id AND mp.Status = 'Pending'";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            using (SqlCommand cmd = new SqlCommand(pendingQuery, con))
+            {
+                cmd.Parameters.AddWithValue("@Month",  DateTime.Now.Month.ToString());
+
+                decimal totalPending = Convert.ToDecimal(cmd.ExecuteScalar());
+                lblPendingPayments.Text = totalPending.ToString("N2");
+            }
+            con.Close();
         }
 
         // Your existing methods
