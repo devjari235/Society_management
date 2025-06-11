@@ -126,8 +126,8 @@
                         <div class="card-icon">
                             <i class="fas fa-file-invoice-dollar"></i>
                         </div>
-                        <div class="card-title">PENDING PAYMENTS</div>
-                        <div class="card-value"><asp:Label ID="lblPendingPayments" runat="server" Text="0" /></div>
+                        <div class="card-title">PENDING MAINTAINANCE</div>
+                        <div class="card-value"><i class="bi bi-currency-rupee"></i><asp:Label ID="lblPendingPayments" runat="server" Text="0" /></div>
                         <a href="AdminMaintenanceList.aspx" class="card-footer-link">View Details <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
