@@ -17,6 +17,7 @@ namespace Society_management
         {
             if (!IsPostBack)
             {
+                LoadRecentActivities();
                 SocietyID();
                 lblTotalResidents.Text = GetTotalResident().ToString();
                 lblTotalFlats.Text = GetTotalFlats().ToString();
@@ -153,6 +154,26 @@ namespace Society_management
             return new { months, total = totalMaintenance, paid, pending };
         }
 
+        private void LoadRecentActivities()
+        {
+            // Sample data (replace with actual data from your database)
+            var activities = new List<Activity>
+    {
+        new Activity { ActivityText = "User logged in", ActivityTime = DateTime.Now.AddMinutes(-30) },
+        new Activity { ActivityText = "Profile updated", ActivityTime = DateTime.Now.AddMinutes(-15) }
+    };
+
+            rptRecentActivity.DataSource = activities;
+            rptRecentActivity.DataBind();
+
+            lblNoActivity.Visible = activities.Count == 0;
+        }
+
+        public class Activity
+        {
+            public string ActivityText { get; set; }
+            public DateTime ActivityTime { get; set; }
+        }
 
 
 

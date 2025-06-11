@@ -174,7 +174,7 @@
         
 
         <!--Quick Actions-->
-                   <div class="row mt-4">
+                 <%--  <div class="row mt-4">
             <div class="col-12">
                 <div class="card shadow">
                     <div class="card-header py-3">
@@ -222,7 +222,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>--%>
     </div>
 </asp:Content>
 
