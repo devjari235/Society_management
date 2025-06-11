@@ -51,7 +51,7 @@
     <div style="margin-bottom: 20px; text-align: left;">
 <%--        <a href="Flat.aspx" style="color:white; text-decoration: none;"><asp:Label ID="lblFlat" runat="server" CssClass="btn btn-primary"><b><i class="bi bi-house-add-fill"></i> Add Flat</b></asp:Label></a>--%>
         <a href="View_flat.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Flats</b></asp:Label></a>
-        <a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Flat History</b></asp:Label></a>
+       <%-- <a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Flat History</b></asp:Label></a>--%>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
