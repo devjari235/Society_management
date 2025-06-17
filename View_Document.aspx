@@ -144,12 +144,16 @@
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
-        <div class="card shadow-sm">
-            <div class="card-body">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
                 <asp:GridView ID="gvDisplay" runat="server" AutoGenerateColumns="False"
-                    CssClass="table table-striped" DataKeyNames="DocumentID"
-                    OnRowCommand="gvDisplay_RowCommand" OnRowDataBound="gvDisplay_RowDataBound"
-                    EmptyDataText="No documents found" EmptyDataRowStyle-CssClass="text-center">
+                    CssClass="table table-striped"
+                    DataKeyNames="DocumentID"
+                    OnRowCommand="gvDisplay_RowCommand"
+                    OnRowDataBound="gvDisplay_RowDataBound"
+                    EmptyDataText="No documents found"
+                    EmptyDataRowStyle-CssClass="text-center">
                     <Columns>
                         <asp:BoundField DataField="DocumentID" HeaderText="ID" />
                         <asp:BoundField DataField="DocumentTitle" HeaderText="Document Title" />
@@ -164,7 +168,7 @@
                                 </asp:LinkButton>
                                 <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteIncome"
                                     CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-danger btn-sm"
-                                    OnClientClick='return ConfirmDelete(this.uniqueID);' ToolTip="Delete Income">
+                                    OnClientClick='return ConfirmDelete(this.uniqueID);' ToolTip="Delete Document">
                                     <i class="fas fa-trash-alt"></i>
                                 </asp:LinkButton>
                             </ItemTemplate>
@@ -174,4 +178,6 @@
             </div>
         </div>
     </div>
+</div>
+
 </asp:Content>

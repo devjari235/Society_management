@@ -121,36 +121,12 @@
     padding: 12px 15px;
 }
     </style>
-            <style>
-.btn-Dashboard {
-     background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
-}
-.btn-create {
-    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-}
-.btn-Live {
-    background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
-}
-.btn-Dashboard {
-    background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
-}
-.btn-Expire{
-    background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
-}
-.page-title-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    
-}
-
+                   <style>
 /* Left-aligned button group */
 .button-group-left {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 /* Base Button Style */
@@ -167,41 +143,47 @@
     text-decoration: none;
     color: white;
     border: none;
+    white-space: nowrap;
 }
 
 .dashboard-btn i {
     margin-right: 8px;
     font-size: 1rem;
 }
+
 .dashboard-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     color: #FFD700;
-    text-decoration:none;
+    text-decoration: none;
+}
+
+/* Individual Button Colors */
+.btn-Dashboard {
+    background: linear-gradient(135deg, #7f8c8d 0%, #57606f 100%);
+}
+.btn-create {
+    background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+}
+.btn-Live {
+    background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
+}
+.btn-Expire {
+    background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
 }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    .page-title-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
     .button-group-left {
+        flex-direction: column;
         width: 100%;
-        justify-content: space-between;
+        gap: 12px;
     }
-    
-    .btn-create {
-        width: 100%;
-        margin-left: 0;
-        order: -1; /* Moves Create button to top on mobile */
-    }
-    
+
     .dashboard-btn {
         width: 100%;
-        text-align: center;
         justify-content: center;
+        text-align: center;
     }
 }
     </style>

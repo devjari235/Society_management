@@ -161,7 +161,21 @@
                 justify-content: center;
             }
         }
+        .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+}
+
+.table-responsive .table {
+    margin-bottom: 0;
+    min-width: 900px; /* force horizontal scroll on small screens */
+}
+
     </style>
+   
     <script type="text/javascript">
         $(document).ready(function () {
             var $table = $('.table');
@@ -227,6 +241,7 @@
 
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+ <div class="table-responsive">
     <asp:GridView ID="gvVisitorApprovals" runat="server" AutoGenerateColumns="False"
         CssClass="table table-striped table-bordered"
         OnRowCommand="gvVisitorApprovals_RowCommand"
@@ -246,23 +261,24 @@
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Actions">
-    <ItemTemplate>
-        <div class="d-flex gap-1">
-                <asp:Button ID="btnCheckIn" runat="server" Text="Check In" CommandName="CheckIn"
-                    CommandArgument='<%# Eval("VisitorID") %>'
-                    CssClass='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "btn btn-success btn-action" : "btn btn-success btn-action disabled" %>'
-                    Enabled='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) %>'
-                    ToolTip='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "" : "Cannot check in rejected visitors" %>' 
-                    />
+                <ItemTemplate>
+                    <div class="d-flex gap-1">
+                        <asp:Button ID="btnCheckIn" runat="server" Text="Check In" CommandName="CheckIn"
+                            CommandArgument='<%# Eval("VisitorID") %>'
+                            CssClass='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "btn btn-success btn-action" : "btn btn-success btn-action disabled" %>'
+                            Enabled='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) %>'
+                            ToolTip='<%# ((Society_management.VisitorApproval)Page).IsApproved(Eval("IsApproved")) ? "" : "Cannot check in rejected visitors" %>' />
 
-                <asp:Button ID="btnCheckOut" runat="server" Text="Check Out" CommandName="CheckOut"
-                    CommandArgument='<%# Eval("VisitorID") %>'
-                    CssClass="btn btn-warning btn-action" />
-            </div>
-            </ItemTemplate>
-        </asp:TemplateField>
+                        <asp:Button ID="btnCheckOut" runat="server" Text="Check Out" CommandName="CheckOut"
+                            CommandArgument='<%# Eval("VisitorID") %>'
+                            CssClass="btn btn-warning btn-action" />
+                    </div>
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
     </asp:GridView>
+</div>
+
     <!-- Custom Toast -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
         <div id="customToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">

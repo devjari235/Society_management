@@ -8,11 +8,9 @@
     </title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Optional: Bootstrap CSS for styling (not required for icons to work) -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <%--bootstrap css--%>
     <link href="bootstrap\css\bootstrap.min.css" rel="stylesheet" />
@@ -32,61 +30,101 @@
     <%--Datatable  js--%>
     <script src="datatable\js\dataTables.min.js"></script>
 
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <!-- Custom CSS -->
     <link href="Styles/Site.css" rel="stylesheet" />
     <style>
+        /* General Styles */
         body {
-            overflow-x: visible;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
 
-        /* Sidebar styling */
-        .sidebar {
-            position: sticky;
-            top: 56px;
-            left: 0;
-            bottom: 0;
-            z-index: 1000;
-            padding: 10px 0;
-            overflow-x: hidden;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-right: 1px solid #eee;
+        /* Navbar Customization */
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        .navbar-nav .nav-link {
+            padding: 0.5rem 1rem;
+        }
+
+        /* Layout Structure */
+        .layout-container {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 20px;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Sidebar container for desktop */
+        .sidebar-container {
             width: 250px;
             transition: all 0.3s ease;
+            flex-shrink: 0;
+            background: white;
+            z-index: 1000;
+            position: sticky; /* Make it sticky for desktop */
+            top: 20px; /* Adjust top position for sticky behavior */
+            height: calc(100vh - 40px); /* Adjust height for sticky behavior */
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding-right: 0px;
+            padding-left: 0px;
         }
 
-            .sidebar .nav-link {
-                display: flex;
-                align-items: center;
-                font-weight: 500;
-                color: #333;
-                padding: 0.75rem 1rem;
-                border-left: 4px solid transparent;
-                white-space: nowrap;
-            }
 
-                .sidebar .nav-link i {
-                    min-width: 20px;
-                    text-align: center;
-                    margin-right: 10px;
-                }
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            transition: margin-left 0.3s ease;
+            /* Changed padding from 20px to 0px */
+            padding: 0px; 
+        }
 
-                .sidebar .nav-link.active {
-                    color: #0d6efd;
-                    background-color: rgba(13, 110, 253, 0.1);
-                    border-left: 4px solid #0d6efd;
-                }
+        .main-content-inner {
+            padding: 0 15px;
+        }
 
-                .sidebar .nav-link:hover:not(.active) {
-                    color: #0d6efd;
-                    background-color: rgba(13, 110, 253, 0.1);
-                }
+        /* Sidebar styling for the list group */
+        .sidebar-container .nav-link {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            color: #333;
+            padding: 0.75rem 1rem;
+            border-left: 4px solid transparent;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .sidebar-container .nav-link i {
+            min-width: 20px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        .sidebar-container .nav-link.active {
+            color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.1);
+            border-left: 4px solid #0d6efd;
+        }
+
+        .sidebar-container .nav-link:hover:not(.active) {
+            color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.1);
+        }
 
         .sidebar-heading {
             font-size: .75rem;
@@ -94,109 +132,421 @@
             transition: all 0.3s ease;
         }
 
-        /* Collapsed sidebar */
-        .sidebar.collapsed {
-            width: 60px;
+
+        /* Collapsed State (Desktop) */
+        .sidebar-collapsed {
+            width: 70px !important;
         }
 
-            .sidebar.collapsed .nav-link-text,
-            .sidebar.collapsed .sidebar-heading {
+        .sidebar-collapsed .nav-link {
+            text-align: center;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        .sidebar-collapsed .nav-link .nav-link-text,
+        .sidebar-collapsed .sidebar-heading {
+            display: none;
+        }
+
+        .sidebar-collapsed .nav-link i {
+            margin-right: 0; /* Remove margin when collapsed */
+        }
+
+        /* Toggle Button Styles */
+        #sidebarToggle {
+            position: relative; /* Changed from sticky */
+            top: 0px;
+            left: 10px;
+            background: white;
+            border: 2px solid #0d6efd;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #0d6efd;
+            z-index: 1100;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            margin-bottom: 10px; /* Add margin below the toggle */
+        }
+
+        #sidebarToggle:hover {
+            background-color: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        #sidebarToggle i {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-collapsed #sidebarToggle i {
+            transform: rotate(180deg);
+        }
+
+
+        /* Mobile Sidebar Styles */
+        @media (max-width: 991.98px) {
+            /* Overlay Styles */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* Sidebar Container */
+            .sidebar-container {
+                position: fixed;
+                top: 0;
+                left: -100%; /* Hidden by default, start further left to accommodate 60% width */
+                width: 60%; /* Set sidebar width to 60% */
+                max-width: 280px; /* Still keep a max-width to prevent it from being too wide on tablets */
+                height: 100vh;
+                z-index: 1050;
+                background: white;
+                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                border-radius: 0; /* Remove border-radius for mobile */
+                top: 0; /* Align to top */
+            }
+
+            .sidebar-container.sidebar-mobile-visible {
+                left: 0; /* Visible when active */
+                width:60%;
+            }
+
+            /* Sidebar Card Adjustments (if you use a card inside sidebar) */
+            .sidebar-card {
+                height: 100%;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            /* Sidebar Header with Close Button */
+            .sidebar-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+            }
+
+            .sidebar-close-btn {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: #6c757d;
+                cursor: pointer;
+                padding: 0.25rem;
+                line-height: 1;
+            }
+
+            .sidebar-close-btn:hover {
+                color: #495057;
+            }
+
+            /* Mobile Toggle Button */
+            .mobile-sidebar-trigger {
+                display: flex; /* Make it visible on mobile */
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1030;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: #0d6efd;
+                color: white;
+                border: none;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                align-items: center;
+                justify-content: center;
+                font-size: 1.25rem;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-sidebar-trigger:hover {
+                background: #0b5ed7;
+                transform: scale(1.1);
+            }
+
+            /* Hide desktop toggle on mobile */
+            #sidebarToggle {
                 display: none;
             }
 
-            .sidebar.collapsed .nav-link {
-                justify-content: center;
+            /* Adjust main content when sidebar is open */
+            body.sidebar-open {
+                overflow: hidden; /* Prevent scrolling when sidebar is open */
             }
 
-                .sidebar.collapsed .nav-link i {
-                    margin-right: 0;
-                }
-
-        /* Main content area */
-        .main-content {
-            /*margin-left: 250px;*/
-            flex: 1;
-            padding: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed ~ .main-content {
-            margin-left: 60px;
-        }
-
-        /* Footer styling */
-        .footer {
-            background-color: #f5f5f5;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar.collapsed ~ .footer {
-            margin-left: 60px;
-        }
-
-        /* Toggle button */
-        .sidebar-toggle {
-            position: sticky;
-            left: 10px;
-            /*            top: -10px;*/
-            z-index: 1100;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-            margin-bottom: 10px;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                left: -250px;
+            /* Layout adjustments for mobile */
+            .layout-container {
+                flex-direction: column;
+                gap: 0;
+                padding: 0;
             }
 
-                .sidebar.show {
-                    left: 0;
-                }
-
-            .main-content, .footer {
-                margin-left: auto !important;
+            .main-content {
+                padding-top: 20px;
+                margin-left: 0 !important; /* Ensure no margin-left on mobile */
             }
 
-            .sidebar.collapsed {
-                left: -250px;
+            .footer {
+                margin-left: 0 !important; /* Ensure no margin-left on mobile */
             }
         }
-         .notification-badge {
-        position: absolute;
-        top: 2px;
-        right: 2px;
-        background-color: red;
-        color: white;
-        font-size: 10px;
-        padding: 1px 5px;
-        border-radius: 50%;
-        line-height: 1;
-    }
+
+        /* Utility & Visual Elements */
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background-color: red;
+            color: white;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 50%;
+            line-height: 1;
+        }
+
+        .icon-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -11px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            z-index: 10;
+            font-weight: bold;
+        }
+
+        .rounded-circle {
+            border-radius: 50% !important;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        }
+
+        .bg-light-blue {
+            background-color: #e9f5ff;
+        }
+
+        .text-light-blue {
+            color: #0d6efd;
+        }
+
+        /* Responsive adjustments for smaller mobile devices */
+        @media (max-width: 767.98px) {
+            .navbar-nav {
+                padding-top: 1rem;
+            }
+
+            /* The width for smaller mobiles */
+            .sidebar-container {
+                width: 60%; /* This is the key change */
+                max-width: none; /* Remove max-width for smaller screens if you want pure 60% */
+            }
+
+            .sidebar-container .nav-link {
+                padding: 0.75rem 1rem;
+            }
+        }
+
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const toggleBtn = document.getElementById('sidebarToggle');
-            const sidebar = document.querySelector('.sidebar');
+            const sidebarContainer = document.querySelector('.sidebar-container');
+            const body = document.body;
+            const desktopToggleButton = document.getElementById('sidebarToggle');
+            const navbarCollapseElement = document.getElementById('navbarNav'); // Get the Bootstrap navbar collapse element
 
-            if (toggleBtn && sidebar) {
-                toggleBtn.addEventListener('click', function () {
-                    sidebar.classList.toggle('collapsed');
+            let isMobileView = window.matchMedia('(max-width: 991.98px)').matches;
 
-                    // Store the state in localStorage
-                    const isCollapsed = sidebar.classList.contains('collapsed');
-                    localStorage.setItem('sidebarCollapsed', isCollapsed);
+            // Function to handle opening sidebar (mobile)
+            function openSidebar() {
+                sidebarContainer.classList.add('sidebar-mobile-visible');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) overlay.classList.add('active');
+                body.classList.add('sidebar-open');
+            }
+
+            // Function to handle closing sidebar (mobile)
+            function closeSidebar() {
+                sidebarContainer.classList.remove('sidebar-mobile-visible');
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) overlay.classList.remove('active');
+                body.classList.remove('sidebar-open');
+            }
+
+            // Function to toggle desktop sidebar
+            function toggleDesktopSidebar() {
+                if (isMobileView) return; // Do nothing if on mobile
+                sidebarContainer.classList.toggle('sidebar-collapsed');
+                const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+            }
+
+            // Function to initialize mobile elements (overlay, close button, mobile toggle)
+            function initializeMobileElements() {
+                // Create mobile overlay if it doesn't exist
+                if (!document.querySelector('.sidebar-overlay')) {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'sidebar-overlay';
+                    document.body.appendChild(overlay);
+                    overlay.addEventListener('click', closeSidebar);
+                }
+
+                // Create mobile toggle button if it doesn't exist (if you want a separate one from navbar toggler)
+                // For your current setup, you're using the navbar toggler to open the sidebar,
+                // so this specific mobile-sidebar-trigger might be redundant if its only job is to open the sidebar.
+                // If you still want a separate floating action button, keep this.
+                if (!document.querySelector('.mobile-sidebar-trigger')) {
+                    const mobileToggleBtn = document.createElement('button');
+                    mobileToggleBtn.className = 'mobile-sidebar-trigger d-lg-none'; // Hide on large screens
+                    mobileToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    document.body.appendChild(mobileToggleBtn);
+                    mobileToggleBtn.addEventListener('click', openSidebar);
+                }
+
+                // Add close button to sidebar header for mobile
+                if (!sidebarContainer.querySelector('.sidebar-header')) {
+                    const sidebarHeader = document.createElement('div');
+                    sidebarHeader.className = 'sidebar-header d-lg-none'; // Hide on large screens
+                    sidebarHeader.innerHTML = `
+                        <h5 class="mb-0">Menu</h5>
+                        <button class="sidebar-close-btn">&times;</button>
+                    `;
+                    sidebarContainer.prepend(sidebarHeader);
+                    const closeBtn = sidebarHeader.querySelector('.sidebar-close-btn');
+                    if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+                }
+
+                // Close sidebar when clicking on sidebar links (mobile only)
+                document.querySelectorAll('.sidebar-container .nav-link').forEach(link => {
+                    link.addEventListener('click', closeSidebar);
                 });
+            }
 
-                // Check localStorage for saved state
-                const savedState = localStorage.getItem('sidebarCollapsed');
-                if (savedState === 'true') {
-                    sidebar.classList.add('collapsed');
+            // Function to clean up mobile-specific elements
+            function cleanupMobileElements() {
+                const overlay = document.querySelector('.sidebar-overlay');
+                if (overlay) {
+                    overlay.removeEventListener('click', closeSidebar);
+                    overlay.remove();
+                }
+                const mobileToggleBtn = document.querySelector('.mobile-sidebar-trigger');
+                if (mobileToggleBtn) {
+                    mobileToggleBtn.removeEventListener('click', openSidebar);
+                    mobileToggleBtn.remove();
+                }
+                const sidebarHeader = sidebarContainer.querySelector('.sidebar-header');
+                if (sidebarHeader) {
+                    const closeBtn = sidebarHeader.querySelector('.sidebar-close-btn');
+                    if (closeBtn) closeBtn.removeEventListener('click', closeSidebar);
+                    sidebarHeader.remove();
+                }
+                document.querySelectorAll('.sidebar-container .nav-link').forEach(link => {
+                    link.removeEventListener('click', closeSidebar);
+                });
+            }
+
+            // Handle window resize to re-evaluate mobile/desktop view
+            function handleResize() {
+                const nowMobile = window.matchMedia('(max-width: 991.98px)').matches;
+                if (nowMobile !== isMobileView) {
+                    isMobileView = nowMobile; // Update the current view state
+
+                    if (isMobileView) {
+                        // Switched to mobile view
+                        cleanupDesktopState(); // Clean up desktop-specific behaviors
+                        initializeMobileElements(); // Initialize mobile elements
+                        sidebarContainer.classList.remove('sidebar-collapsed'); // Ensure desktop collapse is off
+                    } else {
+                        // Switched to desktop view
+                        cleanupMobileElements(); // Clean up mobile elements
+                        closeSidebar(); // Close mobile sidebar if open
+                        applySavedDesktopState(); // Apply saved desktop state
+                    }
                 }
             }
+
+            function applySavedDesktopState() {
+                const savedState = localStorage.getItem('sidebarCollapsed');
+                if (savedState === 'true') {
+                    sidebarContainer.classList.add('sidebar-collapsed');
+                } else {
+                    sidebarContainer.classList.remove('sidebar-collapsed');
+                }
+            }
+
+            function cleanupDesktopState() {
+                // No specific cleanup for desktop needed other than removing 'sidebar-collapsed'
+                // which is done when switching to mobile.
+            }
+
+
+            // Initial setup based on current view
+            if (isMobileView) {
+                initializeMobileElements();
+                sidebarContainer.classList.remove('sidebar-collapsed'); // Ensure desktop classes are not present on mobile load
+            } else {
+                applySavedDesktopState();
+            }
+
+            // Attach desktop toggle event listener
+            if (desktopToggleButton) {
+                desktopToggleButton.addEventListener('click', toggleDesktopSidebar);
+            }
+
+            // --- IMPORTANT: Removed the event listeners for Bootstrap Navbar Toggler ---
+            // If you want the Bootstrap navbar to only toggle itself and not your custom sidebar:
+            /*
+            if (navbarCollapseElement) {
+                // When Bootstrap navbar is about to be shown (toggler clicked)
+                navbarCollapseElement.addEventListener('show.bs.collapse', function () {
+                    if (isMobileView) {
+                        // openSidebar(); // Removed this line
+                    }
+                });
+
+                // When Bootstrap navbar is about to be hidden (toggler clicked again or outside click)
+                navbarCollapseElement.addEventListener('hide.bs.collapse', function () {
+                    if (isMobileView) {
+                        // closeSidebar(); // Removed this line
+                    }
+                });
+            }
+            */
+
+            window.addEventListener('resize', handleResize);
         });
     </script>
 
@@ -205,7 +555,6 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="Home.aspx" style="font-family: Merriweather;">
@@ -237,19 +586,15 @@
                         </li>
                     </ul>
 
-                    <!-- User Profile Section -->
                     <ul class="navbar-nav">
-                             <li class="nav-item" style="position: relative;">
-                                <a class="nav-link" href="Notification.aspx" style="position: relative;">
-                                    <i class="fa fa-bell fa-lg"></i>
-                                    <asp:Label ID="lblRemarkCount" runat="server" CssClass="notification-badge">0</asp:Label>
-                                </a>
-                            </li>
+                        <li class="nav-item" style="position: relative;">
+                            <a class="nav-link" href="Notification.aspx" style="position: relative;">
+                                <i class="fa fa-bell fa-lg"></i>
+                                <asp:Label ID="lblRemarkCount" runat="server" CssClass="notification-badge">0</asp:Label>
+                            </a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                                <%--<i class="fas fa-user-circle me-1"></i>--%>
-                                <%--<asp:Image ID="image" runat="server" Style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
-                                <asp:Label ID="lblUserName" runat="server" Text="Guest"></asp:Label>--%>
                                 <asp:Image ID="image" runat="server" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
                                 <asp:Label ID="lblUserName" runat="server"></asp:Label>
                             </a>
@@ -268,12 +613,9 @@
             </div>
         </nav>
 
-        <!-- Main Content -->
-        <div class="container-fluid mt-3">
-            <div class="row">
-                <!-- Sidebar -->
-                <div class="col-md-3 col-lg-2 d-none d-md-block sidebar"style="padding-right: 0px;padding-left: 0px;">
-
+        <div class="container-fluid mt-3 layout-container">
+            <div class="row w-100">
+                <div id="sidebar-container" class="col-md-3 col-lg-2 d-md-block sidebar-container">
                     <button id="sidebarToggle" class="sidebar-toggle btn btn-primary">
                         <i class="fas fa-bars"></i>
                     </button>
@@ -298,12 +640,6 @@
                                     <span class="nav-link-text">Committee Member</span>
                                 </a>
                             </li>
-                        <%--    <li id="liNoticeBoard" runat="server" class="nav-item" >
-                                <a class="nav-link" href="#">
-                                    <i class="bi bi-envelope-fill"></i>
-                                    <span class="nav-link-text">Notice Board</span>
-                                </a>
-                            </li>--%>
                             <li class="nav-item">
                                 <a class="nav-link" href="User_Complain.aspx">
                                     <i class="fas fa-exclamation-circle me-2"></i>
@@ -328,32 +664,11 @@
                                     <span class="nav-link-text">Photo Gallery</span>
                                 </a>
                             </li>
-<%--                            <li class="nav-item">
-                                <a class="nav-link" href="MyPayments.aspx">
-                                    <i class="fas fa-rupee-sign me-2"></i>
-                                    <span class="nav-link-text">My Payments</span>
-                                </a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link" href="MyVehicles.aspx">
-                                    <i class="fas fa-car me-2"></i>
-                                    <span class="nav-link-text">My Vehicles</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="MyDocuments.aspx">
-                                    <i class="fas fa-file-alt me-2"></i>
-                                    <span class="nav-link-text">My Documents</span>
-                                </a>
-                            </li>--%>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Main Content Area -->
                 <main class="col-md-10 col-lg-10 px-md-4 main-content">
-                    <!-- Breadcrumb -->
                     <nav aria-label="breadcrumb" class="mt-3">
                         <ol class="breadcrumb">
                             <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
@@ -362,48 +677,41 @@
                         </ol>
                     </nav>
 
-                    <!-- Page Header -->
                     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                         <asp:ContentPlaceHolder ID="PageHeaderContent" runat="server">
                             <h1 class="h2">Dashboard</h1>
                         </asp:ContentPlaceHolder>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <asp:ContentPlaceHolder ID="PageHeaderButtons" runat="server">
-                                <!-- Default buttons can go here -->
-                            </asp:ContentPlaceHolder>
+                                </asp:ContentPlaceHolder>
                         </div>
                     </div>
 
-                    <!-- Main Content -->
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                        <!-- Default content can go here -->
-                    </asp:ContentPlaceHolder>
+                        </asp:ContentPlaceHolder>
                 </main>
             </div>
         </div>
 
-        <!-- Footer -->
         <footer class="footer mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <span class="text-muted d-block" style="font-family: Merriweather;">
-                    &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b> <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
-                </span>
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <span class="text-muted d-block" style="font-family: Merriweather;">
+                            &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b> <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
+                        </span>
+                    </div>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        <a href="PrivacyPolicy.aspx" class="text-muted me-3">Privacy Policy</a>
+                        <a href="Terms.aspx" class="text-muted me-3">Terms of Service</a>
+                        <a href="Contact.aspx" class="text-muted">Contact Us</a>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="PrivacyPolicy.aspx" class="text-muted me-3">Privacy Policy</a>
-                <a href="Terms.aspx" class="text-muted me-3">Terms of Service</a>
-                <a href="Contact.aspx" class="text-muted">Contact Us</a>
-            </div>
-        </div>
-    </div>
-</footer>
+        </footer>
 
-        <!-- Bootstrap Bundle with Popper -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Custom JavaScript -->
         <script src="Scripts/site.js"></script>
 
         <asp:ContentPlaceHolder ID="ScriptsContent" runat="server">

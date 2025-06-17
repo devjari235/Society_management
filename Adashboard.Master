@@ -1,30 +1,29 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Adashboard.master.cs" Inherits="Society_management.Adashboard" %>
 
-
 <!DOCTYPE html>
 <html lang="en">
-<head runat="server" >
+<head runat="server">
     <link rel="icon" href="/Images/Logo.png" type="image/png">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%: Page.Title %> - Society Management System</title>
-         <%--bootstrap css--%>
-     <link href="bootstrap\css\bootstrap.min.css" rel="stylesheet" />
-   <%--datatable css--%>
- <link href="datatable\css\dataTables.dataTables.min.css" rel="stylesheet" />
-   <%--fontawesome css--%>
- <link href="fontawesome\css\all.css" rel="stylesheet" />
- <%--Custom css--%>
-  <link href="css\Customstylesheet.css" rel="stylesheet" />
+    <%--bootstrap css--%>
+    <link href="bootstrap\css\bootstrap.min.css" rel="stylesheet" />
+    <%--datatable css--%>
+    <link href="datatable\css\dataTables.dataTables.min.css" rel="stylesheet" />
+    <%--fontawesome css--%>
+    <link href="fontawesome\css\all.css" rel="stylesheet" />
+    <%--Custom css--%>
+    <link href="css\Customstylesheet.css" rel="stylesheet" />
 
- <%--jquery--%>
-<script src="bootstrap\js\jquery-3.5.1.slim.min.js"></script>
-<%-- popper js--%>
- <script src="bootstrap\js\popper.min.js"></script>
- <%--bootstrap js--%>
- <script src="bootstrap\js\bootstrap.min.js"></script>
- <%--Datatable  js--%>
-<script src="datatable\js\dataTables.min.js"></script>
+    <%--jquery--%>
+    <script src="bootstrap\js\jquery-3.5.1.slim.min.js"></script>
+    <%-- popper js--%>
+    <script src="bootstrap\js\popper.min.js"></script>
+    <%--bootstrap js--%>
+    <script src="bootstrap\js\bootstrap.min.js"></script>
+    <%--Datatable  js--%>
+    <script src="datatable\js\dataTables.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
@@ -37,16 +36,21 @@
     <!-- Custom CSS -->
     <link href="/Content/site.css" rel="stylesheet" />
     <!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
-     <style>
-        /* General Styles */
+    
+<style>
+/* General Styles */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
     color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
 /* Navbar Customization */
@@ -58,89 +62,226 @@ body {
     padding: 0.5rem 1rem;
 }
 
-/* Sidebar Styles */
-/* NEW FLEXBOX LAYOUT */
-        .layout-container {
-            display: flex;
-            flex-direction: row;
-            gap: 50px; /* 50px gap between sidebar and content */
-            padding: 20px;
-        }
+/* Layout Structure */
+.layout-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    padding: 20px;
+    flex: 1;
+    position: relative;
+}
 
-        .sidebar-container {
-            width: 250px;
-            transition: width 0.3s ease;
-        }
+.sidebar-container {
+    width: 250px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    background: white;
+    z-index: 1000;
+}
 
-        .sidebar-collapsed {
-            width: 70px !important;
-        }
+.main-content {
+    flex: 1;
+    min-width: 0;
+    transition: margin-left 0.3s ease;
+    padding: 20px;
+}
 
-        .main-content {
-            flex: 1;
-            transition: margin-left 0.3s ease;
-        }
+.main-content-inner {
+    padding: 0 15px;
+}
 
-        .main-content-inner {
-            padding: 0 15px;
-        }
+/* Sidebar Card Styles */
+.sidebar-card {
+    position: sticky;
+    top: 20px;
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
 
-        /* Sidebar card styles */
-        .sidebar-card {
-            position:relative;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-        }
+.sidebar-card .list-group-item {
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
 
-        .sidebar-card .list-group-item {
-            padding: 0.75rem 1rem;
-            white-space: nowrap;
-        }
+.sidebar-card .list-group-item:hover {
+    border-left-color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+}
 
-        .sidebar-collapsed .list-group-item {
-            text-align: center;
-        }
+/* Collapsed State (Desktop) */
+.sidebar-collapsed {
+    width: 70px !important;
+}
 
-        .sidebar-collapsed .list-group-item .sidebar-text,
-        .sidebar-collapsed .badge {
-            display: none;
-        }
+.sidebar-collapsed .list-group-item {
+    text-align: center;
+    padding: 0.75rem 0.5rem !important;
+}
 
-        .sidebar-collapsed #sidebarToggle i {
-            transform: rotate(180deg);
-        }
+.sidebar-collapsed .list-group-item .sidebar-text,
+.sidebar-collapsed .badge {
+    display: none;
+}
 
-.stat-icon {
-    width: 40px;
-    height: 40px;
+/* Toggle Button Styles */
+#sidebarToggle {
+    position:relative;
+    top: 0px;
+    left: 10px;
+    background: white;
+    border: 2px solid #0d6efd;
     border-radius: 50%;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
-    flex-shrink: 0;
+    cursor: pointer;
+    color: #0d6efd;
+    z-index: 1100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
 }
 
-.stat-info h6 {
-    font-size: 0.875rem;
-    margin-bottom: 0.25rem;
-    color: #6c757d;
+#sidebarToggle:hover {
+    background-color: #f0f0f0;
+    transform: scale(1.05);
 }
 
-.stat-info p {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0;
+#sidebarToggle i {
+    transition: transform 0.3s ease;
+    font-size: 1.2rem;
 }
 
-/* Page Header */
-.page-header {
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #dee2e6;
+.sidebar-collapsed #sidebarToggle i {
+    transform: rotate(180deg);
 }
 
-/* Card Customization */
+/* Mobile Sidebar Styles */
+@media (max-width: 991.98px) {
+    /* Overlay Styles */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Sidebar Container */
+    .sidebar-container {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        z-index: 1050;
+        background: white;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
+
+    .sidebar-container.sidebar-mobile-visible {
+        left: 0;
+    }
+
+    /* Sidebar Card Adjustments */
+    .sidebar-card {
+        height: 100%;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* Sidebar Header with Close Button */
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .sidebar-close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0.25rem;
+        line-height: 1;
+    }
+
+    .sidebar-close-btn:hover {
+        color: #495057;
+    }
+
+    /* Mobile Toggle Button */
+    .mobile-sidebar-trigger {
+        display: flex;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1030;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .mobile-sidebar-trigger:hover {
+        background: #0b5ed7;
+        transform: scale(1.1);
+    }
+
+    /* Hide desktop toggle on mobile */
+    #sidebarToggle {
+        display: none;
+    }
+
+    /* Adjust main content when sidebar is open */
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    /* Layout adjustments for mobile */
+    .layout-container {
+        flex-direction: column;
+        gap: 0;
+        padding: 0;
+    }
+
+    .main-content {
+        padding-top: 20px;
+        margin-left: 0 !important;
+    }
+}
+
+/* Utility & Visual Elements */
 .card {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
@@ -150,66 +291,12 @@ body {
     font-weight: 600;
 }
 
-/* Form Styles */
-.form-control, .form-select {
-    padding: 0.5rem 0.75rem;
-}
-
-.btn {
-    padding: 0.5rem 1.25rem;
-}
-
-/* Table Styles */
 .table th {
     background-color: #f8f9fa;
     font-weight: 600;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 767.98px) {
-    .navbar-nav {
-        padding-top: 1rem;
-    }
-    
-    .sidebar-card {
-        margin-bottom: 1rem;
-    }
-}
-.container {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
-
-/* Footer Styles */
-footer a {
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-footer a:hover {
-    color: #0d6efd !important;
-}
-
-/* Utility Classes */
-.rounded-circle {
-    border-radius: 50% !important;
-}
-
-.shadow-sm {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-}
-
-/* Custom Background Colors */
-.bg-light-blue {
-    background-color: #e9f5ff;
-}
-
-/* Custom Text Colors */
-.text-light-blue {
-    color: #0d6efd;
-}
- .icon-container {
+.icon-container {
     position: relative;
     display: inline-block;
 }
@@ -225,40 +312,151 @@ footer a:hover {
     font-size: 12px;
     border-radius: 50%;
     text-align: center;
-    line-height: 20px; /* Matches height to center text vertically */
+    line-height: 20px;
     z-index: 10;
     font-weight: bold;
 }
 
+.rounded-circle {
+    border-radius: 50% !important;
+}
 
+.shadow-sm {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+}
 
+.bg-light-blue {
+    background-color: #e9f5ff;
+}
+
+.text-light-blue {
+    color: #0d6efd;
+}
+
+/* Responsive adjustments for smaller mobile devices */
+@media (max-width: 767.98px) {
+    .navbar-nav {
+        padding-top: 1rem;
+    }
+    
+    .sidebar-container {
+        width: 260px;
+    }
+    
+    .sidebar-card .list-group-item {
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Breadcrumb and Page Header */
+.breadcrumb {
+    padding: 0.75rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}
+
+.page-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
 </style>
-  
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const sidebarContainer = document.getElementById('sidebarContainer');
-            const mainContent = document.getElementById('mainContent');
-            const toggleButton = document.getElementById('sidebarToggle');
+ 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sidebarContainer = document.getElementById('sidebarContainer');
+        const body = document.body;
+        const toggleButton = document.getElementById('sidebarToggle');
 
-            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+        // Check if we're on mobile initially
+        const isMobileView = window.matchMedia('(max-width: 991.98px)').matches;
 
-            if (isCollapsed) {
-                sidebarContainer.classList.add('sidebar-collapsed');
+        // Only create mobile elements if we're on mobile
+        if (isMobileView) {
+            // Create mobile overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'sidebar-overlay';
+            document.body.appendChild(overlay);
+
+            // Create mobile toggle button
+            const mobileToggleBtn = document.createElement('button');
+            mobileToggleBtn.className = 'mobile-sidebar-trigger';
+            mobileToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.appendChild(mobileToggleBtn);
+
+            // Create close button for sidebar header
+            const sidebarHeader = document.createElement('div');
+            sidebarHeader.className = 'sidebar-header d-lg-none';
+            sidebarHeader.innerHTML = `
+            <h5 class="mb-0">Menu</h5>
+            <button class="sidebar-close-btn">&times;</button>
+        `;
+            sidebarContainer.querySelector('.sidebar-card').prepend(sidebarHeader);
+            const closeBtn = document.querySelector('.sidebar-close-btn');
+
+            // Mobile toggle functions
+            function openSidebar() {
+                sidebarContainer.classList.add('sidebar-mobile-visible');
+                overlay.classList.add('active');
+                body.classList.add('sidebar-open');
             }
 
-            toggleButton.addEventListener('click', function () {
-                sidebarContainer.classList.toggle('sidebar-collapsed');
+            function closeSidebar() {
+                sidebarContainer.classList.remove('sidebar-mobile-visible');
+                overlay.classList.remove('active');
+                body.classList.remove('sidebar-open');
+            }
 
-                const icon = toggleButton.querySelector('i');
-                icon.classList.toggle('fa-chevron-left');
-                icon.classList.toggle('fa-chevron-right');
+            // Mobile event listeners
+            mobileToggleBtn.addEventListener('click', openSidebar);
+            closeBtn.addEventListener('click', closeSidebar);
+            overlay.addEventListener('click', closeSidebar);
 
-                const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
-                localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+            // Close sidebar when clicking on links (mobile only)
+            document.querySelectorAll('.sidebar-card a').forEach(link => {
+                link.addEventListener('click', closeSidebar);
             });
-        });
-    </script>
+        }
 
+        // Desktop sidebar state management
+        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+
+        if (!isMobileView) {
+            // Initialize desktop state
+            if (isCollapsed) {
+                sidebarContainer.classList.add('sidebar-collapsed');
+            } else {
+                sidebarContainer.classList.remove('sidebar-collapsed');
+            }
+        }
+
+        // Desktop toggle function
+        function toggleDesktopSidebar() {
+            if (isMobileView) return;
+
+            sidebarContainer.classList.toggle('sidebar-collapsed');
+            const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
+            localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+        }
+
+        // Handle window resize
+        function handleResize() {
+            const nowMobile = window.matchMedia('(max-width: 991.98px)').matches;
+
+            if (nowMobile !== isMobileView) {
+                // Viewport size crossed the threshold, reload to reinitialize
+                window.location.reload();
+            }
+        }
+
+        // Event listeners
+        if (toggleButton) {
+            toggleButton.addEventListener('click', toggleDesktopSidebar);
+        }
+
+        window.addEventListener('resize', handleResize);
+    });
+</script>
 </head>
 <body>
 
@@ -295,23 +493,12 @@ footer a:hover {
                             <li class="nav-item">
                                 <a class="nav-link" href="Accounting.aspx"> <i class="fas fa-money-bill-wave"></i> Finance</a>
                             </li>
-                           <%-- <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="Accounting.aspx" id="financeDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-money-bill-wave"></i>Finance
-                                </a>
-                                   <ul class="dropdown-menu" aria-labelledby="financeDropdown">
-                                    <li><a class="dropdown-item" href="/Finance/Maintenance.aspx">Maintenance</a></li>
-                                    <li><a class="dropdown-item" href="/Finance/Expenses.aspx">Expenses</a></li>
-                                    <li><a class="dropdown-item" href="/Finance/Reports.aspx">Reports</a></li>
-                                </ul>
-                            </li>--%>
                             <li class="nav-item">
                                 <a class="nav-link" href="View_Complaints.aspx">
                                     <span class="icon-container">
                                         <i class="fas fa-exclamation-circle"></i> Complaints
                                         <span id="notificationBadge" class="badge-count">0</span>
                                     </span>
-                                   
                                 </a>
                             </li>
 
@@ -322,18 +509,9 @@ footer a:hover {
                         </ul>
                         
                         <ul class="navbar-nav">
-                   <%--          <li class="nav-item">
-                                 <a class="nav-link" href="/Notification.aspx" style="position: relative;" ><i class="fa fa-bell fa-lg"></i>
-                                    
-                                 </a>
-                             </li>--%>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <asp:Image ID="image" runat="server" style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;" />
-                                        
-                                        <%-- style="width: 30px; height: 30px; border-radius: 50%; object-fit: cover; cursor: pointer;"--%>
-                                   <%-- <i class="fas fa-user-circle fa-lg"></i> 
-                                    <asp:LoginName ID="LoginName1" runat="server" />--%>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                     <li><a class="dropdown-item" href="/Admin_profile.aspx"><i class="fas fa-user"></i> Profile</a></li>
@@ -355,11 +533,8 @@ footer a:hover {
                 <!-- Sidebar -->
                 <div class="sidebar-container" id="sidebarContainer">
                     <div class="card sidebar-card mb-4">
-
                         <div class="card-header bg-light d-flex justify-content-between align-items-center" style="padding-left: 8px;padding-right: 8px;">
-
-                           
-                            <button id="sidebarToggle" class="btn btn-sm btn-outline-secondary">
+                            <button id="sidebarToggle" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-list"></i>
                             </button>
                         </div>
@@ -406,68 +581,26 @@ footer a:hover {
                         </asp:ContentPlaceHolder>
                     </div>
                 </div>
-
             </div>
         </main>
 
-
         <!-- Footer -->
-        <%--<footer class="bg-dark text-white py-4 mt-4">
+        <footer class="footer mt-auto py-3 bg-light">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h5><i class="bi bi-building"></i> Society Management</h5>
-                        <p>A complete solution for managing residential societies, apartments, and gated communities.</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>Quick Links</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="/About.aspx" class="text-white">About Us</a></li>
-                            <li><a href="/Contact.aspx" class="text-white">Contact</a></li>
-                            <li><a href="/Help.aspx" class="text-white">Help & Support</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h5>Contact Info</h5>
-                        <address>
-                            <i class="fas fa-map-marker-alt me-2"></i> 123 Society Lane, City<br />
-                            <i class="fas fa-phone me-2"></i> (123) 456-7890<br />
-                            <i class="fas fa-envelope me-2"></i> info@societyexample.com
-                        </address>
-                    </div>
-                </div>
-                <hr class="my-3 bg-light" />
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p class="mb-0">&copy; <%: DateTime.Now.Year %> Society Management System. All rights reserved.</p>
+                        <span class="text-muted d-block" style="font-family: Merriweather;">
+                            &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b> <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
+                        </span>
                     </div>
-                    <div class="col-md-6 text-md-end">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                        <a href="PrivacyPolicy.aspx" class="text-muted me-3">Privacy Policy</a>
+                        <a href="Terms.aspx" class="text-muted me-3">Terms of Service</a>
+                        <a href="Contact.aspx" class="text-muted">Contact Us</a>
                     </div>
                 </div>
             </div>
-        </footer>--%>
-       <!-- Footer -->
-<footer class="footer mt-auto py-3 bg-light">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <span class="text-muted d-block" style="font-family: Merriweather;">
-                    &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b> <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
-                </span>
-            </div>
-            <div class="col-md-6 text-md-end mt-3 mt-md-0">
-                <a href="PrivacyPolicy.aspx" class="text-muted me-3">Privacy Policy</a>
-                <a href="Terms.aspx" class="text-muted me-3">Terms of Service</a>
-                <a href="Contact.aspx" class="text-muted">Contact Us</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
+        </footer>
     </form>
     <asp:ContentPlaceHolder ID="ScriptsContent" runat="server">
     </asp:ContentPlaceHolder>
