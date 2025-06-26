@@ -18,25 +18,31 @@ namespace Society_management
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 🔒 Prevent browser caching after logout
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+
+            // 🔐 Check session
             if (Session["A_id"] == null)
             {
-                if (Request.Cookies["AdminInfo"] != null)
+                // 🧠 Try to restore from cookie
+                if (Request.Cookies["UserInfo"] != null)
                 {
-                    string aid = Request.Cookies["AdminInfo"]["A_id"];
-                    if (!string.IsNullOrEmpty(aid))
+                    string uid = Request.Cookies["UserInfo"]["A_id"];
+                    if (!string.IsNullOrEmpty(uid))
                     {
-                        Session["A_id"] = aid;
-                        Response.Redirect(Request.RawUrl); // Optional: reload with session
-                    }
-                    else
-                    {
-                        Response.Redirect("A_login.aspx");
+                        Session["A_id"] = uid;
+
+                        // Optional: reload to ensure page loads fully under session
+                        Response.Redirect(Request.RawUrl);
+                        return;
                     }
                 }
-                else
-                {
-                    Response.Redirect("A_login.aspx");
-                }
+
+                // ❌ Session and cookie both missing — redirect to login
+                Response.Redirect("Login.aspx?error=sessionexpired");
+                return;
             }
             if (!IsPostBack)
             {
