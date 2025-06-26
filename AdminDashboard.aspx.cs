@@ -18,6 +18,26 @@ namespace Society_management
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["A_id"] == null)
+            {
+                if (Request.Cookies["AdminInfo"] != null)
+                {
+                    string aid = Request.Cookies["AdminInfo"]["A_id"];
+                    if (!string.IsNullOrEmpty(aid))
+                    {
+                        Session["A_id"] = aid;
+                        Response.Redirect(Request.RawUrl); // Optional: reload with session
+                    }
+                    else
+                    {
+                        Response.Redirect("A_login.aspx");
+                    }
+                }
+                else
+                {
+                    Response.Redirect("A_login.aspx");
+                }
+            }
             if (!IsPostBack)
             {
 
@@ -95,6 +115,7 @@ namespace Society_management
 
         private void BindRecentActivities()
         {
+
             List<Activity> activities = Session["RecentActivities"] as List<Activity>;
 
             if (activities != null && activities.Count > 0)

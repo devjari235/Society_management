@@ -2410,6 +2410,7 @@
     <Content Include="User_view_Events.aspx" />
     <Content Include="U_EmailSend.aspx" />
     <Content Include="U_login.aspx" />
+    <Content Include="U_logout.aspx" />
     <Content Include="U_registration.aspx" />
     <Content Include="VerifyOtp.aspx" />
     <Content Include="VerifyOtpUser.aspx" />
@@ -2904,6 +2905,13 @@
     </Compile>
     <Compile Include="U_login.aspx.designer.cs">
       <DependentUpon>U_login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="U_logout.aspx.cs">
+      <DependentUpon>U_logout.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="U_logout.aspx.designer.cs">
+      <DependentUpon>U_logout.aspx</DependentUpon>
     </Compile>
     <Compile Include="U_registration.aspx.cs">
       <DependentUpon>U_registration.aspx</DependentUpon>

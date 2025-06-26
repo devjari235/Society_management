@@ -59,14 +59,23 @@ namespace Society_management
                 {
                     while (dr.Read())
                     {
+                        // Set admin session values
                         Session["A_id"] = dr.GetValue(0).ToString();
                         Session["A_name"] = dr.GetValue(1).ToString();
                         Session["A_email"] = dr.GetValue(2).ToString();
                         Session["A_pass"] = dr.GetValue(3).ToString();
                         Session["A_phone"] = dr.GetValue(4).ToString();
+
+                        // ✅ Create a cookie for Admin ID only
+                        HttpCookie adminCookie = new HttpCookie("AdminInfo");
+                        adminCookie["A_id"] = dr.GetValue(0).ToString();
+                        adminCookie.Expires = DateTime.Now.AddDays(1); // Optional: set expiry
+                        Response.Cookies.Add(adminCookie);
                     }
+
                     Response.Redirect("AdminDashboard.aspx");
                 }
+
             }
         }
     }

@@ -3,41 +3,90 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Web.UI.WebControls;
+using System.Web;
 
 namespace Society_management
 {
     public partial class UserDashboard : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 🔒 Prevent browser caching after logout
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+
+            // 🔐 Check session
+            if (Session["U_id"] == null)
+            {
+                // 🧠 Try to restore from cookie
+                if (Request.Cookies["UserInfo"] != null)
+                {
+                    string uid = Request.Cookies["UserInfo"]["U_id"];
+                    if (!string.IsNullOrEmpty(uid))
+                    {
+                        Session["U_id"] = uid;
+
+                        // Optional: reload to ensure page loads fully under session
+                        Response.Redirect(Request.RawUrl);
+                        return;
+                    }
+                }
+
+                // ❌ Session and cookie both missing — redirect to login
+                Response.Redirect("U_login.aspx?error=sessionexpired");
+                return;
+            }
+
+            // ✅ Safe to continue: Session is active
             if (!IsPostBack)
             {
-                
                 bindOwnerID();
                 IsOwner();
                 IsUser();
-
-                    LoadDashboardData();
-                    LoadNotices();
-                    LoadUpcomingEvents();
-                
+                LoadDashboardData();
+                LoadNotices();
+                LoadUpcomingEvents();
             }
         }
 
+
         private void LoadDashboardData()
         {
-            int userId = Convert.ToInt32(Session["U_id"]);
 
-            // Get maintenance due information
-            LoadMaintenanceData(userId);
+            int userId = 0;
 
-            // Get visitor information
-            LoadVisitorData(userId);
+            if (Session["U_id"] != null)
+            {
+                userId = Convert.ToInt32(Session["U_id"]);
+            }
+            else if (Request.Cookies["UserInfo"] != null)
+            {
+                // Restore session from cookie
+                string userIdFromCookie = Request.Cookies["UserInfo"]["U_id"];
+                if (!string.IsNullOrEmpty(userIdFromCookie))
+                {
+                    userId = Convert.ToInt32(userIdFromCookie);
+                    Session["U_id"] = userId; // Re-establish session from cookie
+                }
+            }
 
-            // Get upcoming event information
-            LoadEventData();
-            IsCommitteeMember(userId);
+            if (userId != 0)
+            {
+                // Now safe to call these with userId
+                LoadMaintenanceData(userId);
+                LoadVisitorData(userId);
+                LoadEventData();
+                IsCommitteeMember(userId);
+            }
+            else
+            {
+                // Redirect to login if no session or cookie
+                Response.Redirect("U_login.aspx");
+            }
+
         }
 
         private void LoadMaintenanceData(int userId)

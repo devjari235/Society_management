@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data.SqlClient;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Society_management
 {
@@ -14,7 +15,7 @@ namespace Society_management
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-
+             
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -66,7 +67,9 @@ AND
                     while (dr.Read())
                     {
                         Session["U_id"] = dr.GetValue(0).ToString();
-
+                        HttpCookie userCookie = new HttpCookie("UserInfo");
+                        userCookie["U_id"] = dr.GetValue(0).ToString();
+                        Response.Cookies.Add(userCookie);
                     }
                     Response.Redirect("UserDashboard.aspx");
                 }
