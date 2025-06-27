@@ -27,9 +27,9 @@ namespace Society_management
             if (Session["A_id"] == null)
             {
                 // 🧠 Try to restore from cookie
-                if (Request.Cookies["UserInfo"] != null)
+                if (Request.Cookies["AdminInfo"] != null)
                 {
-                    string uid = Request.Cookies["UserInfo"]["A_id"];
+                    string uid = Request.Cookies["AdminInfo"]["A_id"];
                     if (!string.IsNullOrEmpty(uid))
                     {
                         Session["A_id"] = uid;

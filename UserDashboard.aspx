@@ -17,24 +17,7 @@
 
 <!-- Font Awesome (for icons) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        window.addEventListener("pageshow", function (event) {
-            // If the page is loaded from the back-forward cache (user clicked back)
-            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-                // Show SweetAlert first, then redirect on OK
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Session Expired',
-                    text: 'Please login again.',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'U_login.aspx'; // or 'U_login.aspx' for user
-                    }
-                });
-            }
-        });
-    </script>
+
 
     <style>
         :root {

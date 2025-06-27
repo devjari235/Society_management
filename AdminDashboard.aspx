@@ -78,26 +78,6 @@
             color: #6c757d;
         }
     </style>
-
-<script>
-    window.addEventListener("pageshow", function (event) {
-        // If the page is loaded from the back-forward cache (user clicked back)
-        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-            // Show SweetAlert first, then redirect on OK
-            Swal.fire({
-                icon: 'warning',
-                title: 'Session Expired',
-                text: 'Please login again.',
-                confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'Login.aspx'; // or 'U_login.aspx' for user
-                }
-            });
-        }
-    });
-
-</script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
