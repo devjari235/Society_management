@@ -83,7 +83,6 @@
 
         /* Body and Form Styles */
         body {
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .form-card {

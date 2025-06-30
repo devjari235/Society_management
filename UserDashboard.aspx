@@ -219,7 +219,9 @@
         .swiper-slide:hover {
             cursor: pointer;
         }
-
+        .swiper-android .swiper-slide, .swiper-ios .swiper-slide, .swiper-wrapper {
+            justify-content:center;
+        }
         /* Upcoming Events */
         .upcoming-events {
             margin-bottom: 30px;
