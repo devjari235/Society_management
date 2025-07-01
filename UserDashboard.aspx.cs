@@ -18,23 +18,27 @@ namespace Society_management
             Response.Cache.SetNoStore();
             Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
 
+            // 🛡 Check session
             if (Session["U_id"] == null)
             {
+                // 🧠 Try to restore from cookie
                 if (Request.Cookies["UserInfo"] != null)
                 {
                     string uid = Request.Cookies["UserInfo"]["U_id"];
                     if (!string.IsNullOrEmpty(uid))
                     {
                         Session["U_id"] = uid;
-                        Response.Redirect(Request.RawUrl);
+
+                        // 🔁 Reload page to apply restored session
+                        Response.Redirect(Request.RawUrl, true);
                         return;
                     }
                 }
 
+                // ❌ Session & Cookie both missing – redirect to login
                 Response.Redirect("U_login.aspx?error=sessionexpired");
                 return;
             }
-
 
             // ✅ Safe to continue: Session is active
             if (!IsPostBack)
