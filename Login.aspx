@@ -32,7 +32,14 @@
         }
     }
     </script>
+        <script>
+            history.pushState(null, null, location.href);
 
+            window.onpopstate = function () {
+                // 🔁 If back button is clicked, force redirect to login
+                window.location.href = "A_logout.aspx";
+            };
+        </script>
   <style>
     :root {
       --primary-color: #4a6bff;

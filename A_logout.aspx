@@ -21,6 +21,12 @@
          });
      };
 
+     history.pushState(null, null, location.href);
+     window.onpopstate = function () {
+         window.location.href = "Login.aspx";
+     };
+
+
      // Handle back-button (bfcache) event
      window.addEventListener("pageshow", function (event) {
          if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {

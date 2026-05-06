@@ -15,12 +15,13 @@ namespace Society_management
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
+        private int AdminId => Session["A_id"] != null ? Convert.ToInt32(Session["A_id"]) : 0;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 // Initialize controls if needed
-                //txtExpiry.Attributes["min"] = DateTime.Now.ToString("yyyy-MM-dd");
             }
         }
 
@@ -28,68 +29,58 @@ namespace Society_management
         {
             try
             {
-                string script = @"
-        Swal.fire({
-            title: 'Sending Email...',
-            text: 'Please wait while we send your email.',
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Email Sent!',
-                        text: 'Your email has been successfully sent.'
-                    });
-                }, 10000);
-            }
-        });";
+                // Show Initial Loading Script
+                string loaderScript = @"
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we post the notice and notify users.',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "loader", loaderScript, true);
 
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "emailLoader", script, true);
-            
                 // Validate expiry date
                 if (!DateTime.TryParse(txtExpiry.Text, out DateTime expiryDate))
                 {
                     ShowError("Invalid expiry date format. Please use yyyy-MM-dd.");
-                    ScriptManager.RegisterStartupScript(this, GetType(), "hideLoader", "hideLoader();", true);
                     return;
                 }
 
-                // Save notice to database
+                // 1. Save notice to database
                 int noticeId = SaveNoticeToDatabase();
 
-                // Check if email sending is requested
+                // 2. Check selected notification methods
                 bool sendEmail = cblemail.Items.Cast<ListItem>().Any(item => item.Value == "Email" && item.Selected);
                 bool sendInApp = cblemail.Items.Cast<ListItem>().Any(item => item.Value == "On App" && item.Selected);
 
+                // 3. Handle Email Sending
                 if (sendEmail)
                 {
-                    // Register script to update loader message
-                    ScriptManager.RegisterStartupScript(this, GetType(), "updateLoaderMessage",
-                        "document.getElementById('loaderMessage').textContent = 'Sending emails...';", true);
-
-                    // Send emails to selected groups
                     SendEmailsToSelectedGroups();
                 }
 
+                // 4. Handle In-App Notification (Logic added here)
                 if (sendInApp)
                 {
-                    // Add code here for in-app notifications if needed
-                    System.Diagnostics.Trace.WriteLine("In-app notification would be sent here");
+                    SendInAppNotification(noticeId, txtTitle.Text.Trim());
                 }
 
-                // Hide loader and show success message
-                ScriptManager.RegisterStartupScript(this, GetType(), "hideLoaderAndShowSuccess",
-                    "hideLoader(); Swal.fire('Success!', 'Notice posted successfully!" + (sendEmail ? " Emails have been sent." : "") + "', 'success').then(() => window.location = 'CreateNotice.aspx');",
+                // 5. Final Success Message
+                string successDetail = "Notice posted successfully!";
+                if (sendEmail && sendInApp) successDetail += " Emails and In-App notifications sent.";
+                else if (sendEmail) successDetail += " Emails have been sent.";
+                else if (sendInApp) successDetail += " In-App notifications sent.";
+
+                ScriptManager.RegisterStartupScript(this, GetType(), "finalSuccess",
+                    $"Swal.fire('Success!', '{successDetail}', 'success').then(() => window.location = 'CreateNotice.aspx');",
                     true);
             }
             catch (Exception ex)
             {
-                // Hide loader and show error
-                ScriptManager.RegisterStartupScript(this, GetType(), "hideLoaderAndShowError",
-                    "hideLoader(); Swal.fire('Error!', '" + ex.Message.Replace("'", "\\'") + "', 'error');",
-                    true);
+                ShowError("An error occurred: " + ex.Message);
             }
         }
 
@@ -103,7 +94,6 @@ namespace Society_management
                 string relativePath = "~/Notice/" + fileName;
                 string absolutePath = Server.MapPath(relativePath);
                 fuNoticeFile.SaveAs(absolutePath);
-
                 filePath = relativePath;
             }
 
@@ -112,7 +102,6 @@ namespace Society_management
                                   .Where(li => li.Selected)
                                   .Select(li => li.Text));
 
-            // Get selected send methods
             string send = string.Join(",",
                 cblemail.Items.Cast<ListItem>()
                               .Where(li => li.Selected)
@@ -136,7 +125,7 @@ namespace Society_management
                     cmd.Parameters.AddWithValue("@NoticeType", ddlNoticeType.SelectedValue);
                     cmd.Parameters.AddWithValue("@Importance", ddlImportance.SelectedValue);
                     cmd.Parameters.AddWithValue("@Status", GetStatus(DateTime.Parse(txtExpiry.Text)));
-                    cmd.Parameters.AddWithValue("@AdminId", Session["A_id"] ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@AdminId", AdminId);
                     cmd.Parameters.AddWithValue("@broad", broadcast);
                     cmd.Parameters.AddWithValue("@send", send);
                     conn.Open();
@@ -145,107 +134,121 @@ namespace Society_management
             }
         }
 
-        private string GetStatus(DateTime expiryDate)
+        private void SendInAppNotification(int noticeId, string titleText)
         {
-            return expiryDate >= DateTime.Now ? "Live" : "Expired";
+            var selectedGroups = cblBroadcast.Items.Cast<ListItem>().Where(li => li.Selected).Select(li => li.Value).ToList();
+            if (selectedGroups.Count == 0) return;
+
+            HashSet<int> userIds = new HashSet<int>();
+
+            using (SqlConnection conn = new SqlConnection(strcon))
+            {
+                conn.Open();
+                foreach (var group in selectedGroups)
+                {
+                    string userQuery = GetGroupUserQuery(group);
+                    if (string.IsNullOrEmpty(userQuery)) continue;
+
+                    using (SqlCommand cmd = new SqlCommand(userQuery, conn))
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                userIds.Add(Convert.ToInt32(reader[0]));
+                            }
+                        }
+                    }
+                }
+
+                if (userIds.Count > 0)
+                {
+                    string insertNotif = @"INSERT INTO Notifications 
+                                         (User_id, Title, Message, Type, ReferenceID, CreatedDate, IsRead)
+                                         VALUES (@Uid, @Title, @Msg, 'Notice', @RefID, GETDATE(), 0)";
+
+                    foreach (int uid in userIds)
+                    {
+                        using (SqlCommand cmd = new SqlCommand(insertNotif, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@Uid", uid);
+                            cmd.Parameters.AddWithValue("@Title", "New Society Notice");
+                            cmd.Parameters.AddWithValue("@Msg", "A new notice has been posted: " + titleText);
+                            cmd.Parameters.AddWithValue("@RefID", noticeId);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
+        }
+
+        private string GetGroupUserQuery(string group)
+        {
+            switch (group)
+            {
+                case "Committee Member": return "SELECT User_id FROM tblCommitteeMember WHERE Status='Current'";
+                case "Owners": return "SELECT u.User_id FROM tblUser u INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id";
+                case "All Members": return "SELECT User_id FROM tblUser";
+                default: return "";
+            }
         }
 
         private void SendEmailsToSelectedGroups()
         {
-            var selectedGroups = new List<string>();
-            foreach (ListItem item in cblBroadcast.Items)
-            {
-                if (item.Selected)
-                {
-                    selectedGroups.Add(item.Value);
-                }
-            }
-
-            if (selectedGroups.Count == 0)
-            {
-                System.Diagnostics.Trace.WriteLine("No groups selected for email broadcast");
-                return;
-            }
+            var selectedGroups = cblBroadcast.Items.Cast<ListItem>().Where(li => li.Selected).Select(li => li.Value).ToList();
+            if (selectedGroups.Count == 0) return;
 
             var emails = GetGroupEmails(selectedGroups);
-            if (emails.Count == 0)
+            if (emails.Count > 0)
             {
-                System.Diagnostics.Trace.WriteLine("No valid email addresses found for selected groups");
-                return;
+                SendEmailBatch(emails);
             }
-
-            SendEmailBatch(emails);
         }
 
         private List<string> GetGroupEmails(List<string> groups)
         {
             var emails = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
             using (SqlConnection conn = new SqlConnection(strcon))
             {
                 conn.Open();
-
                 foreach (var group in groups)
                 {
                     string query = GetGroupQuery(group);
                     if (string.IsNullOrEmpty(query)) continue;
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
-                            {
-                                string email = reader[0]?.ToString();
-                                if (!string.IsNullOrWhiteSpace(email) && IsValidEmail(email))
-                                {
-                                    emails.Add(email.Trim());
-                                }
-                            }
+                            string email = reader[0]?.ToString();
+                            if (!string.IsNullOrWhiteSpace(email) && IsValidEmail(email))
+                                emails.Add(email.Trim());
                         }
                     }
                 }
             }
-            return new List<string>(emails);
+            return emails.ToList();
         }
 
         private string GetGroupQuery(string group)
         {
             switch (group)
             {
-                case "Committee Member":
-                    return "SELECT Email FROM tblCommitteeMember WHERE Email IS NOT NULL And Status='Current'";
-                case "Owners":
-                    return "SELECT Email_id FROM tblOwner WHERE Email_id IS NOT NULL";
-                case "All Members":
-                    return "SELECT Email FROM tblUser WHERE Email IS NOT NULL";
-                default:
-                    return "";
+                case "Committee Member": return "SELECT Email FROM tblCommitteeMember WHERE Email IS NOT NULL And Status='Current'";
+                case "Owners": return "SELECT Email_id FROM tblOwner WHERE Email_id IS NOT NULL";
+                case "All Members": return "SELECT Email FROM tblUser WHERE Email IS NOT NULL";
+                default: return "";
             }
         }
 
         private void SendEmailBatch(List<string> emails)
         {
             const int batchSize = 50;
-            int batchCount = (int)Math.Ceiling((double)emails.Count / batchSize);
-
-            for (int i = 0; i < batchCount; i++)
+            for (int i = 0; i < emails.Count; i += batchSize)
             {
-                var batch = emails.Skip(i * batchSize).Take(batchSize).ToList();
-                try
-                {
-                    // Update loader message with progress
-                    string progressMessage = $"Sending emails ({Math.Min((i + 1) * batchSize, emails.Count)} of {emails.Count})...";
-                    ScriptManager.RegisterStartupScript(this, GetType(), "updateLoaderMessage" + i,
-                        $"document.getElementById('loaderMessage').textContent = '{progressMessage}';", true);
-
-                    SendSingleEmail(batch);
-                    System.Diagnostics.Trace.WriteLine($"Successfully sent batch {i + 1} of {batchCount} with {batch.Count} recipients");
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Trace.WriteLine($"Failed to send batch {i + 1}: {ex.Message}");
-                }
+                var batch = emails.Skip(i).Take(batchSize).ToList();
+                SendSingleEmail(batch);
             }
         }
 
@@ -260,26 +263,16 @@ namespace Society_management
 
                 if (fuNoticeFile.HasFile && fuNoticeFile.PostedFile.ContentLength > 0)
                 {
-                    string fileName = Path.GetFileName(fuNoticeFile.FileName);
-                    mail.Attachments.Add(new Attachment(fuNoticeFile.PostedFile.InputStream, fileName));
+                    mail.Attachments.Add(new Attachment(fuNoticeFile.PostedFile.InputStream, Path.GetFileName(fuNoticeFile.FileName)));
                 }
 
-                foreach (string email in recipients)
-                {
-                    mail.Bcc.Add(email);
-                }
+                foreach (string email in recipients) mail.Bcc.Add(email);
 
                 using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
                 {
                     smtp.EnableSsl = true;
                     smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(
-                        "infolivesta@gmail.com",
-                        "npimgmeajgyouqvm"
-                    );
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.Timeout = 30000;
-
+                    smtp.Credentials = new NetworkCredential("infolivesta@gmail.com", "zbzjqlopqiuwtxry");
                     smtp.Send(mail);
                 }
             }
@@ -287,57 +280,29 @@ namespace Society_management
 
         private string CreateEmailBody()
         {
-            string attachmentInfo = fuNoticeFile.HasFile ?
-                $"<p><strong>Attachment:</strong> {Server.HtmlEncode(fuNoticeFile.FileName)}</p>" :
-                string.Empty;
-
             return $@"
-            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;'>
+            <div style='font-family: Arial; max-width: 600px; border: 1px solid #eee; padding: 20px;'>
                 <h2 style='color: #4e73df;'>{Server.HtmlEncode(txtTitle.Text)}</h2>
-                <p><strong>Notice Type:</strong> {Server.HtmlEncode(ddlNoticeType.SelectedValue)}</p>
-                <p><strong>Importance:</strong> {Server.HtmlEncode(ddlImportance.SelectedValue)}</p>
-                <p><strong>Expiry Date:</strong> {DateTime.Parse(txtExpiry.Text):dd MMM yyyy}</p>
-                {attachmentInfo}
-                <hr style='border-top: 1px solid #e0e0e0; margin: 15px 0;'>
-                <div style='background-color: #f8f9fa; padding: 15px; border-radius: 5px;'>
-                    {Server.HtmlEncode(txtDescription.Text).Replace("\n", "<br />")}
-                </div>
-                <hr style='border-top: 1px solid #e0e0e0; margin: 15px 0;'>
-                <p>Please log in to the society portal for more details.</p>
-                <p style='color: #6c757d; font-size: 0.9em;'>
-                    This is an automated message. Please do not reply directly to this email.
-                </p>
+                <p><strong>Notice Type:</strong> {ddlNoticeType.SelectedValue}</p>
+                <hr/>
+                <p>{Server.HtmlEncode(txtDescription.Text).Replace("\n", "<br />")}</p>
+                <hr/>
+                <p style='font-size: 0.8em; color: #777;'>This is an automated notification from your Society Management System.</p>
             </div>";
         }
 
+        private string GetStatus(DateTime expiryDate) => expiryDate >= DateTime.Now ? "Live" : "Expired";
+
         private bool IsValidEmail(string email)
         {
-            if (string.IsNullOrWhiteSpace(email))
-                return false;
-
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        private void ShowSuccess(string message)
-        {
-            ScriptManager.RegisterStartupScript(this, GetType(), "SuccessMessage",
-                $"Swal.fire('Success!', '{message.Replace("'", "\\'")}', 'success').then(() => window.location = 'CreateNotice.aspx');",
-                true);
+            try { return new MailAddress(email).Address == email; }
+            catch { return false; }
         }
 
         private void ShowError(string message)
         {
             ScriptManager.RegisterStartupScript(this, GetType(), "ErrorMessage",
-                $"Swal.fire('Error!', '{message.Replace("'", "\\'")}', 'error');",
-                true);
+                $"Swal.fire('Error!', '{message.Replace("'", "\\'")}', 'error');", true);
         }
     }
 }

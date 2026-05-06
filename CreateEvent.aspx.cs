@@ -1,109 +1,119 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Society_management
 {
     public partial class CreateEvent : System.Web.UI.Page
     {
+        string cs = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Set default date to today
                 txtEventDate.Text = DateTime.Now.ToString("yyyy-MM-ddTHH:mm");
             }
         }
 
         protected void btnCreateEvent_Click(object sender, EventArgs e)
         {
-            string imageUrl = string.Empty;
+            string imageUrl = "";
 
-            // Handle file upload if an image was provided
+            // 🔹 IMAGE UPLOAD
             if (fileEventImage.HasFile)
             {
                 try
                 {
                     string fileName = Path.GetFileName(fileEventImage.FileName);
-                    string uploadFolder = Server.MapPath("~/EventImages/");
+                    string folder = Server.MapPath("~/EventImages/");
 
-                    // Create directory if it doesn't exist
-                    if (!Directory.Exists(uploadFolder))
-                    {
-                        Directory.CreateDirectory(uploadFolder);
-                    }
+                    if (!Directory.Exists(folder))
+                        Directory.CreateDirectory(folder);
 
-                    // Save the file
-                    string filePath = Path.Combine(uploadFolder, fileName);
+                    string filePath = Path.Combine(folder, fileName);
                     fileEventImage.SaveAs(filePath);
 
-                    // Set the image URL for database
                     imageUrl = "EventImages/" + fileName;
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = "Error uploading image: " + ex.Message;
+                    lblMessage.Text = "Image upload error: " + ex.Message;
                     lblMessage.CssClass = "text-danger";
-                    lblMessage.Visible = true;
                     return;
                 }
             }
 
-            // Save event to database
-            string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
-
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(cs))
             {
-                string query = @"INSERT INTO tblEvents (EventName, EventDescription, EventDate, EventLocation, 
-                                    OrganizerName, OrganizerEmail, ImageUrl,admin_id) 
-                                    VALUES (@EventName, @EventDescription, @EventDate, @EventLocation, 
-                                    @OrganizerName, @OrganizerEmail, @ImageUrl, @id)";
+                con.Open();
 
-                using (SqlCommand cmd = new SqlCommand(query, con))
-                {
-                    cmd.Parameters.AddWithValue("@EventName", txtEventName.Text);
-                    cmd.Parameters.AddWithValue("@EventDescription", txtEventDescription.Text);
-                    cmd.Parameters.AddWithValue("@EventDate", DateTime.Parse(txtEventDate.Text));
-                    cmd.Parameters.AddWithValue("@EventLocation", txtEventLocation.Text);
-                    cmd.Parameters.AddWithValue("@OrganizerName", txtOrganizerName.Text);
-                    cmd.Parameters.AddWithValue("@OrganizerEmail", txtOrganizerEmail.Text);
-                    cmd.Parameters.AddWithValue("@ImageUrl", string.IsNullOrEmpty(imageUrl) ? DBNull.Value : (object)imageUrl);
-                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+                // 🔥 INSERT EVENT + GET EventId
+                string eventQuery = @"
+                    INSERT INTO tblEvents 
+                    (EventName, EventDescription, EventDate, EventLocation, 
+                     OrganizerName, OrganizerEmail, ImageUrl, admin_id)
+                    
+                    OUTPUT INSERTED.EventId
+                    
+                    VALUES 
+                    (@EventName, @EventDescription, @EventDate, @EventLocation, 
+                     @OrganizerName, @OrganizerEmail, @ImageUrl, @AdminId)";
 
-                    try
-                    {
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                        string script = @"
-            Swal.fire({
-                title: 'Success!',
-                text: 'Event created successfully!',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(function() {
-                window.location = 'CreateEvent.aspx';
-            });";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "SuccessMessage", script, true);
-                        // Clear form
-                        txtEventName.Text = "";
-                        txtEventDescription.Text = "";
-                        txtEventLocation.Text = "";
-                        txtOrganizerName.Text = "";
-                        txtOrganizerEmail.Text = "";
-                    }
-                    catch (Exception ex)
-                    {
-                        lblMessage.Text = "Error creating event: " + ex.Message;
-                        lblMessage.CssClass = "text-danger";
-                        lblMessage.Visible = true;
-                    }
-                }
+                SqlCommand cmd = new SqlCommand(eventQuery, con);
+
+                cmd.Parameters.AddWithValue("@EventName", txtEventName.Text);
+                cmd.Parameters.AddWithValue("@EventDescription", txtEventDescription.Text);
+                cmd.Parameters.AddWithValue("@EventDate", DateTime.Parse(txtEventDate.Text));
+                cmd.Parameters.AddWithValue("@EventLocation", txtEventLocation.Text);
+                cmd.Parameters.AddWithValue("@OrganizerName", txtOrganizerName.Text);
+                cmd.Parameters.AddWithValue("@OrganizerEmail", txtOrganizerEmail.Text);
+                cmd.Parameters.AddWithValue("@ImageUrl", string.IsNullOrEmpty(imageUrl) ? DBNull.Value : (object)imageUrl);
+                cmd.Parameters.AddWithValue("@AdminId", Session["A_id"]);
+
+                int eventId = Convert.ToInt32(cmd.ExecuteScalar()); // 🔥 GET EVENT ID
+
+                // 🔥 INSERT NOTIFICATION FOR ALL USERS
+                string notifyQuery = @"
+                    INSERT INTO Notifications (User_id, Title, Message, Type, ReferenceID, IsRead, CreatedDate)
+                    SELECT 
+                        User_id,
+                        'New Event',
+                        'New Event: ' + @EventName + ' at ' + @Location,
+                        'Event',
+                        @EventId,
+                        0,
+                        GETDATE()
+                    FROM tblUser";
+
+                SqlCommand notifyCmd = new SqlCommand(notifyQuery, con);
+                notifyCmd.Parameters.AddWithValue("@EventName", txtEventName.Text);
+                notifyCmd.Parameters.AddWithValue("@Location", txtEventLocation.Text);
+                notifyCmd.Parameters.AddWithValue("@EventId", eventId);
+
+                notifyCmd.ExecuteNonQuery();
+
+                // ✅ SUCCESS MESSAGE
+                string script = @"
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Event created and notification sent!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(function() {
+                        window.location = 'CreateEvent.aspx';
+                    });";
+
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "Success", script, true);
+
+                // 🔹 CLEAR FORM
+                txtEventName.Text = "";
+                txtEventDescription.Text = "";
+                txtEventLocation.Text = "";
+                txtOrganizerName.Text = "";
+                txtOrganizerEmail.Text = "";
             }
         }
     }

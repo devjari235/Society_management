@@ -15,6 +15,15 @@ namespace Society_management
     {
 
         /// <summary>
+        /// pnlEmpty control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEmpty;
+
+        /// <summary>
         /// Panel1 control.
         /// </summary>
         /// <remarks>

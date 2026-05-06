@@ -323,7 +323,59 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <%-- ── EMPTY STATE (shown when grid has no rows) ── --%>
+<asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+    <div style="
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 20px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+        margin-top: 20px;
+        text-align: center;">
 
+        <!-- Icon -->
+        <div style="
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; color: #adb5bd;"></i>
+        </div>
+
+        <!-- Title -->
+        <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">
+            No Live Notices
+        </h4>
+
+        <!-- Subtitle -->
+        <p style="color: #adb5bd; font-size: 0.95rem; max-width: 320px; margin-bottom: 24px;">
+            There are currently no active notices to display. Create a new notice to notify your society members.
+        </p>
+
+        <!-- Button -->
+        <a href="CreateNotice.aspx" style="
+            padding: 10px 28px;
+            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            color: #fff;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(142,45,226,0.3);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;">
+            <i class="fas fa-plus-circle"></i> Create Notice
+        </a>
+    </div>
+</asp:Panel>
  <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-12">

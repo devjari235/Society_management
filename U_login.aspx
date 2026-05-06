@@ -258,6 +258,14 @@
       }
     }
   </style>
+    <script>
+        history.pushState(null, null, location.href);
+
+        window.onpopstate = function () {
+            // 🔁 If back button is clicked, force redirect to login
+            window.location.href = "U_logout.aspx";
+        };
+    </script>
 </head>
 <body>
   <form id="form1" runat="server">

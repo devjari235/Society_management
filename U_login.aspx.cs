@@ -15,7 +15,19 @@ namespace Society_management
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
-             
+            if (!IsPostBack)
+            {
+                // 🧠 Auto-login using cookie
+                if (Session["U_id"] == null && Request.Cookies["UserInfo"] != null)
+                {
+                    string uid = Request.Cookies["UserInfo"]["U_id"];
+                    if (!string.IsNullOrEmpty(uid))
+                    {
+                        Session["U_id"] = uid;
+                        Response.Redirect("UserDashboard.aspx");
+                    }
+                }
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
