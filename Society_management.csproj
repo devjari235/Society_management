@@ -254,6 +254,7 @@
     <Content Include="Document_Details.aspx" />
     <Content Include="EditEvent.aspx" />
     <Content Include="EmailSend.aspx" />
+    <Content Include="ErrorPage.aspx" />
     <Content Include="EventDetails.aspx" />
     <Content Include="ExpireNotice.aspx" />
     <Content Include="Family_member.aspx" />
@@ -2385,6 +2386,7 @@
     <Content Include="Notification.aspx" />
     <Content Include="Owner.aspx" />
     <Content Include="Owner_Membr.aspx" />
+    <Content Include="PageNotFound.aspx" />
     <Content Include="Past_Committee.aspx" />
     <Content Include="Payment.aspx" />
     <Content Include="Pending_Complaints.aspx" />
@@ -2598,6 +2600,13 @@
     <Compile Include="EmailSend.aspx.designer.cs">
       <DependentUpon>EmailSend.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ErrorPage.aspx.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage.aspx.designer.cs">
+      <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="EventDetails.aspx.cs">
       <DependentUpon>EventDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2723,6 +2732,13 @@
     </Compile>
     <Compile Include="Owner_Membr.aspx.designer.cs">
       <DependentUpon>Owner_Membr.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="PageNotFound.aspx.cs">
+      <DependentUpon>PageNotFound.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PageNotFound.aspx.designer.cs">
+      <DependentUpon>PageNotFound.aspx</DependentUpon>
     </Compile>
     <Compile Include="Past_Committee.aspx.cs">
       <DependentUpon>Past_Committee.aspx</DependentUpon>
