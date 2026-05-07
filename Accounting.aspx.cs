@@ -27,7 +27,11 @@ namespace Society_management
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["A_id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
 
@@ -535,8 +539,8 @@ namespace Society_management
                     }
 
                     ViewState["ExpenseData"] = dtExpense;
-                    rptIncome.DataSource = dtExpense;
-                    rptIncome.DataBind();
+                    rptExpense.DataSource = dtExpense;
+                    rptExpense.DataBind();
                 }
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "updateExpenseSuccess", @"
                 Swal.fire({
@@ -573,8 +577,8 @@ namespace Society_management
                     ViewState["ExpenseData"] = dtExpense;
 
                     // Rebind updated data
-                    rptIncome.DataSource = dtExpense;
-                    rptIncome.DataBind();
+                    rptExpense.DataSource = dtExpense;
+                    rptExpense.DataBind();
                 }
 
                 // Show SweetAlert
@@ -1010,8 +1014,20 @@ namespace Society_management
                 LoadProfitLossStatement();
 
                 // Close modal
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "hideCustomPeriodModal",
-                    "$('#customPeriodModal').modal('hide');", true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "hideCustomPeriodModal", @"
+                    var modalEl = document.getElementById('customPeriodModal');
+
+                    if (modalEl) {
+
+                        var modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+                        if (!modalInstance) {
+                            modalInstance = new bootstrap.Modal(modalEl);
+                        }
+
+                        modalInstance.hide();
+                    }
+                    ", true);
             }
         }
 
@@ -1052,10 +1068,20 @@ namespace Society_management
             LoadProfitLossStatement();
             // Show success message
             // lblSuccessMessage.Text = "Income record added successfully!";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal",
-"$('#addIncomeModal').modal('hide');", true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal", @"
+                var modalEl = document.getElementById('addIncomeModal');
 
+                if (modalEl) {
 
+                    var modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+                    if (!modalInstance) {
+                        modalInstance = new bootstrap.Modal(modalEl);
+                    }
+
+                    modalInstance.hide();
+                }
+                ", true);
 
         }
 
@@ -1099,8 +1125,20 @@ namespace Society_management
                     LoadProfitLossStatement();
                     // Show success message
                     //lblSuccessMessage.Text = "Expense record added successfully!";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "closeModal",
-    "$('#addIncomeModal').modal('hide');", true);
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "closeExpenseModal", @"
+                        var modalEl = document.getElementById('addExpenseModal');
+
+                        if (modalEl) {
+
+                            var modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+                            if (!modalInstance) {
+                                modalInstance = new bootstrap.Modal(modalEl);
+                            }
+
+                            modalInstance.hide();
+                        }
+                        ", true);
 
                 }
                 catch (Exception ex)
@@ -1265,7 +1303,6 @@ namespace Society_management
             DataTable dt = new DataTable();
             ad.Fill(dt);
             ddlIncomeCategory.DataSource = dt;
-            ddlIncomeCategory.DataBind();
             ddlIncomeCategory.DataTextField = "CategoryName";
             ddlIncomeCategory.DataValueField = "CategoryID";
             ddlIncomeCategory.DataBind();
@@ -1281,7 +1318,6 @@ namespace Society_management
             DataTable dt = new DataTable();
             ad.Fill(dt);
             ddlExpenseCategory.DataSource = dt;
-            ddlExpenseCategory.DataBind();
             ddlExpenseCategory.DataTextField = "CategoryName";
             ddlExpenseCategory.DataValueField = "CategoryID";
             ddlExpenseCategory.DataBind();

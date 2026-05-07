@@ -34,7 +34,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
     
     <!-- Custom CSS -->
-    <link href="/Content/site.css" rel="stylesheet" />
+     <!--<link href="/Content/site.css" rel="stylesheet" /> -->
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     
@@ -334,55 +334,126 @@ body {
 }
 
 /* Responsive adjustments for smaller mobile devices */
-@media (max-width: 767.98px) {
-    .navbar-nav {
-        padding-top: 1rem;
+/* =========================================================
+   MOBILE RESPONSIVE (MASTER PAGE OVERRIDES)
+========================================================= */
+@media (max-width: 768px) {
+    /* 1. Remove Master Page layout restrictions */
+    .layout-container {
+        padding: 0 !important;
+        gap: 0 !important;
+        display: block !important; /* Stack sidebar/main-content */
+    }
+
+    .main-content {
+        padding: 10px 0 !important; /* Remove 20px Master Page padding */
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    .main-content-inner {
+        padding: 0 !important;
+    }
+
+    /* 2. Content Padding (5px Margin) */
+    .container-fluid.px-0 {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+
+    /* 3. Expand Tab Content to the absolute edges */
+    .tab-content {
+        padding: 15px 5px !important; 
+        margin-left: -5px !important;
+        margin-right: -5px !important;
+        width: calc(100% + 10px) !important;
+        border-left: none !important;
+        border-right: none !important;
+        border-radius: 0 !important;
+    }
+
+    /* 4. FORCE REPEATER WIDTH (Prevents stacking) */
+    .table-responsive {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .table {
+        /* Increased min-width to ensure all content stays side-by-side */
+        min-width: 950px !important; 
+        font-size: 14px !important;
+    }
+
+    .table td, .table th {
+        white-space: nowrap !important;
+        padding: 12px 8px !important;
+    }
+
+    /* 5. Summary Card Layout (Edge-to-Edge) */
+    .summary-card-row {
+        margin-left: -5px !important;
+        margin-right: -5px !important;
+    }
+
+    .summary-card-row > div {
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+        margin-bottom: 8px;
+    }
+
+    .summary-cat-card {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
     }
     
-    .sidebar-container {
-        width: 260px;
+    .summary-cat-card .card-body {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
     }
-    
-    .sidebar-card .list-group-item {
-        padding: 0.75rem 1rem;
+
+    /* 6. Fix Floating Button Visibility */
+    .mobile-sidebar-trigger {
+        right: 10px !important;
+        bottom: 10px !important;
     }
 }
 
 </style>
  
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    // This runs on first load AND every AJAX update
+    function pageLoad() {
         const sidebarContainer = document.getElementById('sidebarContainer');
         const body = document.body;
         const toggleButton = document.getElementById('sidebarToggle');
 
-        // Check if we're on mobile initially
+        if (!sidebarContainer) return;
+
+        // 1. MOBILE LOGIC
         const isMobileView = window.matchMedia('(max-width: 991.98px)').matches;
 
-        // Only create mobile elements if we're on mobile
         if (isMobileView) {
-            // Create mobile overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'sidebar-overlay';
-            document.body.appendChild(overlay);
+            // Check if overlay already exists to prevent duplicates
+            let overlay = document.querySelector('.sidebar-overlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'sidebar-overlay';
+                document.body.appendChild(overlay);
+            }
 
-            // Create mobile toggle button
-            const mobileToggleBtn = document.createElement('button');
-            mobileToggleBtn.className = 'mobile-sidebar-trigger';
-            mobileToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            document.body.appendChild(mobileToggleBtn);
+            // Check if mobile trigger already exists
+            let mobileToggleBtn = document.querySelector('.mobile-sidebar-trigger');
+            if (!mobileToggleBtn) {
+                mobileToggleBtn = document.createElement('button');
+                mobileToggleBtn.className = 'mobile-sidebar-trigger';
+                mobileToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                document.body.appendChild(mobileToggleBtn);
+            }
 
-            // Create close button for sidebar header
-            const sidebarHeader = document.createElement('div');
-            sidebarHeader.className = 'sidebar-header d-lg-none';
-            sidebarHeader.innerHTML = `
-            <h5 class="mb-0">Menu</h5>
-            <button class="sidebar-close-btn">&times;</button>
-        `;
-            sidebarContainer.querySelector('.sidebar-card').prepend(sidebarHeader);
             const closeBtn = document.querySelector('.sidebar-close-btn');
 
-            // Mobile toggle functions
             function openSidebar() {
                 sidebarContainer.classList.add('sidebar-mobile-visible');
                 overlay.classList.add('active');
@@ -395,61 +466,48 @@ body {
                 body.classList.remove('sidebar-open');
             }
 
-            // Mobile event listeners
-            mobileToggleBtn.addEventListener('click', openSidebar);
-            closeBtn.addEventListener('click', closeSidebar);
-            overlay.addEventListener('click', closeSidebar);
+            // Bind events
+            mobileToggleBtn.onclick = openSidebar;
+            if (closeBtn) closeBtn.onclick = closeSidebar;
+            overlay.onclick = closeSidebar;
 
-            // Close sidebar when clicking on links (mobile only)
+            // Close when a link is clicked
             document.querySelectorAll('.sidebar-card a').forEach(link => {
-                link.addEventListener('click', closeSidebar);
+                link.onclick = closeSidebar;
             });
         }
 
-        // Desktop sidebar state management
+        // 2. DESKTOP LOGIC
         const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
 
         if (!isMobileView) {
-            // Initialize desktop state
-            if (isCollapsed) {
-                sidebarContainer.classList.add('sidebar-collapsed');
-            } else {
-                sidebarContainer.classList.remove('sidebar-collapsed');
-            }
+            if (isCollapsed) sidebarContainer.classList.add('sidebar-collapsed');
+            else sidebarContainer.classList.remove('sidebar-collapsed');
         }
 
-        // Desktop toggle function
-        function toggleDesktopSidebar() {
-            if (isMobileView) return;
-
-            sidebarContainer.classList.toggle('sidebar-collapsed');
-            const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
-            localStorage.setItem('sidebarCollapsed', isNowCollapsed);
-        }
-
-        // Handle window resize
-        function handleResize() {
-            const nowMobile = window.matchMedia('(max-width: 991.98px)').matches;
-
-            if (nowMobile !== isMobileView) {
-                // Viewport size crossed the threshold, reload to reinitialize
-                window.location.reload();
-            }
-        }
-
-        // Event listeners
         if (toggleButton) {
-            toggleButton.addEventListener('click', toggleDesktopSidebar);
-        }
+            toggleButton.onclick = function () {
+                if (window.matchMedia('(max-width: 991.98px)').matches) return;
 
-        window.addEventListener('resize', handleResize);
-    });
+                sidebarContainer.classList.toggle('sidebar-collapsed');
+                const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
+                localStorage.setItem('sidebarCollapsed', isNowCollapsed);
+            };
+        }
+    }
+
+    // Handle resize
+    window.onresize = function () {
+        const isMobile = window.matchMedia('(max-width: 991.98px)').matches;
+        // Optional: reload if switching between mobile/desktop to reset UI
+        // window.location.reload(); 
+    };
 </script>
 </head>
 <body>
 
     <form runat="server">
-        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" />
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" EnablePartialRendering="true" />
 
         <!-- Header/Navbar -->
         <header>
@@ -516,60 +574,59 @@ body {
 
         <!-- Main Content Area -->
         <main class="container-fluid my-4">
-            <div class="layout-container">
+            <asp:UpdatePanel ID="MasterUpdatePanel" runat="server" UpdateMode="Conditional">
+                <ContentTemplate>
+                    <div class="layout-container">
 
-                <!-- Sidebar -->
-                <div class="sidebar-container" id="sidebarContainer">
-                    <div class="card sidebar-card mb-4">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center" style="padding-left: 8px;padding-right: 8px;">
-                            <button id="sidebarToggle" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-list"></i>
-                            </button>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="list-group list-group-flush">
-                                <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Dashboard</span></a>
-                                <a href="/View_flat.aspx" class="list-group-item list-group-item-action"><i class="bi bi-house-fill"></i><span class="sidebar-text"> Flat</span></a>
-                                <a href="/View_Owner.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-square"></i><span class="sidebar-text"> Owner Management</span></a>
-                                <a href="/View_commiteeMember.aspx" class="list-group-item list-group-item-action"><i class="fas fa-users"></i><span class="sidebar-text"> Committee Member</span></a>
-                                <a href="/VisitorApproval.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-vcard-fill"></i><span class="sidebar-text"> Visitor Management</span></a>
-                                <a href="/NoticeDashboard.aspx" class="list-group-item list-group-item-action"><i class="bi bi-envelope-fill"></i><span class="sidebar-text"> Notice Board</span></a>
-                                <a href="/Poll_Result.aspx" class="list-group-item list-group-item-action"><i class="bi bi-bar-chart-fill"></i><span class="sidebar-text"> Poll</span></a>
-                                <a href="/View_Document.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i><span class="sidebar-text">Documents</span></a>
-                                <a href="/PhotoGallery.aspx" class="list-group-item list-group-item-action"><i class="bi bi-images me-2"></i><span class="sidebar-text">Photo Gallery</span></a>
+                        <div class="sidebar-container" id="sidebarContainer">
+                            <div class="card sidebar-card mb-4">
+                                <div class="card-header bg-light d-flex justify-content-between align-items-center" style="padding-left: 8px;padding-right: 8px;">
+                                    <button id="sidebarToggle" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="list-group list-group-flush">
+                                        <a href="AdminDashboard.aspx" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt me-2"></i><span class="sidebar-text">Dashboard</span></a>
+                                        <a href="/View_flat.aspx" class="list-group-item list-group-item-action"><i class="bi bi-house-fill"></i><span class="sidebar-text"> Flat</span></a>
+                                        <a href="/View_Owner.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-square"></i><span class="sidebar-text"> Owner Management</span></a>
+                                        <a href="/View_commiteeMember.aspx" class="list-group-item list-group-item-action"><i class="fas fa-users"></i><span class="sidebar-text"> Committee Member</span></a>
+                                        <a href="/VisitorApproval.aspx" class="list-group-item list-group-item-action"><i class="bi bi-person-vcard-fill"></i><span class="sidebar-text"> Visitor Management</span></a>
+                                        <a href="/NoticeDashboard.aspx" class="list-group-item list-group-item-action"><i class="bi bi-envelope-fill"></i><span class="sidebar-text"> Notice Board</span></a>
+                                        <a href="/Poll_Result.aspx" class="list-group-item list-group-item-action"><i class="bi bi-bar-chart-fill"></i><span class="sidebar-text"> Poll</span></a>
+                                        <a href="/View_Document.aspx" class="list-group-item list-group-item-action"><i class="fas fa-file-alt me-2"></i><span class="sidebar-text">Documents</span></a>
+                                        <a href="/PhotoGallery.aspx" class="list-group-item list-group-item-action"><i class="bi bi-images me-2"></i><span class="sidebar-text">Photo Gallery</span></a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Main Content -->
-                <div class="main-content" id="mainContent">
-                    <div class="main-content-inner">
-                        <!-- Breadcrumb -->
-                        <nav aria-label="breadcrumb" class="mb-4">
-                            <ol class="breadcrumb">
-                                <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
-                                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <div class="main-content" id="mainContent">
+                            <div class="main-content-inner">
+                                <nav aria-label="breadcrumb" class="mb-4">
+                                    <ol class="breadcrumb">
+                                        <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
+                                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                                        </asp:ContentPlaceHolder>
+                                    </ol>
+                                </nav>
+
+                                <div class="page-header mb-4">
+                                    <asp:ContentPlaceHolder ID="PageTitleContent" runat="server">
+                                        <h1><i class="fas fa-home me-2"></i>Welcome to Society Management</h1>
+                                    </asp:ContentPlaceHolder>
+                                </div>
+
+                                <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                                    <div class="alert alert-info">
+                                        Default content goes here. This will be replaced by content pages.
+                                    </div>
                                 </asp:ContentPlaceHolder>
-                            </ol>
-                        </nav>
-
-                        <!-- Page Title -->
-                        <div class="page-header mb-4">
-                            <asp:ContentPlaceHolder ID="PageTitleContent" runat="server">
-                                <h1><i class="fas fa-home me-2"></i>Welcome to Society Management</h1>
-                            </asp:ContentPlaceHolder>
-                        </div>
-
-                        <!-- Main Content -->
-                        <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                            <div class="alert alert-info">
-                                Default content goes here. This will be replaced by content pages.
                             </div>
-                        </asp:ContentPlaceHolder>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </ContentTemplate>
+            </asp:UpdatePanel>
         </main>
 
         <!-- Footer -->
