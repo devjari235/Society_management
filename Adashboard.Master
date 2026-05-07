@@ -495,7 +495,6 @@ body {
             };
         }
     }
-
     // Handle resize
     window.onresize = function () {
         const isMobile = window.matchMedia('(max-width: 991.98px)').matches;
