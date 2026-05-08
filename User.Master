@@ -31,12 +31,12 @@
     <script src="datatable\js\dataTables.min.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-    <link href="Styles/Site.css" rel="stylesheet" />
     <style>
-        /* General Styles */
+        /* =====================
+           GENERAL STYLES
+        ===================== */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
@@ -44,10 +44,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
 
-        /* Navbar Customization */
         .navbar-brand {
             font-weight: 600;
         }
@@ -56,48 +55,78 @@
             padding: 0.5rem 1rem;
         }
 
-        /* Layout Structure */
+        /* =====================
+           DESKTOP LAYOUT
+        ===================== */
         .layout-container {
             display: flex;
             flex-direction: row;
-            gap: 20px;
+            gap: 0;
             padding: 20px;
             flex: 1;
             position: relative;
+            align-items: flex-start;
+            box-sizing: border-box;
+            width: 100%;
+            overflow: hidden;
         }
 
-        /* Sidebar container for desktop */
+        /* DESKTOP SIDEBAR */
         .sidebar-container {
             width: 250px;
-            transition: all 0.3s ease;
+            min-width: 250px;
+            max-width: 250px;
             flex-shrink: 0;
             background: white;
             z-index: 1000;
-            position: sticky; /* Make it sticky for desktop */
-            top: 20px; /* Adjust top position for sticky behavior */
-            height: calc(100vh - 40px); /* Adjust height for sticky behavior */
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px);
             overflow-y: auto;
+            overflow-x: hidden;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             border-radius: 8px;
-            padding-right: 0px;
-            padding-left: 0px;
+            transition: width 0.3s ease, min-width 0.3s ease;
         }
 
-
+        /* DESKTOP MAIN CONTENT */
         .main-content {
             flex: 1;
             min-width: 0;
-            width: 100%;
-            transition: margin-left 0.3s ease;
-            /* Changed padding from 20px to 0px */
-            padding: 0px; 
-        }
-
-        .main-content-inner {
+            max-width: calc(100% - 270px);
+            overflow-x: auto;
             padding: 0 15px;
+            box-sizing: border-box;
         }
 
-        /* Sidebar styling for the list group */
+        /* Collapsed sidebar on desktop */
+        .sidebar-collapsed {
+            width: 70px !important;
+            min-width: 70px !important;
+            max-width: 70px !important;
+        }
+
+        .sidebar-collapsed ~ .main-content {
+            max-width: calc(100% - 90px);
+        }
+
+        .sidebar-collapsed .nav-link {
+            text-align: center;
+            padding: 0.75rem 0.5rem !important;
+        }
+
+        .sidebar-collapsed .nav-link .nav-link-text,
+        .sidebar-collapsed .sidebar-heading {
+            display: none;
+        }
+
+        .sidebar-collapsed .nav-link i {
+            margin-right: 0;
+        }
+
+        /* =====================
+           SIDEBAR NAV LINKS
+        ===================== */
         .sidebar-container .nav-link {
             display: flex;
             align-items: center;
@@ -123,7 +152,7 @@
 
         .sidebar-container .nav-link:hover:not(.active) {
             color: #0d6efd;
-            background-color: rgba(13, 110, 253, 0.1);
+            background-color: rgba(13, 110, 253, 0.05);
         }
 
         .sidebar-heading {
@@ -132,30 +161,12 @@
             transition: all 0.3s ease;
         }
 
-
-        /* Collapsed State (Desktop) */
-        .sidebar-collapsed {
-            width: 70px !important;
-        }
-
-        .sidebar-collapsed .nav-link {
-            text-align: center;
-            padding: 0.75rem 0.5rem !important;
-        }
-
-        .sidebar-collapsed .nav-link .nav-link-text,
-        .sidebar-collapsed .sidebar-heading {
-            display: none;
-        }
-
-        .sidebar-collapsed .nav-link i {
-            margin-right: 0; /* Remove margin when collapsed */
-        }
-
-        /* Toggle Button Styles */
+        /* =====================
+           DESKTOP TOGGLE BUTTON
+        ===================== */
         #sidebarToggle {
-            position: relative; /* Changed from sticky */
-            top: 0px;
+            position: relative;
+            top: 0;
             left: 10px;
             background: white;
             border: 2px solid #0d6efd;
@@ -168,9 +179,9 @@
             cursor: pointer;
             color: #0d6efd;
             z-index: 1100;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: all 0.3s ease;
-            margin-bottom: 10px; /* Add margin below the toggle */
+            margin-bottom: 10px;
         }
 
         #sidebarToggle:hover {
@@ -187,133 +198,18 @@
             transform: rotate(180deg);
         }
 
-
-        /* Mobile Sidebar Styles */
-        @media (max-width: 991.98px) {
-            /* Overlay Styles */
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 1040;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-            }
-
-            .sidebar-overlay.active {
-                opacity: 1;
-                visibility: visible;
-            }
-
-            /* Sidebar Container */
-            .sidebar-container {
-                position: fixed;
-                top: 0;
-                left: -100%; /* Hidden by default, start further left to accommodate 60% width */
-                width: 60%; /* Set sidebar width to 60% */
-                max-width: 280px; /* Still keep a max-width to prevent it from being too wide on tablets */
-                height: 100vh;
-                z-index: 1050;
-                background: white;
-                box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-                transition: left 0.3s ease;
-                overflow-y: auto;
-                border-radius: 0; /* Remove border-radius for mobile */
-                top: 0; /* Align to top */
-            }
-
-            .sidebar-container.sidebar-mobile-visible {
-                left: 0; /* Visible when active */
-                width:60%;
-            }
-
-            /* Sidebar Card Adjustments (if you use a card inside sidebar) */
-            .sidebar-card {
-                height: 100%;
-                box-shadow: none;
-                border-radius: 0;
-            }
-
-            /* Sidebar Header with Close Button */
-            .sidebar-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem;
-                border-bottom: 1px solid #eee;
-            }
-
-            .sidebar-close-btn {
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: #6c757d;
-                cursor: pointer;
-                padding: 0.25rem;
-                line-height: 1;
-            }
-
-            .sidebar-close-btn:hover {
-                color: #495057;
-            }
-
-            /* Mobile Toggle Button */
-            .mobile-sidebar-trigger {
-                display: flex; /* Make it visible on mobile */
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1030;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background: #0d6efd;
-                color: white;
-                border: none;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                align-items: center;
-                justify-content: center;
-                font-size: 1.25rem;
-                transition: all 0.3s ease;
-            }
-
-            .mobile-sidebar-trigger:hover {
-                background: #0b5ed7;
-                transform: scale(1.1);
-            }
-
-            /* Hide desktop toggle on mobile */
-            #sidebarToggle {
-                display: none;
-            }
-
-            /* Adjust main content when sidebar is open */
-            body.sidebar-open {
-                overflow: hidden; /* Prevent scrolling when sidebar is open */
-            }
-
-            /* Layout adjustments for mobile */
-            .layout-container {
-                flex-direction: column;
-                gap: 0;
-                padding: 0;
-            }
-
-            .main-content {
-                padding-top: 20px;
-                margin-left: 0 !important; /* Ensure no margin-left on mobile */
-            }
-
-            .footer {
-                margin-left: 0 !important; /* Ensure no margin-left on mobile */
-            }
+        /* =====================
+           TABLES - SCROLLABLE
+        ===================== */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        /* Utility & Visual Elements */
+        /* =====================
+           UTILITY
+        ===================== */
         .notification-badge {
             position: absolute;
             top: 2px;
@@ -352,7 +248,7 @@
         }
 
         .shadow-sm {
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075) !important;
         }
 
         .bg-light-blue {
@@ -363,34 +259,180 @@
             color: #0d6efd;
         }
 
-        /* Responsive adjustments for smaller mobile devices */
-        @media (max-width: 767.98px) {
+        /* =====================
+           MOBILE STYLES
+        ===================== */
+        @media (max-width: 991.98px) {
+
+            html, body {
+                width: 100%;
+                max-width: 100%;
+                overflow-x: hidden !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            img, video, iframe {
+                max-width: 100%;
+                height: auto;
+            }
+
+            /* LAYOUT */
+            .layout-container {
+                padding: 10px !important;
+                gap: 0;
+                width: 100%;
+                overflow: hidden;
+            }
+
+            /* SIDEBAR - fixed, off-screen by default */
+            .sidebar-container {
+                position: fixed !important;
+                top: 0;
+                left: -280px;
+                width: 260px !important;
+                min-width: 260px !important;
+                max-width: 260px !important;
+                height: 100vh;
+                z-index: 1050;
+                border-radius: 0;
+                margin: 0;
+                padding: 0;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+            }
+
+            .sidebar-container.sidebar-mobile-visible {
+                left: 0;
+            }
+
+            /* MAIN CONTENT - full width */
+            .main-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                padding: 0 8px !important;
+                overflow-x: hidden;
+            }
+
+            /* OVERLAY */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 1040;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .sidebar-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            /* SIDEBAR HEADER */
+            .sidebar-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+                border-bottom: 1px solid #eee;
+            }
+
+            .sidebar-close-btn {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: #6c757d;
+                cursor: pointer;
+                padding: 0.25rem;
+                line-height: 1;
+            }
+
+            .sidebar-close-btn:hover {
+                color: #333;
+            }
+
+            /* MOBILE FLOATING BUTTON */
+            .mobile-sidebar-trigger {
+                display: flex;
+                position: fixed;
+                bottom: 15px;
+                right: 15px;
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                background: #0d6efd;
+                color: #fff;
+                border: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 1030;
+                font-size: 1.3rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                transition: all 0.3s ease;
+            }
+
+            .mobile-sidebar-trigger:hover {
+                background: #0b5ed7;
+                transform: scale(1.05);
+            }
+
+            /* HIDE DESKTOP TOGGLE */
+            #sidebarToggle {
+                display: none !important;
+            }
+
+            /* BODY LOCK */
+            body.sidebar-open {
+                overflow: hidden !important;
+            }
+
+            /* NAVBAR */
             .navbar-nav {
                 padding-top: 1rem;
             }
 
-            /* The width for smaller mobiles */
-            .sidebar-container {
-                width: 60%; /* This is the key change */
-                max-width: none; /* Remove max-width for smaller screens if you want pure 60% */
+            /* FOOTER */
+            .footer {
+                width: 100%;
+                margin-left: 0 !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+                box-sizing: border-box;
             }
 
-            .sidebar-container .nav-link {
-                padding: 0.75rem 1rem;
+            /* TABLES on mobile - horizontal scroll */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 500px;
             }
         }
 
     </style>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const sidebarContainer = document.querySelector('.sidebar-container');
             const body = document.body;
             const desktopToggleButton = document.getElementById('sidebarToggle');
-            const navbarCollapseElement = document.getElementById('navbarNav'); // Get the Bootstrap navbar collapse element
 
             let isMobileView = window.matchMedia('(max-width: 991.98px)').matches;
 
-            // Function to handle opening sidebar (mobile)
             function openSidebar() {
                 sidebarContainer.classList.add('sidebar-mobile-visible');
                 const overlay = document.querySelector('.sidebar-overlay');
@@ -398,7 +440,6 @@
                 body.classList.add('sidebar-open');
             }
 
-            // Function to handle closing sidebar (mobile)
             function closeSidebar() {
                 sidebarContainer.classList.remove('sidebar-mobile-visible');
                 const overlay = document.querySelector('.sidebar-overlay');
@@ -406,17 +447,14 @@
                 body.classList.remove('sidebar-open');
             }
 
-            // Function to toggle desktop sidebar
             function toggleDesktopSidebar() {
-                if (isMobileView) return; // Do nothing if on mobile
+                if (isMobileView) return;
                 sidebarContainer.classList.toggle('sidebar-collapsed');
                 const isNowCollapsed = sidebarContainer.classList.contains('sidebar-collapsed');
                 localStorage.setItem('sidebarCollapsed', isNowCollapsed);
             }
 
-            // Function to initialize mobile elements (overlay, close button, mobile toggle)
             function initializeMobileElements() {
-                // Create mobile overlay if it doesn't exist
                 if (!document.querySelector('.sidebar-overlay')) {
                     const overlay = document.createElement('div');
                     overlay.className = 'sidebar-overlay';
@@ -424,22 +462,17 @@
                     overlay.addEventListener('click', closeSidebar);
                 }
 
-                // Create mobile toggle button if it doesn't exist (if you want a separate one from navbar toggler)
-                // For your current setup, you're using the navbar toggler to open the sidebar,
-                // so this specific mobile-sidebar-trigger might be redundant if its only job is to open the sidebar.
-                // If you still want a separate floating action button, keep this.
                 if (!document.querySelector('.mobile-sidebar-trigger')) {
                     const mobileToggleBtn = document.createElement('button');
-                    mobileToggleBtn.className = 'mobile-sidebar-trigger d-lg-none'; // Hide on large screens
+                    mobileToggleBtn.className = 'mobile-sidebar-trigger d-lg-none';
                     mobileToggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
                     document.body.appendChild(mobileToggleBtn);
                     mobileToggleBtn.addEventListener('click', openSidebar);
                 }
 
-                // Add close button to sidebar header for mobile
                 if (!sidebarContainer.querySelector('.sidebar-header')) {
                     const sidebarHeader = document.createElement('div');
-                    sidebarHeader.className = 'sidebar-header d-lg-none'; // Hide on large screens
+                    sidebarHeader.className = 'sidebar-header d-lg-none';
                     sidebarHeader.innerHTML = `
                         <h5 class="mb-0">Menu</h5>
                         <button class="sidebar-close-btn">&times;</button>
@@ -449,24 +482,16 @@
                     if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
                 }
 
-                // Close sidebar when clicking on sidebar links (mobile only)
                 document.querySelectorAll('.sidebar-container .nav-link').forEach(link => {
                     link.addEventListener('click', closeSidebar);
                 });
             }
 
-            // Function to clean up mobile-specific elements
             function cleanupMobileElements() {
                 const overlay = document.querySelector('.sidebar-overlay');
-                if (overlay) {
-                    overlay.removeEventListener('click', closeSidebar);
-                    overlay.remove();
-                }
+                if (overlay) { overlay.removeEventListener('click', closeSidebar); overlay.remove(); }
                 const mobileToggleBtn = document.querySelector('.mobile-sidebar-trigger');
-                if (mobileToggleBtn) {
-                    mobileToggleBtn.removeEventListener('click', openSidebar);
-                    mobileToggleBtn.remove();
-                }
+                if (mobileToggleBtn) { mobileToggleBtn.removeEventListener('click', openSidebar); mobileToggleBtn.remove(); }
                 const sidebarHeader = sidebarContainer.querySelector('.sidebar-header');
                 if (sidebarHeader) {
                     const closeBtn = sidebarHeader.querySelector('.sidebar-close-btn');
@@ -478,26 +503,6 @@
                 });
             }
 
-            // Handle window resize to re-evaluate mobile/desktop view
-            function handleResize() {
-                const nowMobile = window.matchMedia('(max-width: 991.98px)').matches;
-                if (nowMobile !== isMobileView) {
-                    isMobileView = nowMobile; // Update the current view state
-
-                    if (isMobileView) {
-                        // Switched to mobile view
-                        cleanupDesktopState(); // Clean up desktop-specific behaviors
-                        initializeMobileElements(); // Initialize mobile elements
-                        sidebarContainer.classList.remove('sidebar-collapsed'); // Ensure desktop collapse is off
-                    } else {
-                        // Switched to desktop view
-                        cleanupMobileElements(); // Clean up mobile elements
-                        closeSidebar(); // Close mobile sidebar if open
-                        applySavedDesktopState(); // Apply saved desktop state
-                    }
-                }
-            }
-
             function applySavedDesktopState() {
                 const savedState = localStorage.getItem('sidebarCollapsed');
                 if (savedState === 'true') {
@@ -507,44 +512,32 @@
                 }
             }
 
-            function cleanupDesktopState() {
-                // No specific cleanup for desktop needed other than removing 'sidebar-collapsed'
-                // which is done when switching to mobile.
+            function handleResize() {
+                const nowMobile = window.matchMedia('(max-width: 991.98px)').matches;
+                if (nowMobile !== isMobileView) {
+                    isMobileView = nowMobile;
+                    if (isMobileView) {
+                        sidebarContainer.classList.remove('sidebar-collapsed');
+                        initializeMobileElements();
+                    } else {
+                        cleanupMobileElements();
+                        closeSidebar();
+                        applySavedDesktopState();
+                    }
+                }
             }
 
-
-            // Initial setup based on current view
+            // Init
             if (isMobileView) {
                 initializeMobileElements();
-                sidebarContainer.classList.remove('sidebar-collapsed'); // Ensure desktop classes are not present on mobile load
+                sidebarContainer.classList.remove('sidebar-collapsed');
             } else {
                 applySavedDesktopState();
             }
 
-            // Attach desktop toggle event listener
             if (desktopToggleButton) {
                 desktopToggleButton.addEventListener('click', toggleDesktopSidebar);
             }
-
-            // --- IMPORTANT: Removed the event listeners for Bootstrap Navbar Toggler ---
-            // If you want the Bootstrap navbar to only toggle itself and not your custom sidebar:
-            /*
-            if (navbarCollapseElement) {
-                // When Bootstrap navbar is about to be shown (toggler clicked)
-                navbarCollapseElement.addEventListener('show.bs.collapse', function () {
-                    if (isMobileView) {
-                        // openSidebar(); // Removed this line
-                    }
-                });
-
-                // When Bootstrap navbar is about to be hidden (toggler clicked again or outside click)
-                navbarCollapseElement.addEventListener('hide.bs.collapse', function () {
-                    if (isMobileView) {
-                        // closeSidebar(); // Removed this line
-                    }
-                });
-            }
-            */
 
             window.addEventListener('resize', handleResize);
         });
@@ -580,7 +573,6 @@
                                 <li><a class="dropdown-item" href="Complaint.aspx"> New Complaint</a></li>
                             </ul>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link" href="MaintenanceList.aspx"><i class="fas fa-rupee-sign"></i> Payments</a>
                         </li>
@@ -601,11 +593,8 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="User_profile.aspx"><i class="fas fa-user me-2"></i>Profile</a></li>
                                 <li><a class="dropdown-item" href="User_pass_change.aspx"><i class="fas fa-key me-2"></i>Change Password</a></li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li><a class="dropdown-item" href="U_logout.aspx"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
-                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="U_logout.aspx"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -614,12 +603,11 @@
         </nav>
 
         <div class="container-fluid mt-3 layout-container">
-            <div class="row w-100">
-                <div id="sidebar-container" class="col-md-3 col-lg-2 d-md-block sidebar-container">
+            <div class="d-flex w-100" style="min-width:0;">
+                <div id="sidebar-container" class="sidebar-container">
                     <button id="sidebarToggle" class="sidebar-toggle btn btn-primary">
                         <i class="fas fa-bars"></i>
                     </button>
-
                     <div class="position-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
@@ -636,7 +624,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="User_CommitteeDetails.aspx">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-users me-2"></i>
                                     <span class="nav-link-text">Committee Member</span>
                                 </a>
                             </li>
@@ -648,7 +636,7 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="User_Poll.aspx">
-                                    <i class="bi bi-bar-chart-fill"></i>
+                                    <i class="bi bi-bar-chart-fill me-2"></i>
                                     <span class="nav-link-text">Poll</span>
                                 </a>
                             </li>
@@ -668,7 +656,7 @@
                     </div>
                 </div>
 
-                <main class="col-md-10 col-lg-10 px-md-4 main-content">
+                <main class="main-content">
                     <nav aria-label="breadcrumb" class="mt-3">
                         <ol class="breadcrumb">
                             <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
@@ -683,12 +671,12 @@
                         </asp:ContentPlaceHolder>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <asp:ContentPlaceHolder ID="PageHeaderButtons" runat="server">
-                                </asp:ContentPlaceHolder>
+                            </asp:ContentPlaceHolder>
                         </div>
                     </div>
 
                     <asp:ContentPlaceHolder ID="MainContent" runat="server">
-                        </asp:ContentPlaceHolder>
+                    </asp:ContentPlaceHolder>
                 </main>
             </div>
         </div>
@@ -698,7 +686,8 @@
                 <div class="row align-items-center">
                     <div class="col-md-6">
                         <span class="text-muted d-block" style="font-family: Merriweather;">
-                            &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b> <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
+                            &copy; <%: DateTime.Now.Year %> - <strong>LIVE$TA</strong><b> | </b>
+                            <small class="text-muted" style="font-family: Merriweather;">Change your living style</small>
                         </span>
                     </div>
                     <div class="col-md-6 text-md-end mt-3 mt-md-0">
@@ -711,8 +700,6 @@
         </footer>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script src="Scripts/site.js"></script>
 
         <asp:ContentPlaceHolder ID="ScriptsContent" runat="server">
         </asp:ContentPlaceHolder>

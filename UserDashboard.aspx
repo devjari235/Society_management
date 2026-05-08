@@ -152,8 +152,9 @@
 
         .swiper {
             width: 100%;
-            max-width: 900px;
+            max-width: 100%;
             overflow: hidden;
+            margin: 0 auto;
         }
 
         .swiper-slide {
@@ -190,37 +191,48 @@
             color: #fff;
         }
 
+        /* SWIPER ARROWS */
         .swiper-button-next,
         .swiper-button-prev {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            z-index: 10;
-            color: #0d6efd;
-            background-color: #ffffff;
-            border: 1px solid #dee2e6;
+            z-index: 20;
+
+            width: 48px;
+            height: 48px;
+
+            background: #fff;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #dcdcdc;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+
             display: flex;
             align-items: center;
             justify-content: center;
+
+            color: #0d6efd;
+        }
+
+        /* ARROW ICON SIZE */
+        .swiper-button-next::after,
+        .swiper-button-prev::after {
+            font-size: 20px !important;
+            font-weight: bold;
+        }
+
+        /* PLACE OUTSIDE CARD */
+        .swiper-button-prev {
+            left: -24px;
         }
 
         .swiper-button-next {
-            right: 8.5%;
-        }
-
-        .swiper-button-prev {
-            left: 8.5%;
+            right: -24px;
         }
 
         .swiper-slide:hover {
             cursor: pointer;
-        }
-        .swiper-android .swiper-slide, .swiper-ios .swiper-slide, .swiper-wrapper {
-            justify-content:center;
         }
         /* Upcoming Events */
         .upcoming-events {
@@ -271,24 +283,170 @@
         }
 
         @media (max-width: 768px) {
-            .dashboard-cards {
-                grid-template-columns: 1fr;
-            }
 
-            .quick-actions {
-                grid-template-columns: repeat(2, 1fr);
-            }
+    /* MAIN CONTAINER */
+    .dashboard-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 10px;
+        margin: 0 auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
 
-            .swiper-container-wrapper {
-                padding: 0 40px;
-            }
+    /* DASHBOARD CARDS */
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        width: 100%;
+        padding: 0;
+        margin: 0 auto 25px auto;
+    }
 
-            .swiper-button-next,
-            .swiper-button-prev {
-                width: 30px;
-                height: 30px;
-            }
-        }
+    .card {
+        width: 100%;
+        max-width: 100%;
+        padding: 18px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    /* QUICK ACTIONS */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+        padding: 0;
+        margin: 0 auto 25px auto;
+    }
+
+    .quick-actions .action-btn {
+        width: 100%;
+        max-width: 100%;
+        padding: 18px;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    /* SWIPER WRAPPER */
+    .swiper-container-wrapper {
+        width: 100%;
+        padding: 0;
+        margin: 0 auto 25px auto;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    /* SWIPER */
+    .swiper {
+        width: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        margin: 0 auto;
+    }
+
+    .swiper-wrapper {
+        align-items: stretch;
+    }
+
+    /* SWIPER CARD */
+    .swiper-slide {
+        width: 100% !important;
+        max-width: 100%;
+        padding: 18px;
+        margin: 0 auto !important;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    .swiper-slide > * {
+        width: 100%;
+    }
+
+    /* NOTICE TITLE */
+    .notice-title {
+        font-size: 1.9rem;
+        font-weight: 600;
+        line-height: 1.5;
+        margin-bottom: 12px;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* TEXT FIX */
+    .swiper-slide p,
+    .swiper-slide div,
+    .swiper-slide span {
+        word-break: normal;
+        overflow-wrap: break-word;
+        line-height: 1.7;
+    }
+
+    /* MOBILE ARROWS */
+    .swiper-button-next,
+    .swiper-button-prev {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+
+        width: 34px;
+        height: 34px;
+
+        background: rgba(255,255,255,0.95);
+        border-radius: 50%;
+        border: 1px solid #e5e5e5;
+
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #0d6efd;
+    }
+
+    /* ARROW ICON */
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        font-size: 14px !important;
+        font-weight: bold;
+    }
+
+    /* INSIDE CARD POSITION */
+    .swiper-button-prev {
+        left: 8px;
+    }
+
+    .swiper-button-next {
+        right: 8px;
+    }
+
+    /* EVENTS */
+    .event-item {
+        width: 100%;
+        margin: 0 auto 12px auto;
+        border-radius: 12px;
+        box-sizing: border-box;
+    }
+
+    /* OVERFLOW FIX */
+    p,
+    span,
+    div,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+}
         .quick-actions {
     width: 100%;
     margin: 0;

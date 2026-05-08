@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
     <title>Send Email OTP</title>
     <style>
         * {
@@ -86,6 +88,7 @@
             margin-top: 20px;
             padding: 10px;
             border-radius: 4px;
+            display: block; /* Ensures label behaves like a block for centering */
         }
         
         .success {
@@ -97,9 +100,32 @@
             color: #e74c3c;
             background-color: rgba(231, 76, 60, 0.1);
         }
+
+        /* --- ADDED RESPONSIVE STYLES --- */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px; /* Less space around the form on small screens */
+            }
+            
+            form {
+                padding: 20px; /* Slightly smaller padding inside the form */
+                border-radius: 8px;
+            }
+            
+            h2 {
+                font-size: 20px; /* Smaller heading for mobile */
+                margin-bottom: 15px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            .btn {
+                font-size: 14px; /* Slightly smaller text for easier mobile entry */
+                padding: 10px;
+            }
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 <body>
     <form id="form1" runat="server">

@@ -18,6 +18,11 @@ namespace Society_management
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["U_id"] == null)
+            {
+                Response.Redirect("~/u_login.aspx");
+                return;
+            }
             if (!IsPostBack)
             {
                 BindEmail();
