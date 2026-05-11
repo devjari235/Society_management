@@ -121,17 +121,17 @@ namespace Society_management
             switch (type)
             {
                 case "Remark":
-                    Response.Redirect("Complaints.aspx"); // Or wherever you show complaint remarks
+                    Response.Redirect("User_Complaint_Details.aspx?id=" + refId); // Or wherever you show complaint remarks
                     break;
                 case "Poll":
-                    Response.Redirect("Polls.aspx?id=" + refId);
+                    Response.Redirect("User_Poll.aspx?id=" + refId);
                     break;
                 case "Notice":
                     // Redirect to the page where users view notices
                     Response.Redirect("UserDashboard.aspx");
                     break;
                 case "Event":
-                    Response.Redirect("Events.aspx");
+                    Response.Redirect("User_Event_Details.aspx?EventId=" + refId);
                     break;
             }
         }

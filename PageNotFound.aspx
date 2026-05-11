@@ -221,6 +221,24 @@
         transform: translateY(-3px); 
         box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
     }
+    @media (max-width: 768px) {
+    .btn-group {
+        width: 100%;
+        max-width: 280px;
+        margin: 0 auto;
+        gap: 12px;
+    }
+
+    .btn,
+    .btn-home,
+    .btn-back {
+        width: 100%;
+        padding: 12px 18px;
+        font-size: 16px;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+}
 </style>
 </head>
 <body>
