@@ -68,6 +68,39 @@
            color: white;
            border: none;
        }
+       /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin-top: 15px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #57606f;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
    </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -83,96 +116,94 @@
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
      <div class="container">
-     <div class="row">
-         <div class="col-sm-12">
-             <center>
-                 <h3>Committee Member List
-                 </h3>
-             </center>
+         <div class="row">
+             <div class="col-sm-12">
+                 <center>
+                     <h3>Past Committee Member List</h3>
+                 </center>
+             </div>
          </div>
-     </div>
-     <div class="row">
-         <div class="col-sm-12 col-md-12">
-             <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                 <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-             </asp:Panel>
-         </div>
-     </div>
-     <br />
-     <div class="row">
-         <div class="col-sm-12 col-md-12">
-             <div class="table-responsive">
-                 <asp:GridView CssClass="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowDataBound="gvDisplay_RowDataBound">
-                     <Columns>
-                         <asp:TemplateField HeaderText="Committee Member">
-                             <ItemTemplate>
-                                 <asp:Image CssClass="img-fluid" ID="Image1" ImageUrl='<%#Eval("Photo","~/Profile/{0}") %>' runat="server"/>
-                             </ItemTemplate>
-                         </asp:TemplateField>
-                         <asp:TemplateField HeaderText="Details">
-                             <ItemTemplate>
-                                 <div class="container-fluid">
-                                     <div class="row">
-                                         <div class="col-lg-10">
+
+         <%-- ── Empty State Panel ── --%>
+         <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+             <div class="empty-state-container">
+                 <div class="empty-state-icon">
+                     <i class="fas fa-history"></i>
+                 </div>
+                 <h3 class="empty-state-title">No Past Committee Records</h3>
+                 <p class="text-muted mb-0">
+                     There are currently no historical or archived past committee records found for your society.
+                 </p>
+             </div>
+         </asp:Panel>
+
+         <%-- ── Data Content Placeholder ── --%>
+         <asp:PlaceHolder ID="phDataContent" runat="server">
+             <br />
+             <div class="row">
+                 <div class="col-sm-12 col-md-12">
+                     <div class="table-responsive">
+                         <asp:GridView CssClass="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False" OnRowDataBound="gvDisplay_RowDataBound">
+                             <Columns>
+                                 <asp:TemplateField HeaderText="Committee Member">
+                                     <ItemTemplate>
+                                         <asp:Image CssClass="img-fluid" ID="Image1" ImageUrl='<%#Eval("Photo","~/Profile/{0}") %>' runat="server"/>
+                                     </ItemTemplate>
+                                 </asp:TemplateField>
+                                 <asp:TemplateField HeaderText="Details">
+                                     <ItemTemplate>
+                                         <div class="container-fluid">
                                              <div class="row">
-                                                 <div class="col- 12">
-                                                     <asp:Label ID="lbldes" runat="server" Text='<%#Eval("Designation") %>' Font-Bold="True" Font-Size="X-Large"></asp:Label>
-                                                 </div>
-                                             </div>
-                                             <div class="row">
-                                                 <div>
-
-                                                     <asp:Label ID="lblName" runat="server" Text='<%#Eval("User_name") %>' Font-Bold="True"></asp:Label>
-                                                     &nbsp;|
-                                                     <asp:Label ID="lblRole" runat="server" Text='<%#Eval("Role") %>' Font-Bold="True"></asp:Label>
-
-                                                 </div>
-                                             </div>
-                                             <div class="row">
-                                                 <div>
-
-                                                     <asp:Label ID="lblEmail" runat="server" Text='<%#Eval("Email") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                     &nbsp;|
-                                                     <asp:Label ID="lblphone" runat="server" Text='<%#Eval("Phone_no") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
-
-                                                 </div>
-                                             </div>
-                                             <div class="row">
-                                                 <div>
-
-                                                     <asp:Label ID="lblBlock_name" runat="server" Text='<%#Eval("Block_name") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                     &nbsp;|
-                                 <asp:Label ID="lblFlat_no" runat="server" Text='<%#Eval("Flat_no") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
-
-                                                 </div>
-                                             </div>
-                                             <div class="row">
-                                                 <div>
-
-                                                     <asp:Label ID="lblFrom_Date" runat="server" Text='<%#Eval("From_Date", "{0:dd MMM yyyy}") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
-                                                     --<asp:Label ID="lblTo_date" runat="server" Text='<%#Eval("To_date", "{0:dd MMM yyyy}") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
-
-                                                 </div>
-                                             </div>
-                                             <div class="row">
-                                                 <div>
-
-                                                     <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Status") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                 <div class="col-lg-10">
+                                                     <div class="row">
+                                                         <div class="col-12">
+                                                             <asp:Label ID="lbldes" runat="server" Text='<%#Eval("Designation") %>' Font-Bold="True" Font-Size="X-Large"></asp:Label>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row">
+                                                         <div>
+                                                             <asp:Label ID="lblName" runat="server" Text='<%#Eval("User_name") %>' Font-Bold="True"></asp:Label>
+                                                             &nbsp;|
+                                                             <asp:Label ID="lblRole" runat="server" Text='<%#Eval("Role") %>' Font-Bold="True"></asp:Label>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row">
+                                                         <div>
+                                                             <asp:Label ID="lblEmail" runat="server" Text='<%#Eval("Email") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                             &nbsp;|
+                                                             <asp:Label ID="lblphone" runat="server" Text='<%#Eval("Phone_no") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row">
+                                                         <div>
+                                                             <asp:Label ID="lblBlock_name" runat="server" Text='<%#Eval("Block_name") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                             &nbsp;|
+                                                             <asp:Label ID="lblFlat_no" runat="server" Text='<%#Eval("Flat_no") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row">
+                                                         <div>
+                                                             <asp:Label ID="lblFrom_Date" runat="server" Text='<%#Eval("From_Date", "{0:dd MMM yyyy}") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                             --<asp:Label ID="lblTo_date" runat="server" Text='<%#Eval("To_date", "{0:dd MMM yyyy}") %>' Font-Size="Medium" Font-Bold="True"></asp:Label>
+                                                         </div>
+                                                     </div>
+                                                     <div class="row">
+                                                         <div>
+                                                             <asp:Label ID="lblStatus" runat="server" Text='<%#Eval("Status") %>' Font-Bold="True" Font-Size="Medium"></asp:Label>
+                                                         </div>
+                                                     </div>
                                                  </div>
                                              </div>
                                          </div>
-                                     </div>
-                                 </div>
-                             </ItemTemplate>
-                         </asp:TemplateField>
-
-                     </Columns>
-                 </asp:GridView>
+                                     </ItemTemplate>
+                                 </asp:TemplateField>
+                             </Columns>
+                         </asp:GridView>
+                     </div>
+                 </div>
              </div>
-
-         </div>
+         </asp:PlaceHolder>
      </div>
- </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

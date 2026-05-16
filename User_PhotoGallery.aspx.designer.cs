@@ -15,6 +15,15 @@ namespace Society_management
     {
 
         /// <summary>
+        /// pnlEmpty control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlEmpty;
+
+        /// <summary>
         /// pnlPhotos control.
         /// </summary>
         /// <remarks>
@@ -31,23 +40,5 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptPhotos;
-
-        /// <summary>
-        /// pnlNoPhotos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlNoPhotos;
-
-        /// <summary>
-        /// lblNoPhotos control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNoPhotos;
     }
 }

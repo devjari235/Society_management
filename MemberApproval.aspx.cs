@@ -24,25 +24,36 @@ namespace Society_management
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             string query = @"SELECT v.VisitorID, v.Name, v.ContactNumber, v.VisitPurpose, v.VisitDateTime, 
-                            u.User_name AS MemberName
-                            FROM Visitors v
-                            INNER JOIN tblUser u ON v.User_id = u.User_id
-                            WHERE v.IsApproved = 0 and v.User_id=@id";
+                    u.User_name AS MemberName
+                    FROM Visitors v
+                    INNER JOIN tblUser u ON v.User_id = u.User_id
+                    WHERE v.IsApproved = 0 and v.User_id=@id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand cmd= new SqlCommand(query, connection);
+                SqlCommand cmd = new SqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("id", Session["U_id"]);
                 SqlDataAdapter adapter = new SqlDataAdapter(cmd);
-               DataSet ds = new DataSet();
+                DataSet ds = new DataSet();
                 adapter.Fill(ds);
-                if (ds.Tables[0].Rows.Count == 0)
+
+                // Toggle dynamic layouts based on actual dataset metrics row evaluation
+                if (ds.Tables[0].Rows.Count > 0)
                 {
-                    Label1.Text = "You have no visitors at the moment.";
-                    Panel1.Visible = true;
+                    gvPendingVisitors.DataSource = ds;
+                    gvPendingVisitors.DataBind();
+
+                    pnlEmpty.Visible = false;
+                    phDataContent.Visible = true;
                 }
-                gvPendingVisitors.DataSource = ds;
-                gvPendingVisitors.DataBind();
+                else
+                {
+                    gvPendingVisitors.DataSource = null;
+                    gvPendingVisitors.DataBind();
+
+                    pnlEmpty.Visible = true;
+                    phDataContent.Visible = false;
+                }
             }
         }
 

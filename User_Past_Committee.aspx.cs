@@ -27,27 +27,54 @@ namespace Society_management
             string userId = Session["U_id"]?.ToString();
             if (string.IsNullOrEmpty(userId)) return;
 
-            string query = "SELECT c.Designation,c.Role,c.Email,c.Phone_no,c.Block_name,c.Flat_no,c.From_Date,c.To_date,c.Status,u.User_name,u.Photo from tblCommitteeMember c join tblUser u on u.User_id=c.User_id where (Status='Past')";
+            // ISOLATED QUERY: Filters by Status='Past' AND limits data records strictly to the logged-in user's society
+            string query = @"
+                SELECT 
+                    c.Designation, c.Role, c.Email, c.Phone_no, c.Block_name, c.Flat_no, 
+                    c.From_Date, c.To_date, c.Status, u.User_name, u.Photo 
+                FROM tblCommitteeMember c 
+                JOIN tblUser u ON u.User_id = c.User_id 
+                WHERE c.Status = 'Past'
+                AND c.User_id IN (
+                    SELECT cm.User_id 
+                    FROM tblCommitteeMember cm
+                    JOIN tblUser usr ON cm.User_id = usr.User_id
+                    JOIN tblOwner o ON usr.Owner_id = o.Owner_id
+                    JOIN tblBlock b ON o.Block_id = b.Block_id
+                    WHERE b.Society_id = (
+                        SELECT top 1 b2.Society_id 
+                        FROM tblUser u2
+                        JOIN tblOwner o2 ON u2.Owner_id = o2.Owner_id
+                        JOIN tblBlock b2 ON o2.Block_id = b2.Block_id
+                        WHERE u2.User_id = @id
+                    )
+                )";
 
             using (SqlConnection con = new SqlConnection(strcon))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@id", userId);
+
                     using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
                     {
-                        DataSet ds = new DataSet();
-                        ad.Fill(ds);
+                        DataTable dt = new DataTable();
+                        ad.Fill(dt);
 
-                        // Add this to debug
-                        if (ds.Tables[0].Rows.Count == 0)
+                        // Toggle presentation layout containers based on record count
+                        if (dt != null && dt.Rows.Count > 0)
                         {
-                            Label1.Text = "No committee member data found.";
-                            Panel1.Visible = true;
-                        }
+                            gvDisplay.DataSource = dt;
+                            gvDisplay.DataBind();
 
-                        gvDisplay.DataSource = ds;
-                        gvDisplay.DataBind();
+                            pnlEmpty.Visible = false;
+                            phDataContent.Visible = true;
+                        }
+                        else
+                        {
+                            pnlEmpty.Visible = true;
+                            phDataContent.Visible = false;
+                        }
                     }
                 }
             }

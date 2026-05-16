@@ -100,6 +100,40 @@
             font-weight: bold;
             margin-top: 15px;
         }
+        /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #007bff;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -109,52 +143,62 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="swiper pollSwiper">
-        <div class="swiper-wrapper">
-            <asp:Repeater ID="rptPolls" runat="server" OnItemCommand="rptPolls_ItemCommand">
-                <ItemTemplate>
-                    <div class="swiper-slide">
-                        <div class="poll-card shadow rounded">
-                            <h5 class="poll-question"><%# Eval("Question") %></h5>
+    
+    <%-- ── Active Swiper Carousel Content Container ── --%>
+    <asp:PlaceHolder ID="phDataContent" runat="server">
+        <div class="swiper pollSwiper">
+            <div class="swiper-wrapper">
+                <asp:Repeater ID="rptPolls" runat="server" OnItemCommand="rptPolls_ItemCommand">
+                    <ItemTemplate>
+                        <div class="swiper-slide">
+                            <div class="poll-card shadow rounded">
+                                <h5 class="poll-question"><%# Eval("Question") %></h5>
 
-                            <%# Convert.ToBoolean(Eval("HasVoted")) ? 
-                                "<div class='poll-message success'>You have already voted in this poll. Thank you!</div>" : "" %>
+                                <%-- Shows message if user has already voted --%>
+                                <asp:PlaceHolder runat="server" Visible='<%# Convert.ToBoolean(Eval("HasVoted")) %>'>
+                                    <div class='poll-message success'>
+                                        <i class="fas fa-check-circle me-1"></i>You have already voted in this poll. Thank you!
+                                    </div>
+                                </asp:PlaceHolder>
 
-                            <asp:Panel ID="pnlVote" runat="server" Visible='<%# !(bool)Eval("HasVoted") %>'>
-                                <asp:RadioButtonList ID="rblOptions" runat="server"
-                                    CssClass="poll-options" 
-                                    DataSource='<%# Eval("Options") %>'
-                                    DataTextField="OptionText"
-                                    DataValueField="OptionId">
-                                </asp:RadioButtonList>
-                                <asp:HiddenField ID="hfPollId" runat="server" Value='<%# Eval("PollId") %>' />
-                               <asp:Button ID="btnVote" runat="server" Text="Vote" CommandName="Vote" 
-    CommandArgument='<%# Eval("PollId") %>' CssClass="vote-btn"
-    OnClientClick="return validateSelection(this);" />
-                            </asp:Panel>
+                                <%-- Active Voting System Panel Controls --%>
+                                <asp:Panel ID="pnlVote" runat="server" Visible='<%# !(bool)Eval("HasVoted") %>'>
+                                    <asp:RadioButtonList ID="rblOptions" runat="server"
+                                        CssClass="poll-options" 
+                                        DataSource='<%# Eval("Options") %>'
+                                        DataTextField="OptionText"
+                                        DataValueField="OptionId">
+                                    </asp:RadioButtonList>
+                                    <asp:HiddenField ID="hfPollId" runat="server" Value='<%# Eval("PollId") %>' />
+                                    <br />
+                                    <asp:Button ID="btnVote" runat="server" Text="Submit Vote" CommandName="Vote" 
+                                        CommandArgument='<%# Eval("PollId") %>' CssClass="vote-btn"
+                                        OnClientClick="return validateSelection(this);" />
+                                </asp:Panel>
+                            </div>
                         </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-              </div>
-            <asp:Panel ID="pnlNoPoll" runat="server" Visible="false">
-                <div class="swiper-slide">
-                    <div class="no-poll-container">
-                        <div class="text-center p-4">
-                            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Polls" />
-                            <h5 class="mt-3 fw-bold">No Poll Available</h5>
-                            <p class="text-muted">Stay tuned! New polls will appear here soon.</p>
-                        </div>
-                    </div>
-                </div>
-            </asp:Panel>
-      
-        
-        <!-- Navigation -->
-        <div class="swiper-button-next"></div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-pagination"></div>
-    </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </asp:PlaceHolder>
+
+    <%-- ── New Animated Empty State Panel (Old structure completely removed) ── --%>
+    <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+        <div class="empty-state-container">
+            <div class="empty-state-icon">
+                <i class="fas fa-poll-h"></i>
+            </div>
+            <h3 class="empty-state-title">No Active Polls</h3>
+            <p class="text-muted mb-0">
+                There are currently no active community opinion polls available for your society. Stay tuned!
+            </p>
+        </div>
+    </asp:Panel>
+
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

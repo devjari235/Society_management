@@ -45,25 +45,33 @@ namespace Society_management
             ) AS UnreadCount
             ON c.Complaint_id = UnreadCount.Complaint_id
             WHERE c.User_id = @UserID";
+
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);
 
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
+                    using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
 
-                    if (dt.Rows.Count > 0)
-                    {
-                        gvDisplay.DataSource = dt;
-                        gvDisplay.DataBind();
-                       
-                    }
-                    else
-                    {
-                        gvDisplay.DataSource = null;
-                        gvDisplay.DataBind();
-                        
+                        // Toggle presentation components cleanly based on result count
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            gvDisplay.DataSource = dt;
+                            gvDisplay.DataBind();
+
+                            pnlEmpty.Visible = false;
+                            phDataContent.Visible = true;
+                        }
+                        else
+                        {
+                            gvDisplay.DataSource = null;
+                            gvDisplay.DataBind();
+
+                            pnlEmpty.Visible = true;
+                            phDataContent.Visible = false;
+                        }
                     }
                 }
             }

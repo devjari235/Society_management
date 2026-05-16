@@ -57,22 +57,28 @@ namespace Society_management
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
-                        if (dt.Rows.Count > 0)
+                        // Check datatable items row count metric bounds
+                        if (dt != null && dt.Rows.Count > 0)
                         {
                             rptEvents.DataSource = dt;
                             rptEvents.DataBind();
-                            pnlNoEvents.Visible = false;
+
+                            pnlEmpty.Visible = false;
+                            phDataContent.Visible = true;
                         }
                         else
                         {
-                            pnlNoEvents.Visible = true;
                             rptEvents.Visible = false;
+
+                            pnlEmpty.Visible = true;
+                            phDataContent.Visible = false;
                         }
                     }
                     catch (Exception ex)
                     {
-                        // Optional logging
-                        throw;
+                        lblMessage.Text = "An error occurred while rendering the event database records.";
+                        lblMessage.CssClass = "alert alert-danger";
+                        lblMessage.Visible = true;
                     }
                 }
             }

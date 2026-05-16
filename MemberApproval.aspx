@@ -203,6 +203,40 @@
                 text-align: center;
             }
         }
+        /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin-top: 15px;
+    width: 100%;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #3498db;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -221,49 +255,58 @@
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-        <%-- Wrap GridView in .table-responsive for horizontal scrolling on small screens --%>
-        <div class="table-responsive">
-            <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table"
-                OnRowCommand="gvPendingVisitors_RowCommand">
-                <Columns>
-                    <asp:BoundField DataField="Name" HeaderText="Visitor Name" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" ItemStyle-CssClass="align-middle" />
-                    <asp:BoundField DataField="MemberName" HeaderText="Meeting With" ItemStyle-CssClass="align-middle" />
-                    <asp:TemplateField HeaderText="Action">
-                        <ItemTemplate>
-                            <%-- Apply custom action button class and ensure no wrapping within the cell --%>
-                            <div class="d-flex flex-nowrap justify-content-start align-items-center">
-                                <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve"
-                                    CommandArgument='<%# Eval("VisitorID") %>' CssClass="gridview-action-btn btn-success" />
-                                <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject"
-                                    CommandArgument='<%# Eval("VisitorID") %>' CssClass="gridview-action-btn btn-danger" />
-                            </div>
-                        </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
-        </div>
-
-        <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-        </asp:Panel>
         
+        <%-- ── Empty State Panel: Shows when grid has 0 items ── --%>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <h3 class="empty-state-title">No Pending Gate Requests</h3>
+                <p class="text-muted mb-0">
+                    You have no visitors waiting at the security gate at the moment.
+                </p>
+            </div>
+        </asp:Panel>
+
+        <%-- ── Data Content Placeholder Wrapper ── --%>
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="table-responsive">
+                <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table"
+                    OnRowCommand="gvPendingVisitors_RowCommand">
+                    <Columns>
+                        <asp:BoundField DataField="Name" HeaderText="Visitor Name" ItemStyle-CssClass="align-middle" />
+                        <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" ItemStyle-CssClass="align-middle" />
+                        <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" ItemStyle-CssClass="align-middle" />
+                        <asp:BoundField DataField="VisitDateTime" HeaderText="Visit Time" DataFormatString="{0:g}" ItemStyle-CssClass="align-middle" />
+                        <asp:BoundField DataField="MemberName" HeaderText="Meeting With" ItemStyle-CssClass="align-middle" />
+                        <asp:TemplateField HeaderText="Action">
+                            <ItemTemplate>
+                                <div class="d-flex flex-nowrap justify-content-start align-items-center">
+                                    <asp:Button ID="btnApprove" runat="server" Text="Approve" CommandName="Approve"
+                                        CommandArgument='<%# Eval("VisitorID") %>' CssClass="gridview-action-btn btn-success" />
+                                    <asp:Button ID="btnReject" runat="server" Text="Reject" CommandName="Reject"
+                                        CommandArgument='<%# Eval("VisitorID") %>' CssClass="gridview-action-btn btn-danger" />
+                                </div>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                    </Columns>
+                </asp:GridView>
+            </div>
+        </asp:PlaceHolder>
+
+        <%-- Old fallback panel completely removed; Toast notification elements stay intact below --%>
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
             <div id="customToast" class="toast align-items-center text-white bg-success border-0" role="alert">
                 <div class="d-flex">
-                    <div class="toast-body" id="toastMessage">
-                        Success!
-                    </div>
+                    <div class="toast-body" id="toastMessage">Success!</div>
                     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
             </div>
         </div>
 
     </div>
-</asp:Content>
-<asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
+</asp:Content><asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

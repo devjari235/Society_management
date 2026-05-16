@@ -108,6 +108,39 @@
             text-align: center;
         }
     }
+    /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin-top: 15px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #4e73df;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
 </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -126,57 +159,73 @@
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
-                <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
-                    <Columns>
-                        
-                        <asp:TemplateField HeaderText="Member Name">
-                            <ItemTemplate>
-                              <asp:Label Text='<%#Eval("Member_name") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Email">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Email") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Phone Number">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Phone_no") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Age">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Age") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Gender">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Gender") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText="Relationship">
-                            <ItemTemplate>
-                                <asp:Label Text='<%#Eval("Relationship") %>' runat="server"></asp:Label>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+                </asp:Panel>
             </div>
-
         </div>
+        <br />
+
+        <%-- ── Empty State Panel: Renders when no records exist ── --%>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="empty-state-title">No Family Members Registered</h3>
+                <p class="text-muted mb-0">
+                    You haven't added any family members to your profile yet. Click "Register a member" above to add your family details.
+                </p>
+            </div>
+        </asp:Panel>
+
+        <%-- ── Data Content Placeholder: Renders when records exist ── --%>
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="table-responsive">
+                        <asp:GridView class="table table-striped table-bordered" ID="gvDisplay" runat="server" AutoGenerateColumns="False">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Member Name">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Member_name") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Email">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Email") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Phone Number">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Phone_no") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Age">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Age") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Gender">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Gender") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Relationship">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("Relationship") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+
     </div>
-</div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

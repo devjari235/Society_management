@@ -204,6 +204,39 @@
     display: flex; 
     justify-content: flex-end;
 }
+        /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin-top: 15px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #8E2DE2;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
        </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -218,57 +251,73 @@
         </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-         <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
- <asp:GridView ID="gvDisplay" runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="Complaint_id"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
-    <Columns>
-    <asp:TemplateField HeaderText="Complaint type">
-        <ItemTemplate>
-            <asp:Label Text='<%# Eval("Complaint_type") %>' runat="server" />
-        </ItemTemplate>
-    </asp:TemplateField>
-<asp:TemplateField HeaderText="Priority">
-    <ItemTemplate>
-        <asp:Label ID="lblPriority" Text='<%# Eval("Priority") %>' runat="server" />
-    </ItemTemplate>
-</asp:TemplateField>
-<asp:TemplateField HeaderText="Status">
-    <ItemTemplate>
-        <asp:Label ID="lblStatus" Text='<%# Eval("Status") %>' runat="server" />
-    </ItemTemplate>
-</asp:TemplateField>
-                <asp:TemplateField HeaderText="Submit on">
-    <ItemTemplate>
-        <asp:Label Text='<%# Eval("Create_date", "{0:dd MMM yyyy}") %>' runat="server" />
-    </ItemTemplate>
-</asp:TemplateField>    
-    <asp:TemplateField HeaderText="Resolved on">
-    <ItemTemplate>
-        <asp:Label Text='<%# Eval("Resolve_date", "{0:dd MMM yyyy}") %>' runat="server" />
-    </ItemTemplate>
-</asp:TemplateField>
-</Columns>
-</asp:GridView>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
+                    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+                </asp:Panel>
             </div>
-
         </div>
+
+        <%-- ── Empty State Panel ── --%>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <h3 class="empty-state-title">No Complaints Filed</h3>
+                <p class="text-muted mb-0">
+                    Have an issue with society maintenance or services? Click <b>'New Complaint'</b> above to report it directly to the admin team for a quick resolution.
+                </p>
+            </div>
+        </asp:Panel>
+
+        <%-- ── Data Content Placeholder Wrapper ── --%>
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <br />
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server"
+                            AutoGenerateColumns="False"
+                            DataKeyNames="Complaint_id"
+                            CssClass="table table-striped table-bordered grid-view-custom w-100"
+                            OnRowDataBound="gvDisplay_RowDataBound" 
+                            OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Complaint type">
+                                    <ItemTemplate>
+                                        <b><asp:Label Text='<%# Eval("Complaint_type") %>' runat="server" /></b>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Priority">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblPriority" Text='<%# Eval("Priority") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblStatus" Text='<%# Eval("Status") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Submit on">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Create_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>    
+                                <asp:TemplateField HeaderText="Resolved on">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Resolve_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
     </div>
-</div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

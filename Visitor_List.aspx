@@ -88,6 +88,40 @@
             text-align: center;
         }
     }
+    /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin-top: 15px;
+    width: 100%;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #57606f;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -102,60 +136,60 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-
     <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-12">
-                <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-                </asp:Panel>
-            </div>
-        </div>
-        <br />
-        <div class="row">
-            <div class="col-sm-12 col-md-12">
-                <div class="table-responsive">
-                    <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered">
-                   <%--     <Columns>
-                            <asp:BoundField DataField="Name" HeaderText="Visitor Name"/>
-                            <asp:BoundField DataField="ContactNumber" HeaderText="Contact Number" />
-                            <asp:BoundField DataField="VisitPurpose" HeaderText="Purpose" />
-                            <asp:BoundField DataField="CheckInTime" HeaderText="Visit Time" DataFormatString="{0:g}" />
-                            <asp:BoundField DataField="CheckOutTime" HeaderText="Visit Time" DataFormatString="{0:g}"/>
-                        </Columns>--%>
-                            <Columns>
         
-        <asp:TemplateField HeaderText="Name">
-            <ItemTemplate>
-              <asp:Label Text='<%#Eval("Name") %>' runat="server"></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Contact Number">
-            <ItemTemplate>
-                <asp:Label Text='<%#Eval("ContactNumber") %>' runat="server"></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Visit Purpose">
-            <ItemTemplate>
-                <asp:Label Text='<%#Eval("VisitPurpose") %>' runat="server"></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Visit Time">
-            <ItemTemplate>
-                <asp:Label Text='<%#Eval("CheckInTime") %>' runat="server"></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="CheckOutTime">
-            <ItemTemplate>
-                <asp:Label Text='<%#Eval("CheckOutTime") %>' runat="server"></asp:Label>
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-                    </asp:GridView>
+        <%-- ── Empty State Panel: Renders when total rows evaluate to 0 ── --%>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-history"></i>
                 </div>
-
+                <h3 class="empty-state-title">No Visitor History</h3>
+                <p class="text-muted mb-0">
+                    There are no recorded checkout timestamps or completed logs found in your visitor history.
+                </p>
             </div>
-        </div>
+        </asp:Panel>
+
+        <%-- ── Data Presentation Content Placeholder Wrapper ── --%>
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvPendingVisitors" runat="server" AutoGenerateColumns="False" CssClass="table table-striped table-bordered">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Name">
+                                    <ItemTemplate>
+                                        <b><asp:Label Text='<%#Eval("Name") %>' runat="server"></asp:Label></b>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Contact Number">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("ContactNumber") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Visit Purpose">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("VisitPurpose") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Check-In Time">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("CheckInTime", "{0:dd MMM yyyy hh:mm tt}") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Check-Out Time">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%#Eval("CheckOutTime", "{0:dd MMM yyyy hh:mm tt}") %>' runat="server"></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+
     </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">

@@ -2365,6 +2365,7 @@
     <Content Include="fontawesome\svgs\solid\yen-sign.svg" />
     <Content Include="fontawesome\svgs\solid\yin-yang.svg" />
     <Content Include="fontawesome\svgs\solid\z.svg" />
+    <Content Include="ForgotPassword.aspx" />
     <Content Include="Home.aspx" />
     <Content Include="Images\Bg.jpg" />
     <Content Include="Images\Bill.png" />
@@ -2644,6 +2645,13 @@
     </Compile>
     <Compile Include="Flat.aspx.designer.cs">
       <DependentUpon>Flat.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ForgotPassword.aspx.designer.cs">
+      <DependentUpon>ForgotPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Home.aspx.cs">
       <DependentUpon>Home.aspx</DependentUpon>

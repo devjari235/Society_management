@@ -156,6 +156,40 @@
             align-items: center;
             justify-content: center;
         }
+        /* =========================================
+   EMPTY STATE COMPONENT 
+========================================= */
+.empty-state-container {
+    padding: 60px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    color: #4285f4;
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -165,55 +199,66 @@
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
 </asp:Content>
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
-        <div class="gallery-container">
-            <asp:Panel ID="pnlPhotos" runat="server">
-                <div class="photo-grid">
-                    <asp:Repeater ID="rptPhotos" runat="server" OnItemDataBound="rptPhotos_ItemDataBound">
-                        <ItemTemplate>
-                            <div class="photo-card" 
-                                data-title='<%# Eval("Title") %>'
-                                data-description='<%# Eval("Description") %>'
-                                data-uploader='<%# Eval("name") %>'
-                                data-date='<%# Convert.ToDateTime(Eval("UploadDate")).ToString("MMM dd, yyyy") %>'
-                                onclick="openLightbox(this)">
-                                <div class="photo-image-container">
-                                    <asp:Image ID="imgPhoto" runat="server" 
-                                        ImageUrl='<%# Eval("ImagePath") %>' 
-                                        CssClass="photo-image" 
-                                        AlternateText='<%# Eval("Title") %>' />
-                                </div>
+    <div class="gallery-container">
+        
+        <%-- ── New Animated Empty State Panel: Renders when no records exist ── --%>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container">
+                <div class="empty-state-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h3 class="empty-state-title">Gallery is Empty</h3>
+                <p class="text-muted mb-0">
+                    No celebration event snapshots or community photo updates have been uploaded to the gallery yet.
+                </p>
+            </div>
+        </asp:Panel>
+        
+        <%-- ── Data Presentation Content Container Placeholder ── --%>
+        <asp:Panel ID="pnlPhotos" runat="server">
+            <div class="photo-grid">
+                <asp:Repeater ID="rptPhotos" runat="server" OnItemDataBound="rptPhotos_ItemDataBound">
+                    <ItemTemplate>
+                        <div class="photo-card" 
+                            data-title='<%# Eval("Title") %>'
+                            data-description='<%# Eval("Description") %>'
+                            data-uploader='<%# Eval("name") %>'
+                            data-date='<%# Convert.ToDateTime(Eval("UploadDate")).ToString("MMM dd, yyyy") %>'
+                            onclick="openLightbox(this)">
+                            <div class="photo-image-container">
+                                <asp:Image ID="imgPhoto" runat="server" 
+                                    ImageUrl='<%# Eval("ImagePath") %>' 
+                                    CssClass="photo-image" 
+                                    AlternateText='<%# Eval("Title") %>' />
                             </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
-                </div>
-            </asp:Panel>
-            
-            <asp:Panel ID="pnlNoPhotos" runat="server" CssClass="no-photos" Visible="false">
-                <asp:Label ID="lblNoPhotos" runat="server" Text="No photos available in the gallery yet." />
-            </asp:Panel>
-        </div>
+                        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </asp:Panel>
+        
+    </div>
 
-        <!-- Lightbox HTML -->
-        <div id="lightbox" class="lightbox">
-            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-            <div class="lightbox-content">
-                <div class="lightbox-image-container">
-                    <img id="lightbox-image" class="lightbox-image" src="" alt="">
-                </div>
-                <div class="lightbox-info">
-                    <div id="lightbox-title" class="lightbox-title"></div>
-                    <div id="lightbox-description" class="lightbox-description"></div>
-                    <div class="lightbox-meta">
-                        <span id="lightbox-uploader">Uploaded by: </span>
-                        <span id="lightbox-date"></span>
-                    </div>
-                </div>
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <div class="lightbox-image-container">
+                <img id="lightbox-image" class="lightbox-image" src="" alt="">
             </div>
-            <div class="lightbox-nav">
-                <div class="lightbox-nav-btn" onclick="navigateLightbox(-1)">❮</div>
-                <div class="lightbox-nav-btn" onclick="navigateLightbox(1)">❯</div>
+            <div class="lightbox-info">
+                <div id="lightbox-title" class="lightbox-title"></div>
+                <div id="lightbox-description" class="lightbox-description"></div>
+                <div class="lightbox-meta">
+                    <span id="lightbox-uploader">Uploaded by: </span>
+                    <span id="lightbox-date"></span>
+                </div>
             </div>
         </div>
+        <div class="lightbox-nav">
+            <div class="lightbox-nav-btn" onclick="navigateLightbox(-1)">❮</div>
+            <div class="lightbox-nav-btn" onclick="navigateLightbox(1)">❯</div>
+        </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
       <script>

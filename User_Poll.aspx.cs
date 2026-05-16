@@ -32,15 +32,17 @@ namespace Society_management
         private void LoadPolls()
         {
             DataTable polls = GetActivePoll();
-            if (polls.Rows.Count == 0)
+
+            // FIX 1: Changed control variable reference from pnlNoPoll to pnlEmpty
+            if (polls == null || polls.Rows.Count == 0)
             {
-                pnlNoPoll.Visible = true;
-                rptPolls.Visible = false;
+                pnlEmpty.Visible = true;       // Shows your new animated empty state card
+                phDataContent.Visible = false; // Hides the swiper wrapper completely
                 return;
             }
 
-            pnlNoPoll.Visible = false;
-            rptPolls.Visible = true;
+            pnlEmpty.Visible = false;
+            phDataContent.Visible = true;
 
             List<PollDisplay> pollDisplays = new List<PollDisplay>();
 
@@ -54,7 +56,9 @@ namespace Society_management
                     PollId = pollId,
                     Question = row["Question"].ToString(),
                     HasVoted = hasVoted,
-                    Options = hasVoted ? null : GetPollOptions(pollId)
+                    // FIX 2: Always retrieve options (never return null) so the RadioButtonList 
+                    // inside your HTML layout doesn't crash with a NullReferenceException
+                    Options = GetPollOptions(pollId)
                 });
             }
 

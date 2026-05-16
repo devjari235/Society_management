@@ -31,19 +31,35 @@ namespace Society_management
 
         public void BindGrid(int ownerId)
         {
+            using (SqlConnection con = new SqlConnection(connStr))
+            {
+                string query = "SELECT Member_name, Email, Phone_no, Age, Gender, Relationship FROM tblFamilyMember WHERE Owner_id = @id";
 
-            SqlConnection con = new SqlConnection(connStr);
-            //string query = "select * from tblImage where A_id=@aid";
-            string query = "select Member_name, Email, Phone_no, Age, Gender , Relationship from tblFamilyMember where Owner_id=@id";
-            con.Open();
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", ownerId);
-            SqlDataAdapter ad = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            ad.Fill(ds);
-            gvDisplay.DataSource = ds;
-            gvDisplay.DataBind();
-            con.Close();
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", ownerId);
+                    using (SqlDataAdapter ad = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        ad.Fill(dt);
+
+                        // Conditional Presentation Layout Control Flow
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            gvDisplay.DataSource = dt;
+                            gvDisplay.DataBind();
+
+                            pnlEmpty.Visible = false;
+                            phDataContent.Visible = true;
+                        }
+                        else
+                        {
+                            pnlEmpty.Visible = true;
+                            phDataContent.Visible = false;
+                        }
+                    }
+                }
+            }
         }
     }
 }
