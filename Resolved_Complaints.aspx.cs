@@ -25,30 +25,37 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
-                conn.Open();
+                string selectQuery = @"SELECT u.User_name, c.Complaint_type, c.Complaint_id, c.Priority, c.Status 
+                               FROM tblComplaint c 
+                               JOIN tblUser u ON c.User_id = u.User_id 
+                               JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                               JOIN tblBlock b ON o.Block_id = b.Block_id
+                               JOIN tblSociety s ON s.Society_id = b.Society_id
+                               WHERE s.admin_id = @id AND c.Status='Resolved'";
 
-                // Step 1: Update expired notices
-                // Step 2: Fetch notices
-                //string selectQuery = @"SELECT Notice_id, Title, Description, Expiry_date, File_path, Importance, Status 
-                //               FROM tblNotices 
-                //               WHERE Expiry_date IS NULL OR Expiry_date >= GETDATE() 
-                //               ORDER BY Posted_date DESC";
-
-                string selectQuery = "SELECT u.User_name,c.Complaint_type,c.Complaint_id,c.Priority,c.Status from tblComplaint c join tblUser u on c.User_id=u.User_id \r\nJOIN tblOwner o ON u.Owner_id = o.Owner_id\r\nJOIN tblBlock b ON o.Block_id = b.Block_id\r\nJOIN tblSociety s ON s.Society_id = b.Society_id\r\nWHERE s.admin_id = @id\r\n and c.Status='Resolved'";
                 SqlCommand cmd = new SqlCommand(selectQuery, conn);
                 cmd.Parameters.AddWithValue("@id", Session["A_id"]);
+                conn.Open();
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
-                // Add this to debug
-                if (ds.Tables[0].Rows.Count == 0)
-                {
-                    Label1.Text = "No Resolved Complaints.";
-                    Panel1.Visible = true;
-                }
-                gvDisplay.DataSource = ds;
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                gvDisplay.DataSource = dt;
                 gvDisplay.DataBind();
-                conn.Close();
+
+                // ── TOGGLE VISIBILITY LOGIC ──
+                if (dt.Rows.Count > 0)
+                {
+                    phDataContent.Visible = true;  // Show the data card
+                    pnlEmpty.Visible = false;      // Hide the empty state
+                    Panel1.Visible = false;
+                }
+                else
+                {
+                    phDataContent.Visible = false; // Completely hide the white box card
+                    pnlEmpty.Visible = true;       // Show the professional empty state
+                }
             }
         }
 

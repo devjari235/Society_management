@@ -338,32 +338,35 @@ body {
    MOBILE RESPONSIVE (MASTER PAGE OVERRIDES)
 ========================================================= */
 @media (max-width: 768px) {
-    /* 1. Remove Master Page layout restrictions */
+
     .layout-container {
         padding: 0 !important;
         gap: 0 !important;
-        display: block !important; /* Stack sidebar/main-content */
+        display: block !important;
     }
 
     .main-content {
-        padding: 10px 0 !important; /* Remove 20px Master Page padding */
+        padding: 10px 8px !important;
         margin: 0 !important;
         width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
     }
 
     .main-content-inner {
         padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
     }
 
-    /* 2. Content Padding (5px Margin) */
     .container-fluid.px-0 {
         padding-left: 5px !important;
         padding-right: 5px !important;
     }
 
-    /* 3. Expand Tab Content to the absolute edges */
     .tab-content {
-        padding: 15px 5px !important; 
+        padding: 15px 5px !important;
         margin-left: -5px !important;
         margin-right: -5px !important;
         width: calc(100% + 10px) !important;
@@ -372,15 +375,16 @@ body {
         border-radius: 0 !important;
     }
 
-    /* 4. FORCE REPEATER WIDTH (Prevents stacking) */
+    /* Data tables - horizontal scroll (NOT notice detail) */
     .table-responsive {
         width: 100% !important;
         margin: 0 !important;
+        overflow-x: auto !important;
     }
 
+    /* DEFAULT table min-width for data tables */
     .table {
-        /* Increased min-width to ensure all content stays side-by-side */
-        min-width: 950px !important; 
+        min-width: 950px !important;
         font-size: 14px !important;
     }
 
@@ -389,7 +393,26 @@ body {
         padding: 12px 8px !important;
     }
 
-    /* 5. Summary Card Layout (Edge-to-Edge) */
+    /* NOTICE DETAIL — override the 950px min-width */
+    .card-notice .table-responsive {
+        overflow-x: hidden !important;
+    }
+
+    .card-notice .table {
+        min-width: unset !important;
+        width: 100% !important;
+        display: block !important;
+        font-size: 14px !important;
+    }
+
+    .card-notice .table td,
+    .card-notice .table th {
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+        padding: 10px 12px !important;
+    }
+
     .summary-card-row {
         margin-left: -5px !important;
         margin-right: -5px !important;
@@ -405,7 +428,7 @@ body {
         flex: 0 0 100% !important;
         max-width: 100% !important;
     }
-    
+
     .summary-cat-card .card-body {
         display: flex;
         justify-content: space-between;
@@ -413,13 +436,147 @@ body {
         padding: 12px 15px;
     }
 
-    /* 6. Fix Floating Button Visibility */
     .mobile-sidebar-trigger {
         right: 10px !important;
         bottom: 10px !important;
     }
 }
+/* Fix master page 950px override for this page only */
+.card-committee .table {
+    min-width: unset !important;
+    width: 100% !important;
+}
 
+.card-committee .table td,
+.card-committee .table th {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+}
+
+.card-committee .table-responsive {
+    overflow-x: hidden !important;
+}
+
+@media (max-width: 768px) {
+
+    .page-title-buttons {
+        justify-content: stretch;
+    }
+
+    .dashboard-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .card-committee {
+        padding: 15px 10px;
+        border-radius: 12px;
+        margin: 0;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .card-title {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+    }
+
+    .profile-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .card-committee .table-responsive {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* Stack table into single column cards */
+    .card-committee .details-table,
+    .card-committee .details-table tbody,
+    .card-committee .details-table tr,
+    .card-committee .details-table th,
+    .card-committee .details-table td {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        min-width: unset !important;
+    }
+
+    /* Each row becomes a card */
+    .card-committee .details-table tbody tr {
+        margin-bottom: 12px !important;
+        border: 1px solid #e3e6f0 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+    }
+
+    /* TH = label row */
+    .card-committee .details-table th {
+        background: #f8f9fc !important;
+        border: none !important;
+        border-bottom: 1px solid #e3e6f0 !important;
+        padding: 9px 14px !important;
+        font-size: 12px !important;
+        font-weight: 600 !important;
+        color: #495057 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.4px !important;
+        white-space: normal !important;
+    }
+
+    /* TD = value row */
+    .card-committee .details-table td {
+        background: #ffffff !important;
+        border: none !important;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        color: #212529 !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        overflow: visible !important;
+    }
+
+    /* ASP Label spans inside td */
+    .card-committee .details-table td span,
+    .card-committee .details-table td label {
+        display: block !important;
+        width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: anywhere !important;
+        overflow: visible !important;
+    }
+
+    /* Remove rounded corners that break stacked layout */
+    .card-committee .details-table tr:first-child th,
+    .card-committee .details-table tr:first-child td,
+    .card-committee .details-table tr:last-child th,
+    .card-committee .details-table tr:last-child td {
+        border-radius: 0 !important;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .card-committee .details-table th,
+    .card-committee .details-table td {
+        font-size: 0.85rem !important;
+        padding: 10px 14px !important;
+    }
+
+    .profile-img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+
+    .card-title {
+        font-size: 1.35rem !important;
+    }
+}
 </style>
  
 <script>

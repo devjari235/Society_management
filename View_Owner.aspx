@@ -1,206 +1,216 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_Owner.aspx.cs" Inherits="Society_management.View_Owner" EnableEventValidation="false"  %>
+﻿<%@ Page Title="View Owners" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="View_Owner.aspx.cs" Inherits="Society_management.View_Owner" EnableEventValidation="false" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-                <!-- Bootstrap & Swiper CSS -->
+    <!-- Bootstrap & Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" rel="stylesheet" />
-    <!-- jQuery (required for Bootstrap 5 dropdown toggle) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- jQuery and DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Required CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-<!-- Bootstrap Bundle (includes Popper.js for dropdowns) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Add DataTables CSS & JS in your HeadContent -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Required JavaScript (ONLY THESE TWO FILES ARE NEEDED) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // FIX: Target by ID and check if the table actually contains data rows
+            var $table = $('#<%= gvDisplay.ClientID %>');
 
+            // DataTables requires at least one <tr> in <tbody> and a proper <thead>
+            // We check if the table exists and if it has more than one row (header + at least one data row)
+            if ($table.length > 0 && $table.find('tr').length > 1) {
 
+                // Ensure thead exists: Move the first row to a new thead element if necessary
+                if ($table.find('thead').length === 0) {
+                    var $headerRow = $table.find('tr:first');
+                    var $thead = $('<thead></thead>').append($headerRow);
+                    $table.prepend($thead);
+                }
 
-
-<!-- Bootstrap JS Bundle with Popper (required for dropdowns) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var $table = $('.table');
-
-        // Ensure thead exists
-        if ($table.find('thead').length === 0) {
-            var $thead = $('<thead></thead>').append($table.find('tr:first'));
-            $table.prepend($thead);
-        }
-
-        // Initialize only if not already done
-        if (!$.fn.DataTable.isDataTable($table)) {
-            $table.DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "serverSide": false,
-                "processing": false
-            });
-        }
-
-        // Row click handler
-        $table.find('tbody').on('click', 'tr.clickable-row', function () {
-            var OwnerId = $(this).attr('data-Owner-id');
-            if (noticeId) {
-                window.location.href = 'Owner_Membr.aspx?id=' + OwnerId;
+                // Initialize DataTables
+                if (!$.fn.DataTable.isDataTable($table)) {
+                    $table.DataTable({
+                        "paging": true,
+                        "searching": true,
+                        "ordering": true,
+                        "responsive": true,
+                        "autoWidth": false,
+                        "language": {
+                            "emptyTable": "No data available in table"
+                        }
+                    });
+                }
             }
         });
-    });
-</script>
-
+    </script>
 
     <style>
-/* GridView Button-Row Style */
-.grid-view-custom {
-    border-collapse: separate;
-    border-spacing: 0 8px; /* Adds spacing between rows */
-}
+        /* --- Mobile Responsive & Layout Fixes --- */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
-.grid-view-custom tbody tr {
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 8px; /* Rounded corners */
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
+        .grid-view-custom {
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
 
-/* Button-like hover effect */
-.grid-view-custom tbody tr:hover {
-    background-color: #f8f9fa !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    cursor: pointer;
-}
+        .grid-view-custom tbody tr {
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+        }
 
-/* Active/Selected row */
-.grid-view-custom tbody tr:active,
-.grid-view-custom tbody tr.highlight {
-    background-color: #e9ecef !important;
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-}
+        .grid-view-custom tbody tr:hover {
+            background-color: #f8f9fa !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
 
-/* Cell styling for button effect */
-.grid-view-custom tbody td {
-    padding: 12px 15px;
-    border-top: none !important;
-    border-bottom: none !important;
-}
+        /* --- Professional Empty State (Hidden when Table has data) --- */
+        .empty-state-container {
+            padding: 50px 20px;
+            text-align: center;
+            background-color: #ffffff;
+            border: 1px solid #e3e6f0;
+            border-radius: 0.75rem;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100% !important;
+        }
 
-/* First and last cell rounded corners */
-.grid-view-custom tbody td:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    border-left: none;
-}
+        .empty-state-icon {
+            font-size: 4.5rem;
+            color: #eaecf4;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
 
-.grid-view-custom tbody td:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-    border-right: none;
-}
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
 
-/* Status Badge with Black Background */
-.status-badge {
-    border-radius: 50px;
-    text-transform: uppercase;
-}
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4e73df;
+            margin-bottom: 0.5rem;
+        }
 
-/* Header Styling */
-.grid-view-custom thead th {
-    background-color: transparent;
-    color: #495057;
-    font-weight: 600;
-    border-bottom: 2px solid #dee2e6;
-    padding: 12px 15px;
-}
+        .empty-state-text {
+            font-size: 1rem;
+            color: #858796;
+            margin-bottom: 2rem;
+            max-width: 100%;
+            line-height: 1.6;
+            overflow-wrap: break-word;
+        }
+
+        .btn-create-empty {
+            background-color: #4e73df;
+            color: white !important;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none !important;
+        }
+
+        /* Hide Home/Breadcrumbs if required */
+        .breadcrumb { display: none !important; }
     </style>
-<link href="fontawesome\css\all.css" rel="stylesheet" />
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
-</asp:Content>
-<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-    <div style="text-align: left;">
-<a href="Owner.aspx" style="color:white; text-decoration: none;"><asp:Label ID="lblOwner" runat="server" CssClass="btn btn-primary"><b><i class="bi bi-person-plus-fill"></i> Add Owner</b></asp:Label></a>
-<%--<a href="View_Owner.aspx" style="color:white; text-decoration: none;"><asp:Label id="lblFlatView" runat="server" CssClass="btn btn-secondary"><b><i class="bi bi-eye-fill"></i> View All Owner</b></asp:Label></a>--%>
-<%--<a  href="#" style="color:white; text-decoration: none; "><asp:Label id="lblHist" runat="server" CssClass="btn btn-info"><b style="color:white;"><i class="fa fa-history"></i> Owner History</b></asp:Label></a>--%>
-</div>
-</asp:Content>
-<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-       <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-                       <div class="table-responsive">
-                                   <asp:GridView ID="gvDisplay" runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="Owner_id"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
-      <Columns>
-      
-      <asp:TemplateField HeaderText="Block Name">
-          <ItemTemplate>
-            <asp:Label Text='<%#Eval("Block_name") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Flat Number">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Flate_no") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Owner name">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Owner_name") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Email">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Email_id") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Contact Number">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Contact_no") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Emergency Number">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Emergency_Number") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Total Member">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Total_member") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-      <asp:TemplateField HeaderText="Allotment Date">
-          <ItemTemplate>
-              <asp:Label Text='<%#Eval("Allotment_Date") %>' runat="server"></asp:Label>
-          </ItemTemplate>
-      </asp:TemplateField>
-  </Columns>
-</asp:GridView>
-            </div>
 
-        </div>
+<asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
+    <div style="text-align: left; margin-bottom: 15px;">
+        <a href="Owner.aspx" class="btn btn-primary">
+            <b><i class="bi bi-person-plus-fill"></i> Add Owner</b>
+        </a>
     </div>
-</div>
 </asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
+
+<asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <asp:Panel CssClass="alert alert-success shadow-sm" role="alert" ID="Panel1" runat="server" Visible="false">
+                    <asp:Label ID="Label1" runat="server"></asp:Label>
+                </asp:Panel>
+            </div>
+        </div>
+
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border">
+                <div class="empty-state-icon">
+                    <i class="bi bi-person-exclamation"></i>
+                </div>
+                <h3 class="empty-state-title">No Owners Registered</h3>
+                <p class="empty-state-text">
+                    It looks like there are no owners assigned to flats yet. 
+                    Register a new owner to start managing society members.
+                </p>
+                <a href="Owner.aspx" class="btn-create-empty">
+                    <i class="bi bi-person-plus-fill me-2"></i> Add New Owner Now
+                </a>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow-sm border-0 bg-white">
+                        <div class="card-body p-4">
+                            <div class="table-responsive">
+                                <asp:GridView ID="gvDisplay" runat="server"
+                                    AutoGenerateColumns="False"
+                                    DataKeyNames="Owner_id"
+                                    CssClass="table table-striped table-bordered grid-view-custom w-100"
+                                    OnRowDataBound="gvDisplay_RowDataBound"
+                                    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+                                    GridLines="None">
+                                    <Columns>
+                                        <asp:TemplateField HeaderText="Block Name">
+                                            <ItemTemplate><%#Eval("Block_name") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Flat Number">
+                                            <ItemTemplate><%#Eval("Flate_no") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Owner Name">
+                                            <ItemTemplate><b><%#Eval("Owner_name") %></b></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Email">
+                                            <ItemTemplate><%#Eval("Email_id") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Contact Number">
+                                            <ItemTemplate><%#Eval("Contact_no") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Emergency No">
+                                            <ItemTemplate><%#Eval("Emergency_Number") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Members">
+                                            <ItemTemplate><%#Eval("Total_member") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="Allotment Date">
+                                            <ItemTemplate><%#Eval("Allotment_Date") %></ItemTemplate>
+                                        </asp:TemplateField>
+                                    </Columns>
+                                </asp:GridView>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+    </div>
 </asp:Content>

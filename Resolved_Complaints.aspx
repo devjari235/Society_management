@@ -186,6 +186,26 @@
         text-align: center;
     }
 }
+/* --- ICON ANIMATION --- */
+    .floating-icon {
+        display: inline-block;
+        animation: float-up-down 3s ease-in-out infinite;
+        font-size: 3.5rem;
+    }
+    @keyframes float-up-down {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* --- BALANCED EMPTY STATE --- */
+    .empty-state-container {
+        padding: 60px 20px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -207,52 +227,64 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-         <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
- <asp:GridView ID="gvDisplay" runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="Complaint_id"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
-    <Columns>
-    <asp:TemplateField HeaderText="User Name">
-        <ItemTemplate>
-            <asp:Label Text='<%# Eval("User_name") %>' runat="server" />
-        </ItemTemplate>
-    </asp:TemplateField>
-    <asp:TemplateField HeaderText="Complaint type">
-        <ItemTemplate>
-            <asp:Label Text='<%# Eval("Complaint_type") %>' runat="server" />
-        </ItemTemplate>
-    </asp:TemplateField>
-    <asp:TemplateField HeaderText="Priority">
-        <ItemTemplate>
-            <asp:Label Text='<%# Eval("Priority") %>' runat="server" />
-        </ItemTemplate>
-    </asp:TemplateField>
-    <asp:TemplateField HeaderText="Status">
-        <ItemTemplate>
-             <asp:Label Text='<%# Eval("Status") %>' runat="server" />
-        </ItemTemplate>
-    </asp:TemplateField>
-</Columns>
-</asp:GridView>
-            </div>
+    <div class="container-fluid">
+        <asp:Panel ID="Panel1" runat="server" CssClass="alert alert-success shadow-sm" Visible="false">
+            <asp:Label ID="Label1" runat="server"></asp:Label>
+        </asp:Panel>
 
-        </div>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="bi bi-check-circle-fill floating-icon" style="color: #28a745;"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Resolved Complaints</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 380px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    There are no complaints currently marked as 'Resolved'. Check other categories to track active issues.
+                </p>
+                <div class="text-center">
+                    <a href="View_Complaints.aspx" class="dashboard-btn btn-Dashboard">
+                        <i class="fas fa-arrow-left me-2"></i> View All Complaints
+                    </a>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="card shadow-sm border-0 mb-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server" AutoGenerateColumns="False"
+                            DataKeyNames="Complaint_id"
+                            CssClass="table table-hover grid-view-custom w-100"
+                            OnRowDataBound="gvDisplay_RowDataBound" 
+                            OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+                            GridLines="None">
+                            <Columns>
+                                <asp:TemplateField HeaderText="User Name">
+                                    <ItemTemplate><b><%# Eval("User_name") %></b></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Complaint type">
+                                    <ItemTemplate><%# Eval("Complaint_type") %></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Priority">
+                                    <ItemTemplate>
+                                        <span class="badge bg-light text-dark border"><%# Eval("Priority") %></span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <span class="status-badge px-3 py-1 text-white" style="background:#6c757d; border-radius:50px; font-size:0.8rem;">
+                                            <%# Eval("Status") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
     </div>
-</div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

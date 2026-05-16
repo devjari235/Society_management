@@ -246,7 +246,23 @@
 <script type="text/javascript">
     let paymentChart;
 
+    // 1. Initial Load
+    $(document).ready(function () {
+        initPaymentChart();
+    });
+
+    // 2. Fix for Sidebar Toggle (UpdatePanel refresh)
+    if (typeof Sys !== 'undefined' && Sys.WebForms && Sys.WebForms.PageRequestManager) {
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function () {
+            initPaymentChart();
+        });
+    }
+
     function initPaymentChart() {
+        // Guard to ensure canvas exists
+        if (!document.getElementById('paymentChart')) return;
+
         $.ajax({
             type: "POST",
             url: "AdminDashboard.aspx/GetCurrentYearMaintenanceData",
@@ -254,7 +270,9 @@
             dataType: "json",
             success: function (response) {
                 const data = response.d;
-                renderChart(data.months, data.paid, data.pending);
+                if (data) {
+                    renderChart(data.months, data.paid, data.pending);
+                }
             },
             error: function (err) {
                 console.error("Error fetching chart data:", err);
@@ -263,8 +281,15 @@
     }
 
     function renderChart(months, paidData, pendingData) {
-        var ctx = document.getElementById('paymentChart').getContext('2d');
-        if (paymentChart) paymentChart.destroy();
+        var canvas = document.getElementById('paymentChart');
+        if (!canvas) return;
+
+        var ctx = canvas.getContext('2d');
+
+        // Destroy old instance to refresh cleanly
+        if (paymentChart) {
+            paymentChart.destroy();
+        }
 
         paymentChart = new Chart(ctx, {
             type: 'bar',
@@ -289,6 +314,8 @@
             },
             options: {
                 responsive: true,
+                // Note: maintainAspectRatio is true by default, 
+                // which keeps your original UI height intact.
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -312,8 +339,8 @@
         });
     }
 
-    document.addEventListener('DOMContentLoaded', initPaymentChart);
-    setInterval(initPaymentChart, 60000); // Refresh every 60s
+    // Refresh data every 60s
+    setInterval(initPaymentChart, 60000);
 </script>
 
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -15,15 +15,6 @@ namespace Society_management
     {
 
         /// <summary>
-        /// lblVisitorName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblVisitorName;
-
-        /// <summary>
         /// txtVisitorName control.
         /// </summary>
         /// <remarks>
@@ -40,15 +31,6 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvVisitorName;
-
-        /// <summary>
-        /// lblContactNumber control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblContactNumber;
 
         /// <summary>
         /// txtContactNumber control.
@@ -69,24 +51,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvContact;
 
         /// <summary>
-        /// revContact control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator revContact;
-
-        /// <summary>
-        /// lblVisitPurpose control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblVisitPurpose;
-
-        /// <summary>
         /// txtVisitPurpose control.
         /// </summary>
         /// <remarks>
@@ -94,24 +58,6 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtVisitPurpose;
-
-        /// <summary>
-        /// rfvPurpose control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvPurpose;
-
-        /// <summary>
-        /// lblBlock control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBlock;
 
         /// <summary>
         /// ddlBlock control.
@@ -123,24 +69,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.DropDownList ddlBlock;
 
         /// <summary>
-        /// rfvBlock control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBlock;
-
-        /// <summary>
-        /// lblMember control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMember;
-
-        /// <summary>
         /// ddlMembers control.
         /// </summary>
         /// <remarks>
@@ -148,15 +76,6 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMembers;
-
-        /// <summary>
-        /// rfvMember control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvMember;
 
         /// <summary>
         /// btnSubmit control.

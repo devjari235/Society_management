@@ -62,7 +62,7 @@ namespace Society_management
                     SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587)
                     {
                         EnableSsl = true,
-                        Credentials = new NetworkCredential("infolivesta@gmail.com", "npimgmeajgyouqvm")
+                        Credentials = new NetworkCredential("infolivesta@gmail.com", "zbzjqlopqiuwtxry")
                     };
 
                     MailMessage mail = new MailMessage("infolivesta@gmail.com", toEmail, "Your SocietyConnect OTP",

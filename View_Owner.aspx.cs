@@ -15,6 +15,15 @@ namespace Society_management
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["A_id"] == null && Request.Cookies["AdminInfo"] != null)
+            {
+                string uid = Request.Cookies["AdminInfo"]["A_id"];
+                if (!string.IsNullOrEmpty(uid))
+                {
+                    Session["A_id"] = uid;
+                    Response.Redirect("AdminDashboard.aspx");
+                }
+            }
             if (!IsPostBack)
             {
                 BindGrid();
@@ -23,20 +32,33 @@ namespace Society_management
         }
         public void BindGrid()
         {
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                string query = "SELECT b.Block_name,f.Flate_no,o.Owner_id,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number, o.Total_member, o.Allotment_Date FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id;";
 
-            SqlConnection con = new SqlConnection(strcon);
-            //string query = "select * from tblImage where A_id=@aid";
-            // string query = "select b.Block_name,f.Flate_no,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number,o.Total_member,o.Allotment_Date from tblBlock b join tblFlat f on b.Block_id=f.Block_id join tblOwner o on b.Block_id=o.Block_id on f.Flate_id=o.Flate_id join tblSociety s on s.Society_id=b.Society_id where admin_id=@id";
-            string query = "SELECT b.Block_name,f.Flate_no,o.Owner_id,o.Owner_name,o.Contact_no,o.Email_id,o.Emergency_Number, o.Total_member,  o.Allotment_Date FROM tblBlock b JOIN tblFlat f ON b.Block_id = f.Block_id JOIN  tblOwner o ON f.Flate_id = o.Flate_id AND b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id;";
-            con.Open();
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            SqlDataAdapter ad = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            ad.Fill(ds);
-            gvDisplay.DataSource = ds;
-            gvDisplay.DataBind();
-            con.Close();
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+                    SqlDataAdapter ad = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    ad.Fill(dt);
+
+                    gvDisplay.DataSource = dt;
+                    gvDisplay.DataBind();
+
+                    // Toggle visibility logic
+                    if (dt.Rows.Count > 0)
+                    {
+                        phDataContent.Visible = true; // Shows the card and table
+                        pnlEmpty.Visible = false;     // Hides the centered empty state
+                    }
+                    else
+                    {
+                        phDataContent.Visible = false; // Hides the whole white card
+                        pnlEmpty.Visible = true;      // Shows the centered empty state
+                    }
+                }
+            }
         }
 
         protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)

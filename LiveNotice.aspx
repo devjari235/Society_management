@@ -47,6 +47,32 @@
 </script>
 
     <style>
+        /* Card and Wrapper styling */
+.card {
+    border-radius: 12px;
+    background-color: #ffffff;
+}
+
+/* DataTables Control Styling (Search/Entries) */
+.dataTables_wrapper .dataTables_filter, 
+.dataTables_wrapper .dataTables_length {
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+/* Ensure the table header looks modern */
+.grid-view-custom thead th {
+    background-color: #f8f9fa !important;
+    border-bottom: 1px solid #dee2e6 !important;
+    text-transform: none;
+    color: #495057;
+    padding: 15px !important;
+}
+
+/* Table border removal inside card */
+.grid-view-custom {
+    border: none !important;
+}
 /* GridView Button-Row Style */
 .grid-view-custom {
     border-collapse: separate;
@@ -277,28 +303,132 @@
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-    .page-title-buttons {
+/* --- UNIVERSAL BUTTON SIZING --- */
+.dashboard-btn, 
+.dashboard-btn-pill, 
+.btn-create, 
+.btn-Dashboard, 
+.btn-Live, 
+.btn-Expire, 
+.btn-All {
+    /* Exact Sizing */
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 48px;            /* Fixed height for all buttons */
+    min-width: 160px;        /* Consistent minimum width */
+    padding: 0 20px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important; /* Uniform corners */
+    box-sizing: border-box;
+}
+
+/* --- MOBILE RESPONSIVE (768px) --- */
+@media (max-width: 768px) {
+  /* --- UNIVERSAL BUTTON SIZING (Desktop & General) --- */
+.dashboard-btn, 
+.btn-create, 
+.btn-Dashboard, 
+.btn-All, 
+.btn-Expire {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    height: 48px;             /* Fixed uniform height */
+    min-width: 180px;         /* Consistent minimum width for desktop */
+    padding: 0 20px !important;
+    font-size: 0.95rem !important;
+    border-radius: 8px !important; 
+    box-sizing: border-box;
+    text-align: center;
+}
+
+/* --- MOBILE RESPONSIVE (768px) --- */
+@media (max-width: 768px) {
+       .page-title-buttons {
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .button-group-left {
         width: 100%;
         justify-content: space-between;
+        flex-direction: column;
     }
-    
+
     .btn-create {
         width: 100%;
         margin-left: 0;
-        order: -1; /* Moves Create button to top on mobile */
+        order: -1;
     }
-    
+
     .dashboard-btn {
         width: 100%;
-        text-align: center;
         justify-content: center;
     }
 }
+}
+}
+/* --- ICON UP-DOWN ANIMATION --- */
+.floating-icon {
+    display: inline-block;
+    animation: float-up-down 3s ease-in-out infinite;
+}
+
+@keyframes float-up-down {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+/* --- BALANCED EMPTY STATE --- */
+.empty-state-container {
+    padding: 60px 20px; /* Reduced from 100px to 60px for a natural look */
+    margin: 20px 0;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #dee2e6; /* Standard Bootstrap border color */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Match Bootstrap shadow-sm */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    /* Removed min-height so it wraps the content naturally */
+}
+
+.empty-state-icon {
+    font-size: 3.5rem; /* Standard dashboard icon size */
+    color: #eaecf4;
+    margin-bottom: 15px;
+}
+
+.empty-state-title {
+    font-size: 1.5rem; /* Balanced heading size */
+    font-weight: 700;
+    color: #4e73df;
+    margin-bottom: 8px;
+}
+
+.empty-state-text {
+    font-size: 0.95rem;
+    color: #858796;
+    max-width: 400px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Floating Animation */
+.floating-icon {
+    display: inline-block;
+    animation: float-up-down 3s ease-in-out infinite;
+}
+
+@keyframes float-up-down {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); } /* Subtle 10px movement */
+    100% { transform: translateY(0px); }
+}
+
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -323,169 +453,82 @@
 </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <%-- ── EMPTY STATE (shown when grid has no rows) ── --%>
-<asp:Panel ID="pnlEmpty" runat="server" Visible="false">
-    <div style="
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 20px;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-        margin-top: 20px;
-        text-align: center;">
-
-        <!-- Icon -->
-        <div style="
-            width: 90px; height: 90px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
-            <i class="fas fa-clipboard-list" style="font-size: 2.5rem; color: #adb5bd;"></i>
-        </div>
-
-        <!-- Title -->
-        <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">
-            No Live Notices
-        </h4>
-
-        <!-- Subtitle -->
-        <p style="color: #adb5bd; font-size: 0.95rem; max-width: 320px; margin-bottom: 24px;">
-            There are currently no active notices to display. Create a new notice to notify your society members.
-        </p>
-
-        <!-- Button -->
-        <a href="CreateNotice.aspx" style="
-            padding: 10px 28px;
-            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
-            color: #fff;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            box-shadow: 0 4px 12px rgba(142,45,226,0.3);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;">
-            <i class="fas fa-plus-circle"></i> Create Notice
-        </a>
-    </div>
-</asp:Panel>
- <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
-                                   <asp:GridView ID="gvDisplay" runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="Notice_id"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
-    <Columns>
-        <asp:TemplateField HeaderText="Title">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Title") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Posted Date">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Expiry Date">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Importance">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Importance") %>' runat="server"
-                    CssClass='<%# GetImportanceClass(Eval("Importance").ToString()) %>' />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Status">
-            <ItemTemplate>
-                <span class='<%# GetStatusClass(Eval("Status").ToString()) %>'>
-                    <%# Eval("Status") %>
-                </span>
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <asp:Panel CssClass="alert alert-success shadow-sm" role="alert" ID="Panel1" runat="server" Visible="false">
+                    <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                </asp:Panel>
             </div>
-
         </div>
-    </div>
-</div>
 
-   <%-- <div class="swiper-container-wrapper">
-            <!-- Arrows -->
-            <div class="swiper-button-prev"></div>
-
-            <!-- Swiper -->
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    <asp:Repeater ID="rptNotices" runat="server">
-                        <ItemTemplate>
-                            <div class="swiper-slide">
-                                <div class="notice-title"><%# Eval("Title") %></div>
-                                <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
-                                <span class="badge bg-success"><%# Eval("Status") %></span>
-                                <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
-                                <b><p>Posted By: <%# Eval("name") %></p></b>
-                                <p><%# Eval("Description") %></p>
-                                <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
-                                               Text="📎 View Attachment" Target="_blank"
-                                               CssClass="btn btn-sm btn-outline-secondary mt-2"
-                                               Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                            </div>
-                        </ItemTemplate>
-                    </asp:Repeater>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="fas fa-clipboard-list floating-icon" style="font-size: 3rem; color: #adb5bd; display: inline-block;"></i>
                 </div>
-                <div class="swiper-pagination"></div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Notices Available</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 320px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    There are currently no active notices to display. Keep residents informed by creating a new notice.
+                </p>
+                <div class="text-center">
+                    <a href="CreateNotice.aspx" style="padding: 10px 28px; background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%); color: #fff; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; box-shadow: 0 4px 12px rgba(142,45,226,0.3); display: inline-flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-plus-circle"></i> Create Notice
+                    </a>
+                </div>
             </div>
+        </asp:Panel>
 
-            <div class="swiper-button-next"></div>
-        </div>--%>
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="card shadow-sm border-0 mb-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server"
+                            AutoGenerateColumns="False"
+                            DataKeyNames="Notice_id"
+                            CssClass="table table-hover grid-view-custom w-100"
+                            OnRowDataBound="gvDisplay_RowDataBound" 
+                            OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+                            GridLines="None">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Title">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Title") %>' runat="server" CssClass="fw-bold text-dark" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Posted Date">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Expiry Date">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Importance">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Importance") %>' runat="server"
+                                            CssClass='<%# GetImportanceClass(Eval("Importance").ToString()) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <span class='<%# GetStatusClass(Eval("Status").ToString()) %>'>
+                                            <%# Eval("Status") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <%--<script>
-        new Swiper(".mySwiper", {
-            loop: true,
-            slidesPerView: 1,
-            spaceBetween: 30,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                renderBullet: function (index, className) {
-                    return '<span class="' + className + '">' + (index + 1) + "</span>";
-                }
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev"
-            },
-            autoplay: {
-                delay: 5000,
-                disableOnInteraction: false
-            }
-        });
-    </script>--%>
 
 </asp:Content>

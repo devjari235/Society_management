@@ -24,13 +24,13 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.HyperLink lnkCreateEvent;
 
         /// <summary>
-        /// rptEvents control.
+        /// lblMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptEvents;
+        protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
         /// pnlNoEvents control.
@@ -42,21 +42,30 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Panel pnlNoEvents;
 
         /// <summary>
-        /// lnkCreateFirstEvent control.
+        /// HyperLink1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkCreateFirstEvent;
+        protected global::System.Web.UI.WebControls.HyperLink HyperLink1;
 
         /// <summary>
-        /// lblMessage control.
+        /// phDataContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.PlaceHolder phDataContent;
+
+        /// <summary>
+        /// rptEvents control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptEvents;
     }
 }

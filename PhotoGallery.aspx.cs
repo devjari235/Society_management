@@ -23,52 +23,47 @@ namespace Society_management
 
         private void LoadPhotos()
         {
+            if (Session["A_id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+                return;
+            }
+
+            int currentAdminId = Convert.ToInt32(Session["A_id"]);
             string connStr = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
             DataTable dtPhotos = new DataTable();
 
-            try
+            using (SqlConnection conn = new SqlConnection(connStr))
             {
-                using (SqlConnection conn = new SqlConnection(connStr))
-                {
-                    string query = @"SELECT p.PhotoId, p.Title, p.Description, p.ImagePath, p.UploadDate, a.name 
-                                   FROM SocietyPhotos p join tblAdmin a On p.admin_id=a.admin_id
-                                   ORDER BY UploadDate DESC";
+                string query = @"SELECT p.PhotoId, p.Title, p.Description, p.ImagePath, p.UploadDate, a.name 
+                         FROM SocietyPhotos p 
+                         JOIN tblAdmin a ON p.admin_id = a.admin_id
+                         WHERE p.admin_id = @AdminId
+                         ORDER BY p.UploadDate DESC";
 
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        conn.Open();
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(dtPhotos);
-                    }
-                }
-
-                if (dtPhotos.Rows.Count > 0)
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    rptPhotos.DataSource = dtPhotos;
-                    rptPhotos.DataBind();
-                    pnlPhotos.Visible = true;
-                    pnlNoPhotos.Visible = false;
-                }
-                else
-                {
-                    pnlPhotos.Visible = false;
-                    pnlNoPhotos.Visible = true;
+                    cmd.Parameters.AddWithValue("@AdminId", currentAdminId);
+                    conn.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dtPhotos);
                 }
             }
-            catch (SqlException ex)
+
+            // ── TOGGLE VISIBILITY LOGIC ──
+            if (dtPhotos.Rows.Count > 0)
             {
-                // Log the error
-                System.Diagnostics.Trace.TraceError($"Database error loading photos: {ex.Message}");
-                ShowErrorMessage("Error loading photos. Please try again later.");
+                rptPhotos.DataSource = dtPhotos;
+                rptPhotos.DataBind();
+                phDataContent.Visible = true;  // Show the gallery card
+                pnlNoPhotos.Visible = false;   // Hide empty state
             }
-            catch (Exception ex)
+            else
             {
-                // Log general errors
-                System.Diagnostics.Trace.TraceError($"Error loading photos: {ex.Message}");
-                ShowErrorMessage("An unexpected error occurred. Please try again later.");
+                phDataContent.Visible = false; // Hide gallery card entirely
+                pnlNoPhotos.Visible = true;    // Show centered empty state
             }
         }
-
         protected void rptPhotos_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
@@ -95,7 +90,7 @@ namespace Society_management
 
         private void ShowErrorMessage(string message)
         {
-            pnlPhotos.Visible = false;
+            pnlNoPhotos.Visible = false;
             pnlNoPhotos.Visible = true;
             Label lblNoPhotos = pnlNoPhotos.FindControl("lblNoPhotos") as Label;
             if (lblNoPhotos != null)

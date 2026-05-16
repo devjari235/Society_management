@@ -11,6 +11,15 @@ namespace Society_management
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["A_id"] == null && Request.Cookies["AdminInfo"] != null)
+            {
+                string uid = Request.Cookies["AdminInfo"]["A_id"];
+                if (!string.IsNullOrEmpty(uid))
+                {
+                    Session["A_id"] = uid;
+                    Response.Redirect("AdminDashboard.aspx");
+                }
+            }
             if (!IsPostBack)
             {
                 BindAllNotices();
@@ -32,11 +41,11 @@ namespace Society_management
 
                 SqlCommand cmd = new SqlCommand(
                     @"SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, 
-                             n.Importance, n.Status, n.Posted_date, a.name 
-                      FROM tblNotices n 
-                      INNER JOIN tblAdmin a ON n.admin_id = a.admin_id 
-                      WHERE a.admin_id=@id  
-                      ORDER BY Expiry_date DESC",
+                     n.Importance, n.Status, n.Posted_date, a.name 
+              FROM tblNotices n 
+              INNER JOIN tblAdmin a ON n.admin_id = a.admin_id 
+              WHERE a.admin_id=@id  
+              ORDER BY n.Posted_date DESC",
                     conn);
                 cmd.Parameters.AddWithValue("id", Session["A_id"]);
 
@@ -46,6 +55,18 @@ namespace Society_management
 
                 gvDisplay.DataSource = dt;
                 gvDisplay.DataBind();
+
+                // ── TOGGLE VISIBILITY LOGIC ──
+                if (dt.Rows.Count > 0)
+                {
+                    phDataContent.Visible = true; // Show the White Card
+                    pnlEmpty.Visible = false;     // Hide Centered Empty State
+                }
+                else
+                {
+                    phDataContent.Visible = false; // Hide Entire Card
+                    pnlEmpty.Visible = true;       // Show Centered Empty State
+                }
             }
         }
 

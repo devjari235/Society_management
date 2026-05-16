@@ -28,21 +28,47 @@ namespace Society_management
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            string name = txtName.Text;
-            string ph = txtPhone.Text;
-            string mail = txtEmail.Text;
-            string pass = txtPassword.Text;
-            string query = "insert into tblAdmin values(@Name,@Email,@password,@ph)";
-            SqlConnection conn = new SqlConnection(strcon);
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@Name", name);
-            cmd.Parameters.AddWithValue("@Email", mail);
-            cmd.Parameters.AddWithValue("@password", pass);
-            cmd.Parameters.AddWithValue("@ph", ph);
-            conn.Open();
-            cmd.ExecuteNonQuery();
-            conn.Close();
-            //Response.Write("<script>alert('Thank you For Sing up and go to Login')</script>");
+            string name = txtName.Text.Trim();
+            string ph = txtPhone.Text.Trim();
+            string mail = txtEmail.Text.Trim();
+            string pass = txtPassword.Text.Trim();
+
+            // Specify column names explicitly.
+            // Do not include admin_id because it is an IDENTITY column.
+            // Profile_picture is nullable, so we insert NULL.
+            string query = @"
+        INSERT INTO tblAdmin
+        (
+            name,
+            email,
+            password,
+            phone_no,
+            Profile_picture
+        )
+        VALUES
+        (
+            @Name,
+            @Email,
+            @Password,
+            @Phone,
+            @ProfilePicture
+        )";
+
+            using (SqlConnection conn = new SqlConnection(strcon))
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@Name", name);
+                cmd.Parameters.AddWithValue("@Email", mail);
+                cmd.Parameters.AddWithValue("@Password", pass);
+                cmd.Parameters.AddWithValue("@Phone", ph);
+
+                // Insert NULL because Profile_picture allows NULL
+                cmd.Parameters.AddWithValue("@ProfilePicture", DBNull.Value);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
+
             Response.Redirect("Login.aspx");
         }
         protected void cvTerms_ServerValidate(object source, ServerValidateEventArgs args)

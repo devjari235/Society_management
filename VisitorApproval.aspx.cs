@@ -24,25 +24,48 @@ namespace Society_management
         {
             try
             {
+                string adminId = Session["A_id"]?.ToString();
+                if (string.IsNullOrEmpty(adminId))
+                {
+                    Response.Redirect("Login.aspx");
+                    return;
+                }
+
                 string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
                 string query = @"SELECT v.VisitorID, v.Name, v.ContactNumber, v.VisitPurpose, 
                                v.VisitDateTime, v.IsApproved, u.User_name AS MemberName,
-                               v.CheckInTime, 
-                               v.CheckOutTime
-                                FROM Visitors v
-                                LEFT JOIN tblUser u ON v.User_id = u.User_id
-                                WHERE v.IsScheduled = 0
-                                ORDER BY v.VisitDateTime DESC";
+                               v.CheckInTime, v.CheckOutTime
+                        FROM Visitors v
+                        INNER JOIN tblUser u ON v.User_id = u.User_id
+                        INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                        INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+                        INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+                        WHERE v.IsScheduled = 0 AND s.admin_id = @AdminID
+                        ORDER BY v.VisitDateTime DESC";
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     SqlCommand command = new SqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@AdminID", adminId);
+
                     SqlDataAdapter adapter = new SqlDataAdapter(command);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
 
                     gvVisitorApprovals.DataSource = dt;
                     gvVisitorApprovals.DataBind();
+
+                    // --- TOGGLE VISIBILITY LOGIC ---
+                    if (dt.Rows.Count > 0)
+                    {
+                        phDataContent.Visible = true; // Show Card with Table
+                        pnlEmpty.Visible = false;     // Hide Empty State
+                    }
+                    else
+                    {
+                        phDataContent.Visible = false; // Hide Entire Card
+                        pnlEmpty.Visible = true;       // Show Centered Empty State
+                    }
                 }
             }
             catch (Exception ex)

@@ -29,23 +29,17 @@ namespace Society_management
         {
             try
             {
-                // Show Initial Loading Script
-                string loaderScript = @"
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we post the notice and notify users.',
-                    allowOutsideClick: false,
-                    showConfirmButton: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "loader", loaderScript, true);
-
                 // Validate expiry date
                 if (!DateTime.TryParse(txtExpiry.Text, out DateTime expiryDate))
                 {
-                    ShowError("Invalid expiry date format. Please use yyyy-MM-dd.");
+                    ScriptManager.RegisterStartupScript(this, GetType(), "validationError",
+                        @"Swal.fire({
+                            title: 'Invalid Date',
+                            text: 'Invalid expiry date format. Please use yyyy-MM-dd.',
+                            icon: 'error',
+                            allowOutsideClick: false,
+                            confirmButtonText: 'OK'
+                        });", true);
                     return;
                 }
 
@@ -62,25 +56,49 @@ namespace Society_management
                     SendEmailsToSelectedGroups();
                 }
 
-                // 4. Handle In-App Notification (Logic added here)
+                // 4. Handle In-App Notification
                 if (sendInApp)
                 {
                     SendInAppNotification(noticeId, txtTitle.Text.Trim());
                 }
 
-                // 5. Final Success Message
-                string successDetail = "Notice posted successfully!";
-                if (sendEmail && sendInApp) successDetail += " Emails and In-App notifications sent.";
-                else if (sendEmail) successDetail += " Emails have been sent.";
-                else if (sendInApp) successDetail += " In-App notifications sent.";
+                // 5. Build success detail message
+                string successDetail;
+                if (sendEmail && sendInApp)
+                    successDetail = "Notice posted successfully! Emails and In-App notifications have been sent to all selected groups.";
+                else if (sendEmail)
+                    successDetail = "Notice posted successfully! Emails have been sent to all selected groups.";
+                else if (sendInApp)
+                    successDetail = "Notice posted successfully! In-App notifications have been sent to all selected members.";
+                else
+                    successDetail = "Notice posted successfully!";
 
+                // 6. Show success alert — allowOutsideClick false forces user to click OK
                 ScriptManager.RegisterStartupScript(this, GetType(), "finalSuccess",
-                    $"Swal.fire('Success!', '{successDetail}', 'success').then(() => window.location = 'CreateNotice.aspx');",
-                    true);
+                    $@"Swal.fire({{
+                        title: 'Posted Successfully!',
+                        text: '{successDetail}',
+                        icon: 'success',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#4e73df'
+                    }}).then((result) => {{
+                        if (result.isConfirmed) {{
+                            window.location = 'CreateNotice.aspx';
+                        }}
+                    }});", true);
             }
             catch (Exception ex)
             {
-                ShowError("An error occurred: " + ex.Message);
+                ScriptManager.RegisterStartupScript(this, GetType(), "ErrorMessage",
+                    $@"Swal.fire({{
+                        title: 'Something Went Wrong!',
+                        text: '{ex.Message.Replace("'", "\\'").Replace("\r\n", " ").Replace("\n", " ")}',
+                        icon: 'error',
+                        allowOutsideClick: false,
+                        confirmButtonText: 'Try Again',
+                        confirmButtonColor: '#e74c3c'
+                    }});", true);
             }
         }
 
@@ -297,12 +315,6 @@ namespace Society_management
         {
             try { return new MailAddress(email).Address == email; }
             catch { return false; }
-        }
-
-        private void ShowError(string message)
-        {
-            ScriptManager.RegisterStartupScript(this, GetType(), "ErrorMessage",
-                $"Swal.fire('Error!', '{message.Replace("'", "\\'")}', 'error');", true);
         }
     }
 }

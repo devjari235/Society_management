@@ -40,6 +40,28 @@
             padding: 50px;
             color: #6c757d;
         }
+        /* --- ICON ANIMATION --- */
+    .floating-icon {
+        display: inline-block;
+        animation: float-up-down 3s ease-in-out infinite;
+        font-size: 4rem;
+        color: #cbd5e1;
+        margin-bottom: 15px;
+    }
+    @keyframes float-up-down {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* --- BALANCED EMPTY STATE --- */
+    .empty-state-container {
+        padding: 80px 20px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+    }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </asp:Content>
@@ -57,48 +79,61 @@
         </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="container">
-        <div class="row">
-            <asp:Repeater ID="rptEvents" runat="server">
-                <ItemTemplate>
-                    <div class="col-md-4">
-                        <div class="card event-card">
-                            <asp:Image ID="imgEvent" runat="server"
-                                ImageUrl='<%# Society_management.ViewEvents.GetImageUrl(Eval("ImageUrl")) %>'
-                                CssClass="card-img-top event-image" AlternateText="Event Image" />
-                            <div class="card-body">
-                                <h5 class="card-title"><%# Eval("EventName") %></h5>
-                                <p class="card-text"><%# Society_management.ViewEvents.TruncateDescription(Eval("EventDescription").ToString()) %></p>
-                            </div>
-                            <div class="card-footer bg-transparent">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="event-date">
-                                        <i class="bi bi-calendar-event"></i>
-                                        <%# Society_management.ViewEvents.FormatDate(Eval("EventDate")) %>
-                                    </span>
-                                    <span class="event-location">
-                                        <i class="bi bi-geo-alt"></i> <%# Eval("EventLocation") %>
-                                    </span>
+    <div class="container-fluid">
+        <asp:Label ID="lblMessage" runat="server" CssClass="alert shadow-sm w-100" Visible="false" style="display: block; margin-bottom:20px;"></asp:Label>
+
+        <asp:Panel ID="pnlNoEvents" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="bi bi-calendar-x floating-icon"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Upcoming Events</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 400px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    It looks like there are no events scheduled at the moment. Stay tuned or create a new event for the society.
+                </p>
+                <div class="text-center">
+                    <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-primary"><i class="fas fa-plus-circle"></i> Create New Event</asp:HyperLink>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="row">
+                <asp:Repeater ID="rptEvents" runat="server">
+                    <ItemTemplate>
+                        <div class="col-xl-4 col-lg-6 col-md-6 mb-4">
+                            <div class="card event-card shadow-sm border-0 h-100 bg-white">
+                                <asp:Image ID="imgEvent" runat="server"
+                                    ImageUrl='<%# Society_management.ViewEvents.GetImageUrl(Eval("ImageUrl")) %>'
+                                    CssClass="card-img-top event-image" AlternateText="Event Image" />
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold text-dark"><%# Eval("EventName") %></h5>
+                                    <p class="card-text text-muted" style="font-size: 0.9rem;">
+                                        <%# Society_management.ViewEvents.TruncateDescription(Eval("EventDescription").ToString()) %>
+                                    </p>
                                 </div>
-                                <div class="d-grid mt-2">
-                                    <asp:HyperLink ID="lnkDetails" runat="server"
-                                        NavigateUrl='<%# "~/EventDetails.aspx?EventId=" + Eval("EventId") %>'
-                                        CssClass="btn btn-sm btn-outline-primary">View Details</asp:HyperLink>
+                                <div class="card-footer bg-transparent border-0 pb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="event-date">
+                                            <i class="bi bi-calendar-event text-primary me-1"></i>
+                                            <%# Society_management.ViewEvents.FormatDate(Eval("EventDate")) %>
+                                        </span>
+                                        <span class="event-location text-truncate" style="max-width:150px;">
+                                            <i class="bi bi-geo-alt text-danger me-1"></i> <%# Eval("EventLocation") %>
+                                        </span>
+                                    </div>
+                                    <div class="d-grid">
+                                        <asp:HyperLink ID="lnkDetails" runat="server"
+                                            NavigateUrl='<%# "~/EventDetails.aspx?EventId=" + Eval("EventId") %>'
+                                            CssClass="btn btn-sm btn-outline-primary rounded-pill">View Details</asp:HyperLink>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </ItemTemplate>
-            </asp:Repeater>
-
-            <asp:Panel ID="pnlNoEvents" runat="server" CssClass="col-12 no-events" Visible="false">
-                <h3>No upcoming events found.</h3>
-                <p>Would you like to <asp:HyperLink ID="lnkCreateFirstEvent" runat="server"
-                    NavigateUrl="~/CreateEvent.aspx" CssClass="btn btn-link">create the first one</asp:HyperLink>?</p>
-            </asp:Panel>
-
-            <asp:Label ID="lblMessage" runat="server" CssClass="alert" Visible="false" style="display: block;"></asp:Label>
-        </div>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </div>
+        </asp:PlaceHolder>
     </div>
 </asp:Content>
 

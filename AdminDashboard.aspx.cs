@@ -161,25 +161,35 @@ namespace Society_management
         // Add this new method to get pending payments count
         public void GetTotalPendingMaintainance()
         {
-            SqlConnection con = new SqlConnection(strcon);
+            // Check if session exists to avoid errors
+            if (Session["A_id"] == null) return;
 
-            string pendingQuery = @"SELECT ISNULL(SUM(f.Mentanance), 0) 
-                                      FROM tblFlat f
-                                      WHERE NOT EXISTS (
-                                          SELECT 1 FROM MaintenancePayments mp 
-                                          WHERE mp.Flate_id = f.Flate_id 
-                                          AND mp.Month = @Month 
-                                          AND mp.Status = 'Completed'
-                                      )";
-            con.Open();
-            using (SqlCommand cmd = new SqlCommand(pendingQuery, con))
+            using (SqlConnection con = new SqlConnection(strcon))
             {
-                cmd.Parameters.AddWithValue("@Month",  DateTime.Now.Month.ToString());
+                // Added JOINS to tblBlock and tblSociety to filter by the logged-in Admin's ID
+                string pendingQuery = @"SELECT ISNULL(SUM(f.Mentanance), 0) 
+                                FROM tblFlat f
+                                JOIN tblBlock b ON f.Block_id = b.Block_id
+                                JOIN tblSociety s ON b.Society_id = s.Society_id
+                                WHERE s.admin_id = @admin_id
+                                AND NOT EXISTS (
+                                    SELECT 1 FROM MaintenancePayments mp 
+                                    WHERE mp.Flate_id = f.Flate_id 
+                                    AND mp.Month = @Month 
+                                    AND mp.Year = YEAR(GETDATE())
+                                    AND mp.Status = 'Completed'
+                                )";
 
-                decimal totalPending = Convert.ToDecimal(cmd.ExecuteScalar());
-                lblPendingPayments.Text = totalPending.ToString("N2");
+                con.Open();
+                using (SqlCommand cmd = new SqlCommand(pendingQuery, con))
+                {
+                    cmd.Parameters.AddWithValue("@Month", DateTime.Now.Month);
+                    cmd.Parameters.AddWithValue("@admin_id", Session["A_id"].ToString());
+
+                    decimal totalPending = Convert.ToDecimal(cmd.ExecuteScalar());
+                    lblPendingPayments.Text = totalPending.ToString("N2");
+                }
             }
-            con.Close();
         }
 
         // Your existing methods
@@ -231,23 +241,34 @@ namespace Society_management
 
         public int GetTotalActiveComplaint()
         {
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string query = @"SELECT COUNT(*) 
-                            FROM tblComplaint c
-                            JOIN tblUser u ON c.User_id = u.User_id
-                            JOIN tblOwner o ON u.Owner_id = o.Owner_id
-                            JOIN tblBlock b ON o.Block_id = b.Block_id
-                            JOIN tblSociety s ON s.Society_id = b.Society_id
-                            WHERE s.admin_id = @id";
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            return Convert.ToInt32(cmd.ExecuteScalar());
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                // Filter by Status: Only count 'Pending', 'Active', or 'In Progress'
+                // If you strictly want 'Active', use: c.Status = 'Active'
+                string query = @"SELECT COUNT(*) 
+                        FROM tblComplaint c
+                        JOIN tblUser u ON c.User_id = u.User_id
+                        JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                        JOIN tblBlock b ON o.Block_id = b.Block_id
+                        JOIN tblSociety s ON s.Society_id = b.Society_id
+                        WHERE s.admin_id = @id 
+                        AND c.Status IN ('Pending', 'Active', 'In Progress')";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+
+                con.Open();
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
         }
 
-        [WebMethod]
+        [WebMethod(EnableSession = true)]
         public static object GetCurrentYearMaintenanceData()
         {
+            // 1. Check Session for Admin ID
+            if (HttpContext.Current.Session["A_id"] == null) return null;
+            string adminId = HttpContext.Current.Session["A_id"].ToString();
+
             List<string> months = new List<string> { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                                               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
             decimal[] paid = new decimal[12];
@@ -260,50 +281,66 @@ namespace Society_management
             {
                 con.Open();
 
+                // 2. Updated Total Query: Filtered by Admin's Society
                 string totalQuery = @"
-                    SELECT 
-                        m.number AS [Month],
-                        SUM(f.Mentanance) AS MonthlyMaintenance
-                    FROM (
-                        SELECT DISTINCT Flate_id, Mentanance
-                        FROM tblFlat
-                    ) f
-                    CROSS JOIN (
-                        SELECT number
-                        FROM master..spt_values
-                        WHERE type = 'P' AND number BETWEEN 1 AND 12
-                    ) m
-                    GROUP BY m.number
-                    ORDER BY m.number";
+            SELECT 
+                m.number AS [Month],
+                ISNULL(SUM(f.Mentanance), 0) AS MonthlyMaintenance
+            FROM (
+                SELECT f.Flate_id, f.Mentanance
+                FROM tblFlat f
+                JOIN tblBlock b ON f.Block_id = b.Block_id
+                JOIN tblSociety s ON b.Society_id = s.Society_id
+                WHERE s.admin_id = @adminId
+            ) f
+            CROSS JOIN (
+                SELECT number FROM master..spt_values
+                WHERE type = 'P' AND number BETWEEN 1 AND 12
+            ) m
+            GROUP BY m.number
+            ORDER BY m.number";
 
                 using (SqlCommand cmd = new SqlCommand(totalQuery, con))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    cmd.Parameters.AddWithValue("@adminId", adminId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        int monthIndex = Convert.ToInt32(reader["Month"]) - 1;
-                        totalMaintenance[monthIndex] = Convert.ToDecimal(reader["MonthlyMaintenance"]);
+                        while (reader.Read())
+                        {
+                            int monthIndex = Convert.ToInt32(reader["Month"]) - 1;
+                            totalMaintenance[monthIndex] = Convert.ToDecimal(reader["MonthlyMaintenance"]);
+                            // Initialize pending with total, will subtract paid later
+                            pending[monthIndex] = totalMaintenance[monthIndex];
+                        }
                     }
-                    reader.Close();
                 }
 
+                // 3. Updated Paid Query: Only for users belonging to the Admin's society
                 string paidQuery = @"
-                    SELECT 
-                        [Month],
-                        SUM([Amount]) AS PaidAmount
-                    FROM MaintenancePayments
-                    WHERE [Status] = 'Completed' AND [Year] = YEAR(GETDATE())
-                    GROUP BY [Month]
-                    ORDER BY [Month]";
+            SELECT 
+                mp.[Month],
+                ISNULL(SUM(mp.[Amount]), 0) AS PaidAmount
+            FROM MaintenancePayments mp
+            JOIN tblFlat f ON mp.Flate_id = f.Flate_id
+            JOIN tblBlock b ON f.Block_id = b.Block_id
+            JOIN tblSociety s ON b.Society_id = s.Society_id
+            WHERE mp.[Status] = 'Completed' 
+            AND mp.[Year] = YEAR(GETDATE())
+            AND s.admin_id = @adminId
+            GROUP BY mp.[Month]";
 
                 using (SqlCommand cmd = new SqlCommand(paidQuery, con))
                 {
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
+                    cmd.Parameters.AddWithValue("@adminId", adminId);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        int monthIndex = Convert.ToInt32(reader["Month"]) - 1;
-                        paid[monthIndex] = Convert.ToDecimal(reader["PaidAmount"]);
-                        pending[monthIndex] = Math.Max(0, totalMaintenance[monthIndex] - paid[monthIndex]);
+                        while (reader.Read())
+                        {
+                            int monthIndex = Convert.ToInt32(reader["Month"]) - 1;
+                            paid[monthIndex] = Convert.ToDecimal(reader["PaidAmount"]);
+                            // Recalculate pending for that specific month
+                            pending[monthIndex] = Math.Max(0, totalMaintenance[monthIndex] - paid[monthIndex]);
+                        }
                     }
                 }
             }

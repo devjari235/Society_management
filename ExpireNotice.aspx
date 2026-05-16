@@ -21,30 +21,66 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var $table = $('.table');
+        // Use the exact GridView ID instead of '.table'
+        var $table = $('#<%= gvDisplay.ClientID %>');
 
-        // Ensure thead exists
+        // Stop if GridView is not found
+        if ($table.length === 0) {
+            console.log("GridView not found.");
+            return;
+        }
+
+        // Ensure <thead> exists (required by DataTables)
         if ($table.find('thead').length === 0) {
-            var $thead = $('<thead></thead>').append($table.find('tr:first'));
-            $table.prepend($thead);
+            var $firstRow = $table.find('tr:first');
+
+            if ($firstRow.length > 0) {
+                var $thead = $('<thead></thead>');
+                $thead.append($firstRow);
+                $table.prepend($thead);
+            }
         }
 
-        // Initialize only if not already done
-        if (!$.fn.DataTable.isDataTable($table)) {
-            $table.DataTable({
-                "paging": true,
-                "lengthChange": true,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "serverSide": false,
-                "processing": false
-            });
+        // Check if actual data rows exist
+        var hasData =
+            $table.find('tbody tr').length > 0 &&
+            $table.find('tbody td').length > 1;
+
+        if (!hasData) {
+            console.log("No data rows found. DataTable not initialized.");
+            return;
         }
 
-        // Row click handler
+        // Destroy existing instance if already initialized
+        if ($.fn.DataTable.isDataTable($table)) {
+            $table.DataTable().destroy();
+        }
+
+        // Initialize DataTables
+        $table.DataTable({
+            paging: true,
+            lengthChange: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            autoWidth: false,
+            responsive: true,
+            pageLength: 10,
+            serverSide: false,
+            processing: false,
+            dom: 'lfrtip',   // l=length dropdown, f=search box, r=processing, t=table, i=info, p=paging
+            language: {
+                search: "Search Notices:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                paginate: {
+                    previous: "Previous",
+                    next: "Next"
+                }
+            }
+        });
+
+        // Clickable row support
         $table.find('tbody').on('click', 'tr.clickable-row', function () {
             var noticeId = $(this).attr('data-notice-id');
             if (noticeId) {
@@ -297,6 +333,83 @@
     .notice-card {
         height: auto !important;
     }
+    /* Clean up the card and table look */
+.card {
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+/* Remove default DataTables border that clashes with card */
+#<%= gvDisplay.ClientID %> {
+    border: none !important;
+}
+
+/* Ensure header looks clean */
+.grid-view-custom thead th {
+    background-color: #f8f9fa;
+    border-top: none;
+    border-bottom: 1px solid #eee;
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Pagination and Search alignment */
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+}
+
+.dataTables_wrapper .dataTables_info, 
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 20px;
+}
+.floating-icon {
+    animation: float-up-down 3s ease-in-out infinite;
+}
+
+@keyframes float-up-down {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.empty-state-container {
+    padding: 60px 20px;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+/* --- MOBILE RESPONSIVE (768px) --- */
+@media (max-width: 768px) {
+       .page-title-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .button-group-left {
+        width: 100%;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+
+    .btn-create {
+        width: 100%;
+        margin-left: 0;
+        order: -1;
+    }
+
+    .dashboard-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+}
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -321,81 +434,79 @@
  </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
-    </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-                       <div class="table-responsive">
-                                   <asp:GridView ID="gvDisplay" runat="server"
-    AutoGenerateColumns="False"
-    DataKeyNames="Notice_id"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged">
-    <Columns>
-        <asp:TemplateField HeaderText="Title">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Title") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Posted Date">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Expiry Date">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Importance">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Importance") %>' runat="server"
-                    CssClass='<%# GetImportanceClass(Eval("Importance").ToString()) %>' />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Status">
-            <ItemTemplate>
-                <span class='<%# GetStatusClass(Eval("Status").ToString()) %>'>
-                    <%# Eval("Status") %>
-                </span>
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <asp:Panel CssClass="alert alert-success shadow-sm" role="alert" ID="Panel1" runat="server" Visible="false">
+                    <asp:Label ID="Label1" runat="server" Text=""></asp:Label>
+                </asp:Panel>
             </div>
-
         </div>
-    </div>
-</div>
 
-  <%--  <div class="notice-scroller-container">
-    <asp:Repeater ID="rptExpired" runat="server">
-                <ItemTemplate>
-                    <div class="card mb-3 border-danger">
-                        <div class="card-body">
-                            <h5><%# Eval("Title") %></h5>
-                            <p><%# Eval("Description") %></p>
-                             <b><p>Posted By: <%# Eval("name") %></p></b>
-                            <small><b>Status:</b> <%# Eval("Status") %></small> |
-                            <small><b>Expired On:</b> <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></small>
-                            <p> </p>
-                            <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
-               Text="📎 View Attachment" Target="_blank"
-               CssClass="btn btn-sm btn-outline-secondary mt-2"
-               Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                        </div>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="far fa-calendar-times floating-icon" style="font-size: 3.5rem; color: #cbd5e1; display: inline-block;"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Expired Notices</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 380px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    There are currently no expired notices in your records. All notices are either active or haven't been created yet.
+                </p>
+                <div class="text-center">
+                    <a href="LiveNotice.aspx" class="dashboard-btn btn-Live">
+                        <i class="fas fa-broadcast-tower"></i> Live Notice
+                    </a>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="card shadow-sm border-0 mb-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server"
+                            AutoGenerateColumns="False"
+                            DataKeyNames="Notice_id"
+                            CssClass="table table-hover grid-view-custom w-100" 
+                            OnRowDataBound="gvDisplay_RowDataBound" 
+                            OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+                            GridLines="None">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Title">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Title") %>' runat="server" CssClass="fw-bold text-dark" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Posted Date">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Posted_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Expiry Date">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Expiry_date", "{0:dd MMM yyyy}") %>' runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Importance">
+                                    <ItemTemplate>
+                                        <asp:Label Text='<%# Eval("Importance") %>' runat="server"
+                                            CssClass='<%# GetImportanceClass(Eval("Importance").ToString()) %>' />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <span class='<%# GetStatusClass(Eval("Status").ToString()) %>'>
+                                            <%# Eval("Status") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
                     </div>
-                </ItemTemplate>
-            </asp:Repeater>
-        </div>--%>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

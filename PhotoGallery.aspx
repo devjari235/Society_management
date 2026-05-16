@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="PhotoGallery.aspx.cs" Inherits="Society_management.PhotoGallery" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
+
+
      <style>
         body {
             font-family: Arial, sans-serif;
@@ -184,9 +186,30 @@
         }
 
         .create-notice-container{
-    display: flex; 
-    justify-content: flex-end;
-}
+            display: flex; 
+            justify-content: flex-end;
+        }
+        .floating-icon {
+        display: inline-block;
+        animation: float-up-down 3s ease-in-out infinite;
+        font-size: 3.5rem;
+        color: #cbd5e1;
+        margin-bottom: 15px;
+    }
+    @keyframes float-up-down {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* --- EMPTY STATE --- */
+    .empty-state-container {
+        padding: 60px 20px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+    }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
@@ -199,35 +222,48 @@
         </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-    <div class="gallery-container">
-            <asp:Panel ID="pnlPhotos" runat="server">
+    <div class="container-fluid">
+        
+        <asp:Panel ID="pnlNoPhotos" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="fas fa-images floating-icon"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">Gallery is Empty</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 380px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    No photos have been uploaded to your society gallery yet. Start capturing memories today!
+                </p>
+                <div class="text-center">
+                    <a href="UploadPhoto.aspx" class="btn-create-notice">
+                        <i class="fas fa-plus-circle"></i> Add Photo
+                    </a>
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="gallery-card-wrapper card shadow-sm border-0 mb-4 mt-3 bg-white p-3">
                 <div class="photo-grid">
-                    <asp:Repeater ID="rptPhotos" runat="server" OnItemDataBound="rptPhotos_ItemDataBound">
+                    <asp:Repeater ID="rptPhotos" runat="server">
                         <ItemTemplate>
                             <div class="photo-card" 
-                                data-title='<%# Eval("Title") %>'
-                                data-description='<%# Eval("Description") %>'
-                                data-uploader='<%# Eval("name") %>'
-                                data-date='<%# Convert.ToDateTime(Eval("UploadDate")).ToString("MMM dd, yyyy") %>'
-                                onclick="openLightbox(this)">
+                                 data-title='<%# Eval("Title") %>' 
+                                 data-description='<%# Eval("Description") %>' 
+                                 data-uploader='<%# Eval("name") %>' 
+                                 data-date='<%# Convert.ToDateTime(Eval("UploadDate")).ToString("MMM dd, yyyy") %>' 
+                                 onclick="openLightbox(this)">
                                 <div class="photo-image-container">
-                                    <asp:Image ID="imgPhoto" runat="server" 
-                                        ImageUrl='<%# Eval("ImagePath") %>' 
-                                        CssClass="photo-image" 
-                                        AlternateText='<%# Eval("Title") %>' />
+                                    <img src='<%# ResolveUrl(Eval("ImagePath").ToString()) %>'
+                                     class="photo-image"
+                                     alt='<%# Eval("Title") %>' />
                                 </div>
                             </div>
                         </ItemTemplate>
                     </asp:Repeater>
                 </div>
-            </asp:Panel>
-            
-            <asp:Panel ID="pnlNoPhotos" runat="server" CssClass="no-photos" Visible="false">
-                <asp:Label ID="lblNoPhotos" runat="server" Text="No photos available in the gallery yet." />
-            </asp:Panel>
-        </div>
+            </div>
+        </asp:PlaceHolder>
 
-        <!-- Lightbox HTML -->
         <div id="lightbox" class="lightbox">
             <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
             <div class="lightbox-content">
@@ -237,9 +273,8 @@
                 <div class="lightbox-info">
                     <div id="lightbox-title" class="lightbox-title"></div>
                     <div id="lightbox-description" class="lightbox-description"></div>
-                    <div class="lightbox-meta">
-                        <span id="lightbox-uploader">Uploaded by: </span>
-                        <span id="lightbox-date"></span>
+                    <div id="lightbox-meta">
+                        <span id="lightbox-uploader"></span> | <span id="lightbox-date"></span>
                     </div>
                 </div>
             </div>
@@ -248,6 +283,7 @@
                 <div class="lightbox-nav-btn" onclick="navigateLightbox(1)">❯</div>
             </div>
         </div>
+    </div>
 </asp:Content>
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
     <script>

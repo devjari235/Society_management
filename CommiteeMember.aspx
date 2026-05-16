@@ -74,35 +74,50 @@
         margin-bottom: 15px;
     }
 }
-.gradient-btn {
-    display: inline-block;
-    padding: 10px 20px;
-     color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-   background: linear-gradient(135deg, #0f9b0f 0%, #043927 100%);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    margin: 5px 0;
-}
+/* =========================================
+       UPDATED VIEW BUTTON (PILL STYLE)
+    ========================================= */
+    .dashboard-btn {
+        padding: 10px 24px;
+        border-radius: 50px; /* Pill shape */
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none !important;
+        color: white !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none;
+        cursor: pointer;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-.gradient-btn:hover {
+    .dashboard-btn i {
+        margin-right: 8px;
+        font-size: 1rem;
+    }
+
+    /* Professional Blue Background */
+    .btn-create {
+        background: #4e73df;
+    }
+
+    /* Hover effect matching your request */
+    .dashboard-btn:hover {
         transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    color: #FFD700;
-    text-decoration:none;
-}
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        text-decoration: none;
+    }
 
-.gradient-btn:active {
-    transform: translateY(0);
-}
+    .dashboard-btn:active {
+        transform: translateY(0);
+    }
 
-.gradient-btn i {
-    margin-right: 8px;
-}
+    .create-notice-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+    }
  .create-notice-container{
      display:flex;
      justify-content:flex-end;
@@ -134,8 +149,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="PageTitleContent" runat="server">
-   <div class="create-notice-container">
-       <a href="View_CommiteeMember.aspx" class="gradient-btn"><b><i class="bi bi-eye-fill"></i> View Committee Member</b></a>
+    <div class="create-notice-container">
+        <a href="View_CommiteeMember.aspx" class="dashboard-btn btn-create">
+            <i class="bi bi-eye-fill"></i> View Committee Member
+        </a>
     </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">

@@ -1,7 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Adashboard.Master" AutoEventWireup="true" CodeBehind="Admin_noticeDetails.aspx.cs" Inherits="Society_management.Admin_noticeDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
     <style>
         .card-notice {
@@ -47,6 +46,8 @@
             background-color: #2980b9;
             transform: translateY(-3px);
             color: white;
+            list-style-type:none;
+            text-decoration:none;
         }
 
         .table td, .table th {
@@ -54,21 +55,72 @@
             font-size: 16px;
         }
 
-        @media (max-width: 768px) {
-            .action-button-group {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 10px;
-            }
+@media (max-width: 768px) {
 
-            .btn-register-notice {
-                width: 100%;
-                max-width: 300px;
-                padding: 15px;
-                font-size: 18px;
-                text-align: center;
-            }
-        }
+    .card-notice {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 15px 12px !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+
+    .card-notice .table tbody tr {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+        border: 1px solid #e3e6f0 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+    }
+
+    .card-notice .table tbody tr th {
+        display: block !important;
+        width: 100% !important;
+        background: #f8f9fc !important;
+        border: none !important;
+        border-bottom: 1px solid #e3e6f0 !important;
+        padding: 9px 12px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+
+    .card-notice .table tbody tr td {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 10px 12px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .card-notice .table tbody tr td span {
+        display: block !important;
+        width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    span[id$="lblDescription"] {
+        white-space: pre-wrap !important;
+    }
+
+    .action-button-group {
+        flex-direction: column !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+        padding: 0 !important;
+    }
+
+    .btn-register-notice {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+}
     </style>
 </asp:Content>
 
@@ -135,5 +187,4 @@
 </asp:Content>
 
 <asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </asp:Content>

@@ -12,10 +12,24 @@ namespace Society_management
 {
     public partial class View_CommiteeMember : System.Web.UI.Page
     {
-
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["A_id"] == null && Request.Cookies["AdminInfo"] != null)
+            {
+                string uid = Request.Cookies["AdminInfo"]["A_id"];
+                if (!string.IsNullOrEmpty(uid))
+                {
+                    Session["A_id"] = uid;
+                }
+            }
+
+            if (Session["A_id"] == null)
+            {
+                Response.Redirect("Login.aspx");
+            }
+
             if (!IsPostBack)
             {
                 BindGrid();
@@ -24,41 +38,58 @@ namespace Society_management
 
         public void BindGrid()
         {
+            using (SqlConnection con = new SqlConnection(strcon))
+            {
+                con.Open();
 
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            string updateQuery = @"UPDATE tblCommitteeMember 
+                // 1. Transition expired members
+                string updateQuery = @"UPDATE tblCommitteeMember 
                                SET Status = 'Past' 
                                WHERE To_date < GETDATE() AND Status != 'Past'";
-            SqlCommand updateCmd = new SqlCommand(updateQuery, con);
-            updateCmd.ExecuteNonQuery();
+                new SqlCommand(updateQuery, con).ExecuteNonQuery();
 
+                // 2. Fetch Active members
+                string query = @"SELECT c.*, u.User_name 
+                         FROM tblCommitteeMember c 
+                         JOIN tblUser u ON u.User_id = c.User_id 
+                         JOIN tblOwner o ON o.Owner_id = u.Owner_id 
+                         JOIN tblblock b ON b.Block_id = o.Block_id 
+                         JOIN tblSociety s ON s.Society_id = b.Society_id 
+                         WHERE s.admin_id = @id 
+                         AND (c.To_date IS NULL OR c.To_date >= GETDATE())
+                         AND c.Status != 'Past'";
 
-            string query = "SELECT c.*,u.User_name from tblCommitteeMember c join tblUser u on u.User_id=c.User_id join tblOwner o on o.Owner_id=u.Owner_id join tblblock b on  b.Block_id = o.Block_id JOIN tblSociety s ON s.Society_id = b.Society_id WHERE s.admin_id = @id AND (c.To_date IS NULL OR c.To_date >= GETDATE())";
-           
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
-            SqlDataAdapter ad = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            ad.Fill(ds);
-            // Add this to debug
-            if (ds.Tables[0].Rows.Count == 0)
-            {
-                Label1.Text = "No current committee member.";
-                Panel1.Visible = true;
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@id", Session["A_id"].ToString());
+
+                SqlDataAdapter ad = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                ad.Fill(dt);
+
+                gvDisplay.DataSource = dt;
+                gvDisplay.DataBind();
+
+                // ── TOGGLE VISIBILITY LOGIC ──
+                if (dt.Rows.Count > 0)
+                {
+                    phDataContent.Visible = true; // Show Table Card
+                    pnlEmpty.Visible = false;     // Hide Empty State
+                }
+                else
+                {
+                    phDataContent.Visible = false; // Hide Table Card Completely
+                    pnlEmpty.Visible = true;       // Show Centered Empty State
+                }
             }
-            gvDisplay.DataSource = ds;
-            gvDisplay.DataBind();
-            con.Close();
         }
-
 
         protected void gvDisplay_RowDataBound(object sender, GridViewRowEventArgs e)
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
+                // Enables PostBack on row click for SelectedIndexChanged
                 e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(gvDisplay, "Select$" + e.Row.RowIndex);
-                e.Row.ToolTip = "Click to select this row.";
+                e.Row.ToolTip = "Click to view committee details.";
             }
         }
 
@@ -67,10 +98,10 @@ namespace Society_management
             int selectedIndex = gvDisplay.SelectedIndex;
             if (selectedIndex >= 0)
             {
-                // Get the Notice_id from DataKeys
+                // Get the Committee_id from DataKeys defined in ASPX
                 string Committee_id = gvDisplay.DataKeys[selectedIndex].Value.ToString();
 
-                // Redirect to details page with the id
+                // Redirect to details page
                 Response.Redirect("Committee_Details.aspx?id=" + Committee_id);
             }
         }

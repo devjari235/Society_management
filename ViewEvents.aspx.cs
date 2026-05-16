@@ -28,6 +28,7 @@ namespace Society_management
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                // Fetch Upcoming events for this admin
                 string query = "SELECT * FROM tblEvents WHERE EventDate >= @CurrentDate AND admin_id = @id ORDER BY EventDate ASC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
@@ -42,22 +43,24 @@ namespace Society_management
                         DataTable dt = new DataTable();
                         da.Fill(dt);
 
+                        // ── TOGGLE VISIBILITY LOGIC ──
                         if (dt.Rows.Count > 0)
                         {
                             rptEvents.DataSource = dt;
                             rptEvents.DataBind();
-                            pnlNoEvents.Visible = false;
+                            phDataContent.Visible = true; // Show Cards
+                            pnlNoEvents.Visible = false;  // Hide Empty State
                         }
                         else
                         {
-                            pnlNoEvents.Visible = true;
-                            rptEvents.Visible = false;
+                            phDataContent.Visible = false; // Hide Grid
+                            pnlNoEvents.Visible = true;    // Show Centered State
                         }
                     }
                     catch (Exception ex)
                     {
-                        // Optional logging
-                        throw;
+                        lblMessage.Text = "Error: " + ex.Message;
+                        lblMessage.Visible = true;
                     }
                 }
             }

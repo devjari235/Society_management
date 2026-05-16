@@ -236,6 +236,28 @@
         text-align: center;
     }
 }
+/* --- ICON ANIMATION --- */
+    .floating-icon {
+        display: inline-block;
+        animation: float-up-down 3s ease-in-out infinite;
+        font-size: 3.5rem;
+        color: #cbd5e1;
+        margin-bottom: 15px;
+    }
+    @keyframes float-up-down {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-12px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* --- BALANCED EMPTY STATE --- */
+    .empty-state-container {
+        padding: 60px 20px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+    }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -259,61 +281,64 @@
   </div>
 </asp:Content>
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
-     <div class="container">
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <asp:Panel CssClass="alert alert-success" role="alert" ID="Panel1" runat="server" Visible="false">
-                <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-            </asp:Panel>
-        </div>
+    <div class="container-fluid">
+        <asp:Panel ID="Panel1" runat="server" CssClass="alert alert-success shadow-sm" Visible="false">
+            <asp:Label ID="Label1" runat="server"></asp:Label>
+        </asp:Panel>
+
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="bi bi-chat-left-dots floating-icon"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Complaints Found</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 380px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    Great news! There are no complaints matching this category. Everything seems to be running smoothly.
+                </p>
+                <div class="text-center">
+                </div>
+            </div>
+        </asp:Panel>
+
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="card shadow-sm border-0 mb-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server" AutoGenerateColumns="False"
+                            DataKeyNames="Complaint_id"
+                            CssClass="table table-hover grid-view-custom w-100"
+                            OnRowDataBound="gvDisplay_RowDataBound" 
+                            OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
+                            OnRowCommand="gvDisplay_RowCommand"
+                            GridLines="None">
+                            <Columns>
+                                <asp:TemplateField HeaderText="Create Date">
+                                    <ItemTemplate><%# Eval("Create_date", "{0:dd/MM/yyyy}") %></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="User Name">
+                                    <ItemTemplate><b><%# Eval("User_name") %></b></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Complaint type">
+                                    <ItemTemplate><%# Eval("Complaint_type") %></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Priority">
+                                    <ItemTemplate><%# Eval("Priority") %></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <asp:LinkButton ID="lnkStatus" runat="server" 
+                                            Text='<%# Eval("Status") %>'
+                                            CommandName="UpdateStatus" 
+                                            CommandArgument='<%# Container.DataItemIndex %>'
+                                            CssClass="status-link" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
     </div>
-    <br />
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="table-responsive">
-  <asp:GridView ID="gvDisplay" runat="server"
-    DataKeyNames="Complaint_id"
-    AutoGenerateColumns="False"
-    CssClass="table table-striped table-bordered grid-view-custom"
-    OnRowDataBound="gvDisplay_RowDataBound" 
-    OnSelectedIndexChanged="gvDisplay_SelectedIndexChanged"
-    OnRowCommand="gvDisplay_RowCommand">
-    <Columns>
-        <asp:TemplateField HeaderText="Create Date">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Create_date", "{0:dd/MM/yyyy}") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="User Name">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("User_name") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Complaint type">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Complaint_type") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Priority">
-            <ItemTemplate>
-                <asp:Label Text='<%# Eval("Priority") %>' runat="server" />
-            </ItemTemplate>
-        </asp:TemplateField>
-        <asp:TemplateField HeaderText="Status">
-            <ItemTemplate>
-                <asp:LinkButton ID="lnkStatus" runat="server" 
-                    Text='<%# Eval("Status") %>'
-                    CommandName="UpdateStatus" 
-                    CommandArgument='<%# Container.DataItemIndex %>'
-                    CssClass="status-link" />
-            </ItemTemplate>
-        </asp:TemplateField>
-    </Columns>
-</asp:GridView>
-             </div>
-        </div>
-    </div>
-</div>
-</asp:Content>
-<asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
+</asp:Content><asp:Content ID="Content5" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

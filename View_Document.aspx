@@ -131,6 +131,27 @@
         .action-buttons {
             white-space: nowrap;
         }
+        .floating-icon {
+        display: inline-block;
+        animation: float-up-down 3s ease-in-out infinite;
+        font-size: 3.5rem;
+        color: #cbd5e1;
+        margin-bottom: 15px;
+    }
+    @keyframes float-up-down {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+
+    /* --- EMPTY STATE --- */
+    .empty-state-container {
+        padding: 60px 20px;
+        margin-top: 20px;
+        background: #ffffff;
+        border-radius: 12px;
+        text-align: center;
+    }
     </style>
 </asp:Content>
 
@@ -144,40 +165,60 @@
 
 <asp:Content ID="Content4" ContentPlaceHolderID="MainContent" runat="server">
     <div class="container-fluid">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <div class="table-responsive">
-                <asp:GridView ID="gvDisplay" runat="server" AutoGenerateColumns="False"
-                    CssClass="table table-striped"
-                    DataKeyNames="DocumentID"
-                    OnRowCommand="gvDisplay_RowCommand"
-                    OnRowDataBound="gvDisplay_RowDataBound"
-                    EmptyDataText="No documents found"
-                    EmptyDataRowStyle-CssClass="text-center">
-                    <Columns>
-                        <asp:BoundField DataField="DocumentID" HeaderText="ID" />
-                        <asp:BoundField DataField="DocumentTitle" HeaderText="Document Title" />
-                        <asp:BoundField DataField="UploadDate" HeaderText="Upload Date" DataFormatString="{0:dd-MMM-yyyy}" />
-                        <asp:BoundField DataField="name" HeaderText="Uploaded By" />
-                        <asp:TemplateField HeaderText="Actions" ItemStyle-CssClass="action-buttons">
-                            <ItemTemplate>
-                                <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download"
-                                    CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm"
-                                    ToolTip="Download document">
-                                    <i class="fas fa-download"></i>
-                                </asp:LinkButton>
-                                <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteIncome"
-                                    CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-danger btn-sm"
-                                    OnClientClick='return ConfirmDelete(this.uniqueID);' ToolTip="Delete Document">
-                                    <i class="fas fa-trash-alt"></i>
-                                </asp:LinkButton>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                    </Columns>
-                </asp:GridView>
+        <asp:Panel ID="pnlEmpty" runat="server" Visible="false">
+            <div class="empty-state-container shadow-sm border rounded bg-white">
+                <div class="empty-state-icon text-center">
+                    <i class="fas fa-file-invoice floating-icon"></i>
+                </div>
+                <h4 style="color: #495057; font-weight: 700; margin-bottom: 8px;">No Documents Found</h4>
+                <p style="color: #adb5bd; font-size: 0.95rem; max-width: 380px; margin-bottom: 24px; margin-left: auto; margin-right: auto;">
+                    You haven't uploaded any documents yet. Keep your society records organized by adding them here.
+                </p>
+                <div class="text-center">
+                    <a href="Documents.aspx" class="btn btn-primary">
+                        <i class="fas fa-file-upload"></i> Add Document
+                    </a>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
+        </asp:Panel>
 
+        <asp:PlaceHolder ID="phDataContent" runat="server">
+            <div class="card shadow-sm border-0 mb-4 mt-3">
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <asp:GridView ID="gvDisplay" runat="server" AutoGenerateColumns="False"
+                            CssClass="table table-hover grid-view-custom w-100"
+                            DataKeyNames="DocumentID"
+                            OnRowCommand="gvDisplay_RowCommand"
+                            OnRowDataBound="gvDisplay_RowDataBound"
+                            GridLines="None">
+                            <Columns>
+                                <asp:BoundField DataField="DocumentID" HeaderText="ID" />
+                                <asp:TemplateField HeaderText="Document Title">
+                                    <ItemTemplate><b><%# Eval("DocumentTitle") %></b></ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:BoundField DataField="UploadDate" HeaderText="Upload Date" />
+                                <asp:BoundField DataField="name" HeaderText="Uploaded By" />
+                                <asp:TemplateField HeaderText="Actions" ItemStyle-CssClass="action-buttons text-center">
+                                    <ItemTemplate>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <asp:LinkButton ID="lnkDownload" runat="server" CommandName="Download"
+                                                CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-primary btn-sm">
+                                                <i class="fas fa-download"></i>
+                                            </asp:LinkButton>
+                                            <asp:LinkButton ID="lnkDelete" runat="server" CommandName="DeleteDocument"
+                                                CommandArgument='<%# Eval("DocumentID") %>' CssClass="btn btn-danger btn-sm"
+                                                OnClientClick='return ConfirmDelete(this.uniqueID);'>
+                                                <i class="fas fa-trash-alt"></i>
+                                            </asp:LinkButton>
+                                        </div>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+                </div>
+            </div>
+        </asp:PlaceHolder>
+    </div>
 </asp:Content>

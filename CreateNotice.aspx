@@ -58,28 +58,72 @@
         .dashboard-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            color: #FFD700;
             text-decoration:none;
+            color:white;
         }
 
         /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .page-title-buttons {
-                flex-direction: column;
-                gap: 8px;
-            }
-            
-            .button-group-left {
-                width: 100%;
-                justify-content: space-between;
-            }
-            
-            .dashboard-btn {
-                width: 100%;
-                text-align: center;
-                justify-content: center;
-            }
-        }
+       @media (max-width: 768px) {
+
+    /* Fix CheckBoxList table layout on mobile */
+    .custom-checkbox-list table,
+    .custom-checkbox-list tbody,
+    .custom-checkbox-list tr,
+    .custom-checkbox-list td {
+        display: inline-flex !important;
+        width: auto !important;
+        padding: 0 !important;
+        border: none !important;
+        vertical-align: middle !important;
+    }
+
+    .custom-checkbox-list tr {
+        flex-wrap: wrap !important;
+        gap: 10px !important;
+    }
+
+    .custom-checkbox-list td {
+        align-items: center !important;
+        gap: 5px !important;
+        white-space: nowrap !important;
+    }
+
+    .custom-checkbox-list input[type="checkbox"] {
+        width: 16px !important;
+        height: 16px !important;
+        margin: 0 4px 0 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .custom-checkbox-list label {
+        margin: 0 !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        white-space: nowrap !important;
+    }
+
+    /* Keep both checkbox lists consistent */
+    #cblBroadcast table,
+    #cblemail table {
+        width: 100% !important;
+    }
+
+    #cblBroadcast tr,
+    #cblemail tr {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    #cblBroadcast td,
+    #cblemail td {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 5px !important;
+        width: auto !important;
+    }
+}
 
         /* Body and Form Styles */
         body {

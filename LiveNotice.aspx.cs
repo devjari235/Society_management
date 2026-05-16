@@ -38,30 +38,30 @@ namespace Society_management
 
                 // Step 1: Auto-expire old notices
                 string updateQuery = @"
-                    UPDATE tblNotices
-                    SET    Status = 'Expired'
-                    WHERE  Expiry_date < GETDATE()
-                    AND    Status     != 'Expired'";
+            UPDATE tblNotices
+            SET    Status = 'Expired'
+            WHERE  Expiry_date < GETDATE()
+            AND    Status != 'Expired'";
 
                 new SqlCommand(updateQuery, conn).ExecuteNonQuery();
 
                 // Step 2: Fetch live notices for this admin
                 string selectQuery = @"
-                    SELECT
-                        n.Notice_id,
-                        n.Title,
-                        n.Description,
-                        n.Expiry_date,
-                        n.File_path,
-                        n.Importance,
-                        n.Status,
-                        n.Posted_date,
-                        a.name
-                    FROM   tblNotices n
-                    INNER JOIN tblAdmin a ON n.admin_id = a.admin_id
-                    WHERE  a.admin_id = @id
-                    AND    (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE())
-                    ORDER  BY n.Posted_date DESC";
+            SELECT
+                n.Notice_id,
+                n.Title,
+                n.Description,
+                n.Expiry_date,
+                n.File_path,
+                n.Importance,
+                n.Status,
+                n.Posted_date,
+                a.name
+            FROM   tblNotices n
+            INNER JOIN tblAdmin a ON n.admin_id = a.admin_id
+            WHERE  a.admin_id = @id
+            AND    (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE())
+            ORDER  BY n.Posted_date DESC";
 
                 SqlCommand cmd = new SqlCommand(selectQuery, conn);
                 cmd.Parameters.AddWithValue("@id", adminId);
@@ -72,9 +72,17 @@ namespace Society_management
                 gvDisplay.DataSource = dt;
                 gvDisplay.DataBind();
 
-                // ── Show empty state if no live notices ───────────────────────
+                // ── UPDATED VISIBILITY LOGIC ───────────────────────
                 bool hasRows = dt.Rows.Count > 0;
+
+                // 1. Toggle the GridView itself
                 gvDisplay.Visible = hasRows;
+
+                // 2. Toggle the PlaceHolder (The white card/container)
+                // Ensure you added ID="phDataContent" to your PlaceHolder in the .aspx file
+                phDataContent.Visible = hasRows;
+
+                // 3. Toggle the Empty Panel
                 pnlEmpty.Visible = !hasRows;
             }
         }

@@ -54,6 +54,24 @@
             padding: 0.5rem 1rem;
         }
 
+        /* Remove the empty grey header space across pages */
+        .page-header-bar {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0.25rem !important;
+            border-bottom: 0 !important;
+            background: transparent !important;
+        }
+
+        /* Hide breadcrumb row completely (it creates the grey empty strip) */
+        nav[aria-label="breadcrumb"] {
+            display: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 0 !important;
+        }
+
         /* =====================
            DESKTOP LAYOUT
         ===================== */
@@ -261,166 +279,229 @@
         /* =====================
            MOBILE STYLES
         ===================== */
-        @media (max-width: 991.98px) {
+       @media (max-width: 991.98px) {
 
-            html, body {
-                width: 100%;
-                max-width: 100%;
-                overflow-x: hidden !important;
-                margin: 0;
-                padding: 0;
-            }
+    html, body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden !important;
+        margin: 0;
+        padding: 0;
+    }
 
-            * {
-                box-sizing: border-box;
-            }
+    * {
+        box-sizing: border-box;
+    }
 
-            img, video, iframe {
-                max-width: 100%;
-                height: auto;
-            }
+    img, video, iframe {
+        max-width: 100%;
+        height: auto;
+    }
 
-            /* LAYOUT */
-            .layout-container {
-                padding: 10px !important;
-                gap: 0;
-                width: 100%;
-                overflow: hidden;
-            }
+    /* LAYOUT */
+    .layout-container {
+        padding: 10px !important;
+        gap: 0;
+        width: 100%;
+        overflow: visible !important;
+    }
 
-            /* SIDEBAR - fixed, off-screen by default */
-            .sidebar-container {
-                position: fixed !important;
-                top: 0;
-                left: -280px;
-                width: 260px !important;
-                min-width: 260px !important;
-                max-width: 260px !important;
-                height: 100vh;
-                z-index: 1050;
-                border-radius: 0;
-                margin: 0;
-                padding: 0;
-                transition: left 0.3s ease;
-                overflow-y: auto;
-            }
+    /* d-flex wrapper */
+    .d-flex.w-100 {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
 
-            .sidebar-container.sidebar-mobile-visible {
-                left: 0;
-            }
+    /* SIDEBAR - fixed, off-screen by default */
+    .sidebar-container {
+        position: fixed !important;
+        top: 0;
+        left: -280px;
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
+        height: 100vh;
+        z-index: 1050;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+    }
 
-            /* MAIN CONTENT - full width */
-            .main-content {
-                width: 100% !important;
-                max-width: 100% !important;
-                min-width: 0 !important;
-                margin: 0 !important;
-                padding: 0 8px !important;
-                overflow-x: hidden;
-            }
+    .sidebar-container.sidebar-mobile-visible {
+        left: 0;
+    }
 
-            /* OVERLAY */
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background-color: rgba(0,0,0,0.5);
-                z-index: 1040;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-            }
+    /* MAIN CONTENT - full width, no overflow */
+    .main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 8px !important;
+        overflow-x: hidden !important;
+    }
 
-            .sidebar-overlay.active {
-                opacity: 1;
-                visibility: visible;
-            }
+    /* OVERLAY */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
 
-            /* SIDEBAR HEADER */
-            .sidebar-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1rem;
-                border-bottom: 1px solid #eee;
-            }
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
 
-            .sidebar-close-btn {
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: #6c757d;
-                cursor: pointer;
-                padding: 0.25rem;
-                line-height: 1;
-            }
+    /* SIDEBAR HEADER */
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
 
-            .sidebar-close-btn:hover {
-                color: #333;
-            }
+    .sidebar-close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #6c757d;
+        cursor: pointer;
+        padding: 0.25rem;
+        line-height: 1;
+    }
 
-            /* MOBILE FLOATING BUTTON */
-            .mobile-sidebar-trigger {
-                display: flex;
-                position: fixed;
-                bottom: 15px;
-                right: 15px;
-                width: 52px;
-                height: 52px;
-                border-radius: 50%;
-                background: #0d6efd;
-                color: #fff;
-                border: none;
-                align-items: center;
-                justify-content: center;
-                z-index: 1030;
-                font-size: 1.3rem;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-                transition: all 0.3s ease;
-            }
+    .sidebar-close-btn:hover {
+        color: #333;
+    }
 
-            .mobile-sidebar-trigger:hover {
-                background: #0b5ed7;
-                transform: scale(1.05);
-            }
+    /* MOBILE FLOATING BUTTON */
+    .mobile-sidebar-trigger {
+        display: flex;
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #0d6efd;
+        color: #fff;
+        border: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1030;
+        font-size: 1.3rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+    }
 
-            /* HIDE DESKTOP TOGGLE */
-            #sidebarToggle {
-                display: none !important;
-            }
+    .mobile-sidebar-trigger:hover {
+        background: #0b5ed7;
+        transform: scale(1.05);
+    }
 
-            /* BODY LOCK */
-            body.sidebar-open {
-                overflow: hidden !important;
-            }
+    /* HIDE DESKTOP TOGGLE */
+    #sidebarToggle {
+        display: none !important;
+    }
 
-            /* NAVBAR */
-            .navbar-nav {
-                padding-top: 1rem;
-            }
+    /* BODY LOCK */
+    body.sidebar-open {
+        overflow: hidden !important;
+    }
 
-            /* FOOTER */
-            .footer {
-                width: 100%;
-                margin-left: 0 !important;
-                padding-left: 10px !important;
-                padding-right: 10px !important;
-                box-sizing: border-box;
-            }
+    /* NAVBAR */
+    .navbar-nav {
+        padding-top: 1rem;
+    }
 
-            /* TABLES on mobile - horizontal scroll */
-            .table-responsive {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
+    /* FOOTER */
+    .footer {
+        width: 100%;
+        margin-left: 0 !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box;
+    }
 
-            table {
-                min-width: 500px;
-            }
-        }
+    /* TABLES on mobile - horizontal scroll only for data tables, not notice detail */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Notice detail card table — no horizontal scroll, full wrap */
+    .card-notice .table-responsive {
+        overflow-x: hidden !important;
+    }
+
+    .card-notice table {
+        width: 100% !important;
+        min-width: unset !important;
+        display: block !important;
+    }
+
+    .card-notice table tbody {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .card-notice table tbody tr {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+        border: 1px solid #e3e6f0 !important;
+        border-radius: 10px !important;
+        overflow: hidden !important;
+    }
+
+    .card-notice table tbody tr th {
+        display: block !important;
+        width: 100% !important;
+        background: #f8f9fc !important;
+        border: none !important;
+        border-bottom: 1px solid #e3e6f0 !important;
+        padding: 9px 12px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+    }
+
+    .card-notice table tbody tr td {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    .card-notice table tbody tr td span {
+        display: block !important;
+        width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+
+    span[id$="lblDescription"] {
+        white-space: pre-wrap !important;
+    }
+}
+
 
     </style>
 
@@ -662,14 +743,14 @@
                         <ContentTemplate>
 
                             <nav aria-label="breadcrumb" class="mt-3">
-                                <ol class="breadcrumb">
+                                <ol class="breadcrumb mb-0">
                                     <asp:ContentPlaceHolder ID="BreadcrumbContent" runat="server">
                                         <li class="breadcrumb-item"><a href="Default.aspx">Home</a></li>
                                     </asp:ContentPlaceHolder>
                                 </ol>
                             </nav>
 
-                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center page-header-bar">
                                 <asp:ContentPlaceHolder ID="PageHeaderContent" runat="server">
                                     <h1 class="h2">Dashboard</h1>
                                 </asp:ContentPlaceHolder>

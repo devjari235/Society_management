@@ -29,12 +29,12 @@ namespace Society_management
             using (SqlConnection con = new SqlConnection(strcon))
             {
                 string query = @"SELECT d.DocumentID, d.DocumentTitle, 
-                               FORMAT(d.UploadDate, 'dd-MMM-yyyy') as UploadDate, 
-                               a.name, d.FileName, d.StoredFileName 
-                               FROM tblDocuments d 
-                               JOIN tblAdmin a ON d.admin_id = a.admin_id 
-                               WHERE a.admin_id = @id 
-                               ORDER BY d.UploadDate DESC";
+                        FORMAT(d.UploadDate, 'dd-MMM-yyyy') as UploadDate, 
+                        a.name, d.FileName, d.StoredFileName 
+                        FROM tblDocuments d 
+                        JOIN tblAdmin a ON d.admin_id = a.admin_id 
+                        WHERE a.admin_id = @id 
+                        ORDER BY d.UploadDate DESC";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -46,6 +46,18 @@ namespace Society_management
 
                     gvDisplay.DataSource = dt;
                     gvDisplay.DataBind();
+
+                    // ── TOGGLE VISIBILITY LOGIC ──
+                    if (dt.Rows.Count > 0)
+                    {
+                        phDataContent.Visible = true;  // Show White Card
+                        pnlEmpty.Visible = false;      // Hide Empty State
+                    }
+                    else
+                    {
+                        phDataContent.Visible = false; // Hide White Card entirely
+                        pnlEmpty.Visible = true;       // Show Centered Empty State
+                    }
                 }
             }
         }
