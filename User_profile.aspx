@@ -1,16 +1,23 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User.Master" AutoEventWireup="true" CodeBehind="User_profile.aspx.cs" Inherits="Society_management.User_profile" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User.Master"
+    AutoEventWireup="true"
+    CodeBehind="User_profile.aspx.cs"
+    Inherits="Society_management.User_profile" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
-    <!-- Remove one of these - keep only one jQuery version -->
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <!-- jQuery (keep only one version) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style type="text/css">
         input[type="file"] {
             display: none;
         }
-
 
         .profile-pic {
             position: absolute;
@@ -23,13 +30,20 @@
             padding: 10px;
         }
 
-            .profile-pic img {
-                border-radius: 50%;
-                box-shadow: 0px 0px 5px 0px #c1c1c1;
-                cursor: pointer;
-                width: 100px;
-                height: 100px;
-            }
+        .profile-pic img {
+            border-radius: 50%;
+            box-shadow: 0px 0px 5px 0px #c1c1c1;
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+        }
+
+        .image11 {
+            border-radius: 50%;
+            box-shadow: 0px 0px 5px 0px #c1c1c1;
+            cursor: pointer;
+            object-fit: cover;
+        }
 
         .image11:hover {
             cursor: pointer;
@@ -53,10 +67,10 @@
             transition: all 0.3s ease;
         }
 
-            .profile-image-wrapper:hover {
-                border-color: #4285f4;
-                box-shadow: 0 0 10px rgba(66, 133, 244, 0.5);
-            }
+        .profile-image-wrapper:hover {
+            border-color: #4285f4;
+            box-shadow: 0 0 10px rgba(66, 133, 244, 0.5);
+        }
 
         .profile-image {
             width: 100%;
@@ -107,11 +121,11 @@
             transition: all 0.3s ease;
         }
 
-            .btn-update:hover {
-                background-color: #3367d6;
-                transform: translateY(-2px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            }
+        .btn-update:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
 
         .form-group {
             margin-top: -5px;
@@ -120,55 +134,43 @@
         .card {
             width: 110%;
         }
-        .form-group{
-            margin-top:-5px;
-        }
     </style>
-    <script>
-        function previewFile() {
-            var preview = document.getElementById('<%= imgPhoto.ClientID %>');
-            var file = document.getElementById('profileImageUpload').files[0];
-            var reader = new FileReader();
 
-            reader.onloadend = function () {
-                preview.src = reader.result;
-            }
-
-            if (file) {
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // This ensures the click handler works after postbacks
+    <script type="text/javascript">
         $(document).ready(function () {
-            $('#<%= imgPhoto.ClientID %>').on('click', function () {
-                    $('#profileImageUpload').click();
-                });
+
+            // Click image to open file chooser
+            $("#imgPhoto").on("click", function (e) {
+                e.preventDefault();
+                $("#profileImageUpload").click();
             });
-    </script>
-    <script>
+
+        });
+
         function previewAndUpload(input) {
             if (input.files && input.files[0]) {
+
                 var reader = new FileReader();
 
                 reader.onload = function (e) {
-                    document.getElementById('<%= imgPhoto.ClientID %>').src = e.target.result;
+                    // Preview selected image immediately
+                    $("#imgPhoto").attr("src", e.target.result);
 
-                     // Show loader for 2 seconds
-                     Swal.fire({
-                         title: 'Uploading...',
-                         text: 'Please wait while we upload your photo.',
-                         allowOutsideClick: false,
-                         showConfirmButton: false,
-                         didOpen: () => {
-                             Swal.showLoading();
-                         }
-                     });
+                    // Show uploading popup
+                    Swal.fire({
+                        title: 'Uploading...',
+                        text: 'Please wait while we upload your photo.',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        didOpen: function () {
+                            Swal.showLoading();
+                        }
+                    });
 
-                     setTimeout(function () {
-                         Swal.close();
-                         __doPostBack('<%= profileImageUpload.ClientID %>', '');
-             }, 2000);
+                    // Submit full form so FileUpload works correctly
+                    setTimeout(function () {
+                        document.forms[0].submit();
+                    }, 1000);
                 };
 
                 reader.readAsDataURL(input.files[0]);
@@ -176,152 +178,157 @@
         }
     </script>
 
+    <link rel="stylesheet" type="text/css"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="profileone.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-
-
-
-    <%--<script>
-        function uploadProfilePicture() {
-            // Show loading indicator (optional)
-            Swal.fire({
-                title: 'Uploading...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            // Trigger postback to server
-            __doPostBack('<%= profileImageUpload.ClientID %>', '');
-        }
-    </script>--%>
-
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="profileone.css">
-    <!-- <link rel="stylesheet" type="text/css" href="profile.css"> -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 </asp:Content>
+
 <asp:Content ID="Content3" ContentPlaceHolderID="BreadcrumbContent" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content4" ContentPlaceHolderID="PageHeaderContent" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content5" ContentPlaceHolderID="PageHeaderButtons" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content6" ContentPlaceHolderID="MainContent" runat="server">
+
     <div class="container profile-container">
         <div class="card">
-            <div class="card-body ">
+            <div class="card-body">
                 <div class="text-center mb-4">
                     <h3 class="card-title">Your Profile</h3>
                     <hr class="w-25 mx-auto" style="border-top: 2px solid #4285f4;" />
                 </div>
 
                 <div class="row">
+                    <!-- Profile Image -->
                     <div class="col-md-4 text-center">
                         <div id="Div1" runat="server">
-                            <asp:Image ID="imgPhoto" runat="server"
+                            <asp:Image
+                                ID="imgPhoto"
+                                runat="server"
                                 ClientIDMode="Static"
                                 Height="210px"
+                                Width="210px"
                                 AlternateText="Profile Picture"
                                 CssClass="image11"
                                 ImageUrl="~/Profile/Default.png"
-                                Style="cursor: pointer;" />
+                                Style="cursor:pointer;" />
                         </div>
 
                         <asp:FileUpload
                             ID="profileImageUpload"
                             runat="server"
-                            Style="display: none;"
                             ClientIDMode="Static"
-                            onchange="previewAndUpload(this);"
-                            AutoPostBack="true" />
+                            Style="display:none;"
+                            onchange="previewAndUpload(this);" />
 
-                        <asp:Label ID="lblInstruction" runat="server"
+                        <asp:Label
+                            ID="lblInstruction"
+                            runat="server"
                             Text="Click image to upload new photo"
                             CssClass="text-muted d-block mt-2" />
                     </div>
 
+                    <!-- Profile Details -->
                     <div class="col-md-8">
                         <div class="profile-details">
+
+                            <!-- Keep all your existing fields exactly as they were -->
+                            <!-- Name -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Name</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtname" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtname" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
 
+                            <!-- Email -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Email</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtemail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
                                 </div>
                             </div>
 
+                            <!-- Phone -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Phone</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtphone" runat="server" CssClass="form-control" TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtphone" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+
+                            <!-- Gender -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Gender</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtGender" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtGender" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+
+                            <!-- Age -->
                             <div class="form-group row">
                                 <label class="col-sm-3 col-form-label form-label">Age</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtAge" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtAge" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+
+                            <!-- Marital Status -->
                             <div class="form-group row">
-                                <label class="col-sm-3 col-form-label form-label">Marital_Status</label>
+                                <label class="col-sm-3 col-form-label form-label">Marital Status</label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtmarite" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtmarite" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
-                          <%--  <div class="form-group row">
-                                <asp:Label id="lblDesi" class="col-sm-3 col-form-label form-label" runat="server">Designation</asp:Label>
-                                <div class="col-sm-9">
-                                    <asp:TextBox ID="txtDesi" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
-                                </div>
-                            </div>
+
+                            <!-- Designation -->
                             <div class="form-group row">
-                                <asp:Label id="lblRole" class="col-sm-3 col-form-label form-label" runat="server">Role</asp:Label>
-                                
+                                <asp:Label ID="lblDesi" runat="server"
+                                    Text="Designation"
+                                    CssClass="col-sm-3 col-form-label form-label">
+                                </asp:Label>
                                 <div class="col-sm-9">
-                                    <asp:TextBox ID="txtRole" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
-                                </div>
-                            </div>--%>
-                            <div class="form-group row">
-                                <asp:Label ID="lblDesi" runat="server" Text="Designation" class="col-sm-3 col-form-label form-label"></asp:Label>
-                                 <div class="col-sm-9">
-                                     <asp:TextBox ID="txtDesi" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
-                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <asp:Label ID="lblRole" runat="server" Text="Role" class="col-sm-3 col-form-label form-label"></asp:Label>
-                                <div class="col-sm-9">
-                                    <asp:TextBox ID="txtRole" runat="server" CssClass="form-control" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox ID="txtDesi" runat="server" CssClass="form-control"></asp:TextBox>
                                 </div>
                             </div>
+
+                            <!-- Role -->
+                            <div class="form-group row">
+                                <asp:Label ID="lblRole" runat="server"
+                                    Text="Role"
+                                    CssClass="col-sm-3 col-form-label form-label">
+                                </asp:Label>
+                                <div class="col-sm-9">
+                                    <asp:TextBox ID="txtRole" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+
+                            <!-- Update Button -->
                             <div class="form-group row mt-4">
                                 <div class="col-sm-9 offset-sm-3">
-                                    <asp:Button ID="btnUpdate" runat="server" Text="Update Profile"
-                                        CssClass="btn btn-update text-white" OnClick="btnUpdate_Click" />
+                                    <asp:Button
+                                        ID="btnUpdate"
+                                        runat="server"
+                                        Text="Update Profile"
+                                        CssClass="btn btn-update text-white"
+                                        OnClick="btnUpdate_Click" />
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </asp:Content>
+
 <asp:Content ID="Content7" ContentPlaceHolderID="ScriptsContent" runat="server">
 </asp:Content>

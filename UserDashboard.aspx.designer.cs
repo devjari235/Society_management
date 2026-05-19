@@ -168,6 +168,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Label lblNextVisitorTime;
 
         /// <summary>
+        /// spanLastVisitor control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl spanLastVisitor;
+
+        /// <summary>
         /// lblLastVisitorTime control.
         /// </summary>
         /// <remarks>
@@ -184,6 +193,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkViewVisitors;
+
+        /// <summary>
+        /// divEventBadge control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divEventBadge;
+
+        /// <summary>
+        /// phEventDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phEventDetails;
 
         /// <summary>
         /// lblEventTitle control.
@@ -220,6 +247,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkRegisterEvent;
+
+        /// <summary>
+        /// pnlNoEventCard control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoEventCard;
 
         /// <summary>
         /// lnkAddVisitor control.
@@ -267,15 +303,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.HyperLink lnkBookFacility;
 
         /// <summary>
-        /// rptNotices control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptNotices;
-
-        /// <summary>
         /// pnlNoNotice control.
         /// </summary>
         /// <remarks>
@@ -283,6 +310,24 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlNoNotice;
+
+        /// <summary>
+        /// phNoticeContent control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.PlaceHolder phNoticeContent;
+
+        /// <summary>
+        /// rptNotices control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptNotices;
 
         /// <summary>
         /// rptEvents control.

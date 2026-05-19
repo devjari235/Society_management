@@ -23,34 +23,35 @@ namespace Society_management
 
                 rbEmail.Enabled = true;
                 rbSMS.Enabled = true;
+
+                // Initialize tracking parameters
+                Session["ResetUserRole"] = null;
+                Session["FinalRedirectTarget"] = null;
+                Session["MaskedEmail"] = null;
+                Session["MaskedSMS"] = null;
             }
         }
 
-        protected void btnSendOTP_Click(object sender, EventArgs e)
+        protected void btnCheckIdentifier_Click(object sender, EventArgs e)
         {
             try
             {
-                string identifier = hdnIdentifier.Value.Trim();
-                string method = rbEmail.Checked ? "Email" : "SMS";
-                hdnMethod.Value = method;
-
+                string identifier = txtIdentifier.Text.Trim();
                 if (string.IsNullOrEmpty(identifier))
                 {
-                    ShowAlert("Please enter email or mobile number", "error");
-                    hdnCurrentStep.Value = "1";
+                    lblIdentifierError.Text = "Please enter email or mobile number";
                     return;
                 }
 
                 string email = null;
-                string mobile = null;
                 bool found = false;
 
                 using (SqlConnection conn = new SqlConnection(strcon))
                 {
                     conn.Open();
 
-                    // Check tblAdmin (Using 'phone_no' to match your schema layout)
-                    string query = "SELECT email, phone_no FROM tblAdmin WHERE email = @id OR phone_no = @id";
+                    // 1. Check tblAdmin (Always search by both parameters)
+                    string query = "SELECT email FROM tblAdmin WHERE email = @id OR phone_no = @id";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@id", identifier);
@@ -60,15 +61,15 @@ namespace Society_management
                             {
                                 found = true;
                                 email = dr["email"]?.ToString();
-                                mobile = dr["phone_no"]?.ToString();
+                                Session["ResetUserRole"] = "Admin";
                             }
                         }
                     }
 
-                    // Check tblUser (Using 'Phone_no' to match your schema layout)
+                    // 2. If not an Admin, check tblUser
                     if (!found)
                     {
-                        query = "SELECT Email, Phone_no FROM tblUser WHERE Email = @id OR Phone_no = @id";
+                        query = "SELECT Email FROM tblUser WHERE Email = @id OR Phone_no = @id";
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
                             cmd.Parameters.AddWithValue("@id", identifier);
@@ -78,29 +79,46 @@ namespace Society_management
                                 {
                                     found = true;
                                     email = dr["Email"]?.ToString();
-                                    mobile = dr["Phone_no"]?.ToString();
+                                    Session["ResetUserRole"] = "User";
                                 }
                             }
                         }
                     }
                 }
 
-                if (!found)
+                // If the identifier didn't match any record in either table
+                if (!found || string.IsNullOrEmpty(email))
                 {
-                    ShowAlert("No account found with this email or mobile number", "error");
+                    lblIdentifierError.Text = "No account found with this email or mobile number";
                     hdnCurrentStep.Value = "1";
                     return;
                 }
 
-                // Generate 6-Digit OTP
+                lblIdentifierError.Text = "";
+                hdnIdentifier.Value = identifier;
+                hdnMethod.Value = "Email"; // Force email delivery channel automatically
+
+                // Secure string masking logic (e.g., dim***55@gmail.com)
+                var parts = email.Split('@');
+                string maskedEmail = "";
+                if (parts[0].Length > 3)
+                {
+                    maskedEmail = parts[0].Substring(0, 3) + "***" + parts[0].Substring(parts[0].Length - 2) + "@" + parts[1];
+                }
+                else
+                {
+                    maskedEmail = parts[0].Substring(0, 1) + "***@" + parts[1];
+                }
+
+                Session["MaskedEmail"] = maskedEmail;
+
+                // Generate the 6-Digit OTP immediately
                 string otp = GenerateOTP();
 
-                // Save OTP records to DB
+                // Save the generated OTP token line to database
                 using (SqlConnection conn = new SqlConnection(strcon))
                 {
                     conn.Open();
-
-                    // Invalidate old pending OTP requests
                     string invalidate = "UPDATE tblPasswordReset SET IsUsed = 1 WHERE Identifier = @id AND IsUsed = 0";
                     using (SqlCommand cmd = new SqlCommand(invalidate, conn))
                     {
@@ -108,8 +126,90 @@ namespace Society_management
                         cmd.ExecuteNonQuery();
                     }
 
-                    // Insert new token line
-                    string insert = @"INSERT INTO tblPasswordReset (Identifier, OTP, DeliveryMethod, ExpiryTime, IsUsed, CreatedDate) 
+                    string insert = @"INSERT INTO tblPasswordReset (Identifier, OTP, DeliveryMethod, ExpiryTime, IsUsed, CreatedDate)  
+                              VALUES (@id, @otp, 'Email', DATEADD(MINUTE, 10, GETDATE()), 0, GETDATE())";
+                    using (SqlCommand cmd = new SqlCommand(insert, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", identifier);
+                        cmd.Parameters.AddWithValue("@otp", otp);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                // Dispatch the secure email via your free Google SMTP channel
+                bool sent = SendEmail(email, otp);
+
+                if (sent)
+                {
+                    // Bypasses Step 2 entirely and takes the user straight to Step 3 (Verify OTP screen)
+                    string script = $"Swal.fire({{ icon: 'success', title: 'OTP Sent', text: 'Verification code sent safely to {maskedEmail}!', confirmButtonColor: '#4e73df' }}).then(function() {{ document.getElementById('otpMessage').innerText = 'Enter the verification code sent to {maskedEmail}'; showStep(3); startTimer(); }});";
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ShowOTP", script, true);
+                    hdnCurrentStep.Value = "3";
+                }
+                else
+                {
+                    ShowAlert("Failed to send OTP email. Please try again or check your server configuration.", "error");
+                    hdnCurrentStep.Value = "1";
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowAlert($"System Error: {ex.Message}", "error");
+            }
+        }
+
+        protected void btnSendOTP_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string identifier = hdnIdentifier.Value.Trim();
+                string method = hdnMethod.Value;
+
+                if (string.IsNullOrEmpty(identifier))
+                {
+                    ShowAlert("Session context lost. Please restart.", "error");
+                    hdnCurrentStep.Value = "1";
+                    return;
+                }
+
+                string email = null;
+                string mobile = null;
+                string userRole = Session["ResetUserRole"] as string;
+
+                using (SqlConnection conn = new SqlConnection(strcon))
+                {
+                    conn.Open();
+                    string query = userRole == "Admin" ?
+                        "SELECT email, phone_no FROM tblAdmin WHERE email = @id OR phone_no = @id" :
+                        "SELECT Email, Phone_no FROM tblUser WHERE Email = @id OR Phone_no = @id";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", identifier);
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                email = userRole == "Admin" ? dr["email"]?.ToString() : dr["Email"]?.ToString();
+                                mobile = userRole == "Admin" ? dr["phone_no"]?.ToString() : dr["Phone_no"]?.ToString();
+                            }
+                        }
+                    }
+                }
+
+                string otp = GenerateOTP();
+
+                using (SqlConnection conn = new SqlConnection(strcon))
+                {
+                    conn.Open();
+                    string invalidate = "UPDATE tblPasswordReset SET IsUsed = 1 WHERE Identifier = @id AND IsUsed = 0";
+                    using (SqlCommand cmd = new SqlCommand(invalidate, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", identifier);
+                        cmd.ExecuteNonQuery();
+                    }
+
+                    string insert = @"INSERT INTO tblPasswordReset (Identifier, OTP, DeliveryMethod, ExpiryTime, IsUsed, CreatedDate)  
                                       VALUES (@id, @otp, @method, DATEADD(MINUTE, 10, GETDATE()), 0, GETDATE())";
                     using (SqlCommand cmd = new SqlCommand(insert, conn))
                     {
@@ -120,7 +220,6 @@ namespace Society_management
                     }
                 }
 
-                // Send OTP through the selected channel
                 bool sent = false;
                 if (method == "Email" && !string.IsNullOrEmpty(email))
                 {
@@ -133,8 +232,9 @@ namespace Society_management
 
                 if (sent)
                 {
-                    // Run sweetalert and proceed to step 3 cleanly
-                    string script = $"Swal.fire({{ icon: 'success', title: 'OTP Sent', text: 'Verification code sent successfully. Check your {method.ToLower()}!', confirmButtonColor: '#4e73df' }}).then(function() {{ showStep(3); startTimer(); }});";
+                    string targetMaskedHint = method == "Email" ? Session["MaskedEmail"]?.ToString() : Session["MaskedSMS"]?.ToString();
+
+                    string script = $"Swal.fire({{ icon: 'success', title: 'OTP Sent', text: 'Verification code sent successfully to {targetMaskedHint}!', confirmButtonColor: '#4e73df' }}).then(function() {{ document.getElementById('otpMessage').innerText = 'Enter the verification code sent to {targetMaskedHint}'; showStep(3); startTimer(); }});";
                     ScriptManager.RegisterStartupScript(this, GetType(), "ShowOTP", script, true);
                     hdnCurrentStep.Value = "3";
                 }
@@ -147,7 +247,6 @@ namespace Society_management
             catch (Exception ex)
             {
                 ShowAlert($"Error: {ex.Message}", "error");
-                System.Diagnostics.Debug.WriteLine($"SendOTP Error: {ex.Message}");
             }
         }
 
@@ -178,8 +277,6 @@ namespace Society_management
                 {
                     conn.Open();
 
-                    // FIX 1: Let SQL check time with GETDATE() directly
-                    // FIX 2: Added AND IsUsed = 0 and ORDER BY Id DESC to completely prevent millisecond double-click collisions
                     string query = @"SELECT TOP 1 IsUsed, 
                                      CASE WHEN ExpiryTime >= GETDATE() THEN 1 ELSE 0 END AS IsValidTime
                                      FROM tblPasswordReset 
@@ -228,7 +325,6 @@ namespace Society_management
 
                 if (isValid)
                 {
-                    // Mark token row asset state consumed
                     using (SqlConnection conn = new SqlConnection(strcon))
                     {
                         conn.Open();
@@ -249,7 +345,6 @@ namespace Society_management
             catch (Exception ex)
             {
                 ShowAlert($"Error: {ex.Message}", "error");
-                System.Diagnostics.Debug.WriteLine($"VerifyOTP Error: {ex.Message}");
             }
         }
 
@@ -278,51 +373,83 @@ namespace Society_management
                 string hashedPassword = HashPassword(newPassword);
                 bool updated = false;
 
+                string userRole = Session["ResetUserRole"] as string;
+
+                if (string.IsNullOrEmpty(userRole))
+                {
+                    ShowAlert("Security validation context lost. Please try from Step 1.", "error");
+                    hdnCurrentStep.Value = "1";
+                    return;
+                }
+
                 using (SqlConnection conn = new SqlConnection(strcon))
                 {
                     conn.Open();
 
-                    // Update admin table if matching record exists (using system schema column mappings)
-                    string query = "UPDATE tblAdmin SET password = @pw WHERE email = @id OR phone_no = @id";
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    if (userRole == "Admin")
                     {
-                        cmd.Parameters.AddWithValue("@pw", hashedPassword);
-                        cmd.Parameters.AddWithValue("@id", identifier);
-                        int rows = cmd.ExecuteNonQuery();
-                        if (rows > 0) updated = true;
-                    }
-
-                    // Update user table if matching record exists
-                    if (!updated)
-                    {
-                        query = "UPDATE tblUser SET Password = @pw WHERE Email = @id OR Phone_no = @id";
+                        string query = "UPDATE tblAdmin SET password = @pw WHERE email = @id OR phone_no = @id";
                         using (SqlCommand cmd = new SqlCommand(query, conn))
                         {
                             cmd.Parameters.AddWithValue("@pw", hashedPassword);
                             cmd.Parameters.AddWithValue("@id", identifier);
                             int rows = cmd.ExecuteNonQuery();
-                            if (rows > 0) updated = true;
+                            if (rows > 0)
+                            {
+                                updated = true;
+                                Session["FinalRedirectTarget"] = "~/Login.aspx";
+                            }
+                        }
+                    }
+                    else if (userRole == "User")
+                    {
+                        string query = "UPDATE tblUser SET Password = @pw WHERE Email = @id OR Phone_no = @id";
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@pw", hashedPassword);
+                            cmd.Parameters.AddWithValue("@id", identifier);
+                            int rows = cmd.ExecuteNonQuery();
+                            if (rows > 0)
+                            {
+                                updated = true;
+                                Session["FinalRedirectTarget"] = "~/u_login.aspx";
+                            }
                         }
                     }
                 }
 
                 if (updated)
                 {
+                    Session["ResetUserRole"] = null;
+
                     string script = "showStep(5);";
                     ScriptManager.RegisterStartupScript(this, GetType(), "ShowSuccess", script, true);
                     hdnCurrentStep.Value = "5";
                 }
                 else
                 {
-                    ShowAlert("Failed to update password. Please try again.", "error");
+                    ShowAlert("Failed to update password. Profile records may have changed.", "error");
                     hdnCurrentStep.Value = "4";
                 }
             }
             catch (Exception ex)
             {
                 ShowAlert($"Error: {ex.Message}", "error");
-                System.Diagnostics.Debug.WriteLine($"ResetPassword Error: {ex.Message}");
             }
+        }
+
+        protected void lnkGoToLogin_Click(object sender, EventArgs e)
+        {
+            string targetUrl = Session["FinalRedirectTarget"] as string;
+
+            if (string.IsNullOrEmpty(targetUrl))
+            {
+                Response.Redirect("~/u_login.aspx");
+                return;
+            }
+
+            Session["FinalRedirectTarget"] = null;
+            Response.Redirect(targetUrl);
         }
 
         private string GenerateOTP()

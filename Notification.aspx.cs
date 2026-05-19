@@ -128,7 +128,7 @@ namespace Society_management
                     break;
                 case "Notice":
                     // Redirect to the page where users view notices
-                    Response.Redirect("UserDashboard.aspx");
+                    Response.Redirect("UserDashboard.aspx#latest-announcements");
                     break;
                 case "Event":
                     Response.Redirect("User_Event_Details.aspx?EventId=" + refId);

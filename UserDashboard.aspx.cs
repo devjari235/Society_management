@@ -217,8 +217,8 @@ namespace Society_management
             {
                 // Get today's visitors count
                 string countQuery = @"SELECT COUNT(*) FROM Visitors 
-                                    WHERE User_id = @UserId 
-                                    AND CONVERT(date, VisitDateTime) = CONVERT(date, GETDATE())";
+                            WHERE User_id = @UserId 
+                            AND CONVERT(date, VisitDateTime) = CONVERT(date, GETDATE())";
 
                 SqlCommand countCmd = new SqlCommand(countQuery, con);
                 countCmd.Parameters.AddWithValue("@UserId", userId);
@@ -230,31 +230,37 @@ namespace Society_management
 
                 // Get last visitor time
                 string lastVisitorQuery = @"SELECT TOP 1 VisitDateTime FROM Visitors 
-                                          WHERE User_id = @UserId 
-                                          ORDER BY VisitDateTime DESC";
+                                  WHERE User_id = @UserId 
+                                  ORDER BY VisitDateTime DESC";
 
                 SqlCommand lastVisitorCmd = new SqlCommand(lastVisitorQuery, con);
                 lastVisitorCmd.Parameters.AddWithValue("@UserId", userId);
 
                 object lastVisitorTime = lastVisitorCmd.ExecuteScalar();
-                if (lastVisitorTime != null)
+
+                // FIXED CONDITION: Clean fallback if zero records are retrieved from the reader
+                if (lastVisitorTime != null && lastVisitorTime != DBNull.Value)
                 {
                     lblLastVisitorTime.Text = Convert.ToDateTime(lastVisitorTime).ToString("dd-MM-yyyy h:mm tt");
-
+                }
+                else
+                {
+                    // Reset the label so it doesn't leak the old sample text out to the user interface
+                    lblLastVisitorTime.Text = "No recent logs";
                 }
 
                 // Get next scheduled visitor
                 string nextVisitorQuery = @"SELECT TOP 1 ScheduledDateTime FROM ScheduledVisits 
-                                           WHERE User_id = @UserId 
-                                           AND ScheduledDateTime > GETDATE() 
-                                           AND IsCompleted = 0 
-                                           ORDER BY ScheduledDateTime ASC";
+                                   WHERE User_id = @UserId 
+                                   AND ScheduledDateTime > GETDATE() 
+                                   AND IsCompleted = 0 
+                                   ORDER BY ScheduledDateTime ASC";
 
                 SqlCommand nextVisitorCmd = new SqlCommand(nextVisitorQuery, con);
                 nextVisitorCmd.Parameters.AddWithValue("@UserId", userId);
 
                 object nextVisitorTime = nextVisitorCmd.ExecuteScalar();
-                if (nextVisitorTime != null)
+                if (nextVisitorTime != null && nextVisitorTime != DBNull.Value)
                 {
                     lblNextVisitorTime.Text = Convert.ToDateTime(nextVisitorTime).ToString("dd-MM-yyyy h:mm tt");
                     pnlNextVisitor.Visible = true;
@@ -268,39 +274,83 @@ namespace Society_management
 
         private void LoadEventData()
         {
+            // Default UI state
+            phEventDetails.Visible = false;
+            pnlNoEventCard.Visible = true;
+            divEventBadge.InnerText = "None";
+            divEventBadge.Style["background-color"] = "#6c757d";
+
+            // Check session
+            if (Session["U_id"] == null)
+                return;
+
+            int userId = Convert.ToInt32(Session["U_id"]);
             string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = @"SELECT TOP 1 EventName, EventDate AS EventDay, 
-                                EventDate AS StartTime, DATEADD(HOUR, 2, EventDate) AS EndTime
-                                FROM tblEvents 
-                                WHERE EventDate > GETDATE() 
-                                ORDER BY EventDate ASC";
+                // FIXED QUERY: Joins tblSociety inside the subquery to fetch the correct admin_id mapped to the user
+                string query = @"
+            SELECT TOP 1
+                e.EventName,
+                e.EventDate
+            FROM tblEvents e
+            WHERE e.EventDate >= CAST(GETDATE() AS DATE)
+              AND e.admin_id = (
+                  SELECT TOP 1 s.admin_id
+                  FROM tblUser u
+                  INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                  INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+                  INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+                  WHERE u.User_id = @UserId
+              )
+            ORDER BY e.EventDate ASC";
 
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                con.Open();
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    if (reader.Read())
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+
+                    try
                     {
-                        lblEventTitle.Text = reader["EventName"].ToString();
-                        lblEventDate.Text = Convert.ToDateTime(reader["EventDay"]).ToString("dd MMMM");
+                        con.Open();
 
-                        DateTime eventDate = Convert.ToDateTime(reader["EventDay"]);
-                        int daysToEvent = (eventDate - DateTime.Now).Days;
-                        lblDaysToEvent.Text = $"{daysToEvent} days to go";
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                string eventName = reader["EventName"].ToString();
+                                DateTime eventDate = Convert.ToDateTime(reader["EventDate"]);
 
-                        //pnlRegistration.Visible = true;
+                                // Fill labels
+                                lblEventTitle.Text = eventName;
+                                lblEventDate.Text = eventDate.ToString("dd MMMM yyyy");
+
+                                // Calculate remaining days cleanly
+                                int daysToEvent = (eventDate.Date - DateTime.Today).Days;
+
+                                if (daysToEvent == 0)
+                                    lblDaysToEvent.Text = "Today";
+                                else if (daysToEvent == 1)
+                                    lblDaysToEvent.Text = "1 day left";
+                                else
+                                    lblDaysToEvent.Text = $"{daysToEvent} days to go";
+
+                                // Show event section toggle structures
+                                phEventDetails.Visible = true;
+                                pnlNoEventCard.Visible = false;
+
+                                // Badge management state rules update
+                                divEventBadge.InnerText = "New";
+                                divEventBadge.Style["background-color"] = "#e74c3c";
+                            }
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        // No upcoming events
-                        lblEventTitle.Text = "No upcoming events";
-                        lblEventDate.Text = "";
-                        lblDaysToEvent.Text = "";
-                        //pnlRegistration.Visible = false;
+                        System.Diagnostics.Trace.TraceError("LoadEventData Error: " + ex.ToString());
+
+                        divEventBadge.InnerText = "Error";
+                        divEventBadge.Style["background-color"] = "#dc3545";
                     }
                 }
             }
@@ -361,45 +411,77 @@ namespace Society_management
                 {
                     rptNotices.DataSource = allnotice;
                     rptNotices.DataBind();
+
                     pnlNoNotice.Visible = false;
+                    phNoticeContent.Visible = true;
                 }
                 else
                 {
                     rptNotices.DataSource = null;
                     rptNotices.DataBind();
+
                     pnlNoNotice.Visible = true;
+                    phNoticeContent.Visible = false;
                 }
             }
         }
 
         private void LoadUpcomingEvents()
         {
+            // 1. Verify and capture the current User ID from the session safely
+            if (Session["U_id"] == null) return;
+            int userId = Convert.ToInt32(Session["U_id"]);
+
             string connectionString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = @"SELECT EventName, EventDate AS EventDay, 
-                               EventDate AS StartTime, DATEADD(HOUR, 2, EventDate) AS EndTime
-                               FROM tblEvents 
-                               WHERE EventDate > GETDATE() 
-                               ORDER BY EventDate ASC";
+                // FIXED QUERY: Added INNER JOIN tblSociety 's' to bridge tblBlock to s.admin_id context boundaries
+                string query = @"
+            SELECT 
+                EventName, 
+                EventDate AS EventDay, 
+                EventDate AS StartTime, 
+                DATEADD(HOUR, 2, EventDate) AS EndTime
+            FROM tblEvents 
+            WHERE EventDate >= CAST(GETDATE() AS DATE) 
+              AND admin_id = (
+                  SELECT TOP 1 s.admin_id 
+                  FROM tblUser u
+                  INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                  INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+                  INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+                  WHERE u.User_id = @UserId
+              )
+            ORDER BY EventDate ASC";
 
-                SqlCommand cmd = new SqlCommand(query, con);
-
-                con.Open();
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                if (dt.Rows.Count > 0)
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    rptEvents.DataSource = dt;
-                    rptEvents.DataBind();
-                    pnlNoEvents.Visible = false;
-                }
-                else
-                {
-                    pnlNoEvents.Visible = true;
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+
+                    try
+                    {
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataTable dt = new DataTable();
+                        da.Fill(dt);
+
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            rptEvents.DataSource = dt;
+                            rptEvents.DataBind();
+                            pnlNoEvents.Visible = false;
+                        }
+                        else
+                        {
+                            rptEvents.DataSource = null;
+                            rptEvents.DataBind();
+                            pnlNoEvents.Visible = true;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Trace.TraceError($"Error binding upcoming events list repeater: {ex.Message}");
+                    }
                 }
             }
         }

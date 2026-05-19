@@ -51,6 +51,15 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.Label lblIdentifierError;
 
         /// <summary>
+        /// btnCheckIdentifier control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCheckIdentifier;
+
+        /// <summary>
         /// rbEmail control.
         /// </summary>
         /// <remarks>
@@ -139,6 +148,15 @@ namespace Society_management
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnResetPassword;
+
+        /// <summary>
+        /// lnkGoToLogin control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton lnkGoToLogin;
 
         /// <summary>
         /// hdnIdentifier control.

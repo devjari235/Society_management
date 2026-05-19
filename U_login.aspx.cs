@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
+using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Data.SqlClient;
-using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace Society_management
 {
     public partial class U_login : System.Web.UI.Page
     {
         string strcon = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -32,60 +31,96 @@ namespace Society_management
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string email = txtEmail.Text;
-            string ph = txtEmail.Text;
-            string pass = txtPassword.Text;
-            SqlConnection con = new SqlConnection(strcon);
-            con.Open();
-            //string query = "select * from tblUser where (Email=@mail or Phone_no=@phone) and (Password=@pass)";
-            string query = @"
-SELECT * FROM tblUser 
-WHERE 
-    (Email COLLATE SQL_Latin1_General_CP1_CI_AS = @mail 
-     OR Phone_no COLLATE SQL_Latin1_General_CP1_CI_AS = @phone)
-AND 
-    Password COLLATE SQL_Latin1_General_CP1_CS_AS = @pass";
+            string emailOrPhone = txtEmail.Text.Trim();
+            string rawPassword = txtPassword.Text.Trim();
 
-            SqlCommand cmd = new SqlCommand(query, con);
-            cmd.Parameters.AddWithValue("mail", email);
-            cmd.Parameters.AddWithValue("phone", ph);
-            cmd.Parameters.AddWithValue("pass", pass);
-            int i = Convert.ToInt16(cmd.ExecuteScalar());
-            if (i == 0)
+            if (string.IsNullOrEmpty(emailOrPhone) || string.IsNullOrEmpty(rawPassword))
             {
-                string script = @"
-                    <script>
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Invalid User or Password',
-                            confirmButtonColor: '#d33',
-                            confirmButtonText: 'Try Again'
-                        });
-                    </script>";
-
-                ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
-
+                ShowErrorAlert("Fields cannot be empty");
+                return;
             }
-            else
+
+            // Generate MD5 hash variant of input password to match encrypted DB fields
+            string encryptedPassword = GetMd5Hash(rawPassword);
+
+            using (SqlConnection con = new SqlConnection(strcon))
             {
-                // Session["a"] = txtEmail.Text;
+                // Checks matching patterns for either raw text input or encrypted string formats
+                string query = @"
+                    SELECT User_id FROM tblUser 
+                    WHERE (Email = @identifier OR Phone_no = @identifier)
+                    AND (Password COLLATE SQL_Latin1_General_CP1_CS_AS = @rawPass 
+                         OR Password = @encryptedPass)";
 
-                SqlDataReader dr = cmd.ExecuteReader();
-
-
-                if (dr.HasRows)
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    while (dr.Read())
+                    cmd.Parameters.AddWithValue("@identifier", emailOrPhone);
+                    cmd.Parameters.AddWithValue("@rawPass", rawPassword);
+                    cmd.Parameters.AddWithValue("@encryptedPass", encryptedPassword);
+
+                    try
                     {
-                        Session["U_id"] = dr.GetValue(0).ToString();
-                        HttpCookie userCookie = new HttpCookie("UserInfo");
-                        userCookie["U_id"] = dr.GetValue(0).ToString();
-                        Response.Cookies.Add(userCookie);
+                        con.Open();
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                // Account validation matching found! Fetch User ID
+                                string userId = dr["User_id"].ToString();
+                                Session["U_id"] = userId;
+
+                                // Establish persistent authentication token footprints via cookies
+                                HttpCookie userCookie = new HttpCookie("UserInfo");
+                                userCookie["U_id"] = userId;
+                                userCookie.Expires = DateTime.Now.AddDays(15); // Keeps the cookie active for 15 days
+                                Response.Cookies.Add(userCookie);
+
+                                Response.Redirect("UserDashboard.aspx", false);
+                                Context.ApplicationInstance.CompleteRequest();
+                            }
+                            else
+                            {
+                                ShowErrorAlert("Invalid User or Password");
+                            }
+                        }
                     }
-                    Response.Redirect("UserDashboard.aspx");
+                    catch (Exception ex)
+                    {
+                        ShowErrorAlert("Database Connection Error. Try again later.");
+                        System.Diagnostics.Debug.WriteLine($"Login Execution Failure: {ex.Message}");
+                    }
                 }
             }
+        }
+
+        // Helper cryptographic component mapping MD5 outputs matching your ForgotPassword module
+        private string GetMd5Hash(string input)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in hashBytes)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
+        }
+
+        private void ShowErrorAlert(string message)
+        {
+            string script = $@"
+                <script>
+                    Swal.fire({{
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '{message}',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Try Again'
+                    }});
+                </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
         }
     }
 }

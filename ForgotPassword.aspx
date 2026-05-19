@@ -149,7 +149,7 @@
             margin-bottom: 8px;
         }
 
-        .fp-input-group .input-wrap { position: relative; }
+        .fp-input-group .input-wrap { position: relative; width: 100%; }
         .fp-input-group .input-wrap i {
             position: absolute;
             left: 16px;
@@ -157,11 +157,12 @@
             transform: translateY(-50%);
             color: #94a3b8;
             font-size: 0.95rem;
+            z-index: 5;
         }
 
         .fp-input-group .fp-input {
             width: 100%;
-            padding: 13px 16px 13px 44px;
+            padding: 13px 44px 13px 44px; /* Balanced left and right bounds padding */
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 0.95rem;
@@ -245,13 +246,18 @@
         /* ── Password toggle ── */
         .pw-toggle {
             position: absolute;
-            right: 14px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             color: #94a3b8;
             cursor: pointer;
+            padding: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .error-message { color: #ef4444; font-size: 0.8rem; font-weight: 500; display: none; margin-top: 5px; align-items: center; gap: 4px; }
@@ -322,7 +328,7 @@
                     <div id="step1" class="step active">
                         <div class="fp-icon-wrap"><i class="fas fa-lock"></i></div>
                         <h2 class="fp-title">Forgot Password?</h2>
-                        <p class="fp-subtitle">Enter your registered email address or mobile number to receive a verification code.</p>
+                        <p class="fp-subtitle">Enter your registered email address or mobile number to verify your profile account details.</p>
 
                         <div class="fp-input-group">
                             <label>Email Address or Mobile Number</label>
@@ -335,9 +341,9 @@
                             </div>
                             <asp:Label ID="lblIdentifierError" runat="server" ForeColor="Red" Style="font-size:0.8rem; display:block; margin-top:5px;" />
                         </div>
-                        <button type="button" class="fp-btn" onclick="goToStep2()">
-                            <i class="fas fa-arrow-right"></i> Continue
-                        </button>
+                        
+                        <asp:Button ID="btnCheckIdentifier" runat="server" Text="Continue" CssClass="fp-btn" OnClick="btnCheckIdentifier_Click" OnClientClick="return goToStep2();" />
+                        
                         <div class="fp-back">
                             <a href="Login.aspx"><i class="fas fa-arrow-left"></i> Back to Login</a>
                         </div>
@@ -427,7 +433,10 @@
                             <div class="fp-success-icon"><i class="fas fa-check"></i></div>
                             <h2 class="fp-title" style="color:#10b981;">Password Reset Successful!</h2>
                             <p class="fp-subtitle">Your password has been updated. You can now login with your new password.</p>
-                            <a href="Login.aspx" class="fp-btn" style="text-decoration:none;"><i class="fas fa-sign-in-alt"></i> Go to Login</a>
+        
+                            <asp:LinkButton ID="lnkGoToLogin" runat="server" CssClass="fp-btn" Style="text-decoration:none;" OnClick="lnkGoToLogin_Click">
+                                <i class="fas fa-sign-in-alt"></i> Go to Login
+                            </asp:LinkButton>
                         </div>
                     </div>
 
@@ -453,7 +462,7 @@
                 }
 
                 var id = document.getElementById('<%= hdnIdentifier.ClientID %>').value;
-                if (id) setHints(id);
+                if (id && step === 2) setHints(id);
                 if (step === 3) startTimer();
             });
 
@@ -469,20 +478,31 @@
 
                 if (!identifier) {
                     showError('identifierError', 'Please enter email or mobile number');
-                    return;
+                    return false;
                 }
 
                 if (!emailRegex.test(identifier) && !mobileRegex.test(identifier)) {
                     showError('identifierError', 'Please enter valid email or 10-digit mobile number');
-                    return;
+                    return false;
                 }
 
                 hideError('identifierError');
-                setHints(identifier);
-
                 document.getElementById('<%= hdnIdentifier.ClientID %>').value = identifier;
-                showStep(2);
-                document.getElementById('<%= hdnCurrentStep.ClientID %>').value = '2';
+                return true;
+            }
+
+            function setHintsFromCodeBehind(maskedEmail, maskedSMS) {
+                var emailHint = document.getElementById('emailHint');
+                var smsHint = document.getElementById('smsHint');
+                
+                if (emailHint) emailHint.textContent = maskedEmail;
+                if (smsHint) smsHint.textContent = maskedSMS;
+                
+                if(maskedEmail !== "N/A") {
+                    selectMethod('Email');
+                } else {
+                    selectMethod('SMS');
+                }
             }
 
             function showStep(step) {
@@ -510,26 +530,6 @@
                     var l = document.getElementById('line' + j);
                     if (!l) continue;
                     l.classList.toggle('done', j < active);
-                }
-            }
-
-            function setHints(val) {
-                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                var emailHint = document.getElementById('emailHint');
-                var smsHint = document.getElementById('smsHint');
-                if (emailRegex.test(val)) {
-                    var parts = val.split('@');
-                    var masked = parts[0].substring(0, 2) + '***@' + parts[1];
-                    if (emailHint) emailHint.textContent = masked;
-                    document.getElementById('<%= rbEmail.ClientID %>').checked = true;
-                    document.getElementById('<%= rbSMS.ClientID %>').disabled = true;
-                    selectMethod('Email');
-                } else {
-                    var masked = val.substring(0, 2) + '****' + val.substring(6);
-                    if (smsHint) smsHint.textContent = '+91 ' + masked;
-                    document.getElementById('<%= rbSMS.ClientID %>').checked = true;
-                    document.getElementById('<%= rbEmail.ClientID %>').disabled = true;
-                    selectMethod('SMS');
                 }
             }
 
@@ -590,8 +590,8 @@
                 var countEl = document.getElementById('timerCount');
                 var resendBtn = document.getElementById('resendBtn');
                 var timerText = document.getElementById('timerText');
-                if(resendBtn) resendBtn.disabled = true;
-                if(timerText) timerText.style.display = 'inline';
+                if (resendBtn) resendBtn.disabled = true;
+                if (timerText) timerText.style.display = 'inline';
 
                 clearInterval(timerInterval);
                 timerInterval = setInterval(function () {
@@ -637,7 +637,7 @@
 
                 var colors = ['#e2e8f0', '#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
                 var labels = ['', 'Weak', 'Fair', 'Good', 'Strong'];
-                
+
                 fill.style.width = (score * 25) + '%';
                 fill.style.background = colors[score];
                 text.textContent = labels[score];

@@ -471,7 +471,41 @@
     margin-bottom: 0.5rem;
 }
 
+/* =========================================
+   ANNOUNCEMENTS EMPTY STATE COMPONENT 
+========================================= */
+.notice-empty-container {
+    padding: 40px 20px;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6rem rgba(0,0,0,0.05);
+    margin: 10px auto;
+    width: 100%;
+}
 
+.notice-empty-icon {
+    font-size: 3.5rem;
+    color: #0d6efd;
+    opacity: 0.2;
+    margin-bottom: 1rem;
+    display: inline-block;
+    animation: noticeFloat 3s ease-in-out infinite;
+}
+
+@keyframes noticeFloat {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+
+.notice-empty-title {
+    color: #1e293b;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
 
     </style>
 
@@ -582,25 +616,65 @@
                         Next expected visitor at <asp:Label ID="lblNextVisitorTime" runat="server" Text="4:30 PM"></asp:Label>.
                     </asp:Panel>
                 </div>
-                <div class="card-footer">
-                    <span><i class="fas fa-user-clock me-1"></i> Last visitor: <asp:Label ID="lblLastVisitorTime" runat="server" Text="11:30 AM"></asp:Label></span>
-                    <asp:HyperLink ID="lnkViewVisitors" runat="server" CssClass="btn btn-sm btn-outline-primary" NavigateUrl="~/Visitor_List.aspx">View All</asp:HyperLink>
+               <div class="card-footer">
+                    <span id="spanLastVisitor" runat="server">
+                        <i class="fas fa-user-clock me-1"></i>
+                        Last visitor:
+                        <asp:Label ID="lblLastVisitorTime" runat="server" Text="No recent logs"></asp:Label>
+                    </span>
+
+                    <asp:HyperLink ID="lnkViewVisitors"
+                        runat="server"
+                        CssClass="btn btn-sm btn-outline-primary"
+                        NavigateUrl="~/Visitor_List.aspx">
+                        View All
+                    </asp:HyperLink>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Society Events</div>
-                    <div class="card-badge">New</div>
-                </div>
-                <div class="card-content">
-                    <asp:Label ID="lblEventTitle" runat="server" Text="Annual Society Day celebration"></asp:Label> on <asp:Label ID="lblEventDate" runat="server" Text="30th June"></asp:Label>. 
-                </div>
-                <div class="card-footer">
-                    <span><i class="far fa-calendar-alt me-1"></i> <asp:Label ID="lblDaysToEvent" runat="server" Text="5 days to go"></asp:Label></span>
-                    <asp:HyperLink ID="lnkRegisterEvent" runat="server" CssClass="btn btn-sm btn-primary" NavigateUrl="~/User_view_Events.aspx">View All Events</asp:HyperLink>
-                </div>
-            </div>
+           <div class="card">
+    <div class="card-header">
+        <div class="card-title">Society Events</div>
+        <div class="card-badge" id="divEventBadge" runat="server">Events</div>
+    </div>
+
+    <!-- Show when event exists -->
+    <asp:PlaceHolder ID="phEventDetails" runat="server" Visible="false">
+        <div class="card-content">
+            <asp:Label ID="lblEventTitle" runat="server"></asp:Label>
+            on
+            <asp:Label ID="lblEventDate" runat="server"></asp:Label>.
+        </div>
+
+        <div class="card-footer">
+            <span>
+                <i class="far fa-calendar-alt me-1"></i>
+                <asp:Label ID="lblDaysToEvent" runat="server"></asp:Label>
+            </span>
+
+            <asp:HyperLink ID="lnkRegisterEvent"
+                runat="server"
+                CssClass="btn btn-sm btn-primary"
+                NavigateUrl="~/User_view_Events.aspx">
+                View All Events
+            </asp:HyperLink>
+        </div>
+    </asp:PlaceHolder>
+   <!-- Show when no event exists -->
+<asp:Panel ID="pnlNoEventCard"
+    runat="server"
+    Visible="false"
+    CssClass="text-center py-2">
+
+    <div class="card-content text-muted mb-0">
+        <i class="fas fa-calendar-times d-block mb-2"
+           style="font-size:1.4rem; color:#adb5bd;"></i>
+        <span style="font-size:0.95rem;">
+            No upcoming events scheduled.
+        </span>
+    </div>
+</asp:Panel>
+</div>
         </div>
 
         <!-- Quick Actions -->
@@ -634,33 +708,51 @@
 
         <!-- Announcements Swiper -->
         <h3 class="mb-3">&nbsp;</h3>
-        <h3 class="mb-3">Latest Announcements</h3>
-        <div class="swiper-container-wrapper">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
-                        <ItemTemplate>
-                            <div class="swiper-slide">
-                                <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" Style="all: unset; display: block;">
-                                    <div class="notice-title"><%# Eval("Title") %></div>
-                                    <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
-                                    <span class="badge bg-success"><%# Eval("Status") %></span>
-                                    <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
-                                    <b><p>Posted By: <%# Eval("name") %></p></b>
-                                    <p><%# Eval("Description") %></p>
-                                    <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
-                                        Text="📎 View Attachment" Target="_blank"
-                                        CssClass="btn btn-sm btn-outline-secondary mt-2"
-                                        Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
-                                </asp:LinkButton></div></ItemTemplate></asp:Repeater><asp:Panel ID="pnlNoNotice" runat="server" Visible="false">
-                        <div class="swiper-slide d-flex align-items-center justify-content-center" style="height: 300px;">
-                            <div class="text-center p-4">
-                                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png" alt="No Notices" style="width: 80px;" />
-                                <h5 class="mt-3 fw-bold text-secondary">No Notice Available</h5><p class="text-muted">Stay tuned! New notices will appear here soon.</p></div></div></asp:Panel></div><div class="swiper-pagination"></div>
+        <h3 id="latest-announcements" class="mb-3">Latest Announcements</h3>
+
+        <%-- ── New Animated Empty State Panel (Old structure completely replaced) ── --%>
+        <asp:Panel ID="pnlNoNotice" runat="server" Visible="false">
+            <div class="notice-empty-container">
+                <div class="notice-empty-icon">
+                    <i class="fas fa-bullhorn"></i>
+                </div>
+                <h4 class="notice-empty-title">No New Announcements</h4>
+                <p class="text-muted mb-0">
+                    Your society administration hasn't broadcasted any active announcements or circulars yet.
+                </p>
             </div>
-            <div class="swiper-button-next"></div>
-        </div>
+        </asp:Panel>
+
+        <%-- ── Data Presenter Swiper Content Placeholder Container ── --%>
+        <asp:PlaceHolder ID="phNoticeContent" runat="server">
+            <div class="swiper-container-wrapper">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        <asp:Repeater ID="rptNotices" runat="server" OnItemCommand="rptNotices_ItemCommand">
+                            <ItemTemplate>
+                                <div class="swiper-slide">
+                                    <asp:LinkButton ID="lnkDetails" runat="server" CommandArgument='<%# Eval("Notice_id") %>' CommandName="ViewDetails" Style="all: unset; display: block;">
+                                        <div class="notice-title"><%# Eval("Title") %></div>
+                                        <span class="badge bg-primary me-2"><%# Eval("Importance") %></span>
+                                        <span class="badge bg-success"><%# Eval("Status") %></span>
+                                        <p class="text-muted mt-2">Expires: <%# Eval("Expiry_date", "{0:dd MMM yyyy}") %></p>
+                                        <b><p>Posted By: <%# Eval("name") %></p></b>
+                                        <p><%# Eval("Description") %></p>
+                                        <asp:HyperLink runat="server" NavigateUrl='<%# Eval("File_path") %>' 
+                                            Text="📎 View Attachment" Target="_blank"
+                                            CssClass="btn btn-sm btn-outline-secondary mt-2"
+                                            Visible='<%# !string.IsNullOrEmpty(Eval("File_path").ToString()) %>' />
+                                    </asp:LinkButton>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+            </div>
+        </asp:PlaceHolder>
 
         <!-- Upcoming Events -->
         <h3 class="mb-3">Upcoming Events</h3><asp:Repeater ID="rptEvents" runat="server">
@@ -672,9 +764,23 @@
                     </div>
                     <div class="event-details">
                         <div class="event-title"><%# Eval("EventName") %></div>
-                        <div class="event-time"><%# Eval("StartTime", "{0:hh:mm tt}") %> - <%# Eval("EndTime", "{0:hh:mm tt}") %></div></div></div></ItemTemplate></asp:Repeater><asp:Panel ID="pnlNoEvents" runat="server" Visible="false" CssClass="text-center py-4">
-            <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
-            <h5 class="text-muted">No Upcoming Events</h5><p>Check back later for scheduled events</p></asp:Panel></div><!-- Quick Help Modal --><div class="modal fade" id="quickHelpModal" tabindex="-1" aria-labelledby="quickHelpModalLabel" aria-hidden="true">
+                        <div class="event-time"><%# Eval("StartTime", "{0:hh:mm tt}") %> - <%# Eval("EndTime", "{0:hh:mm tt}") %></div>
+                    </div>
+                </div>
+            </ItemTemplate>
+         </asp:Repeater>
+<%-- ── Updated Animated Empty State for Events (Matches Announcements) ── --%>
+<asp:Panel ID="pnlNoEvents" runat="server" Visible="false">
+    <div class="notice-empty-container">
+        <div class="notice-empty-icon" style="color: #6c757d;"> <%-- Accent color changed slightly to differentiate it --%>
+            <i class="fas fa-calendar-times"></i>
+        </div>
+        <h4 class="notice-empty-title">No Upcoming Events</h4>
+        <p class="text-muted mb-0">
+            There are currently no community gatherings, meetings, or festivals scheduled. Check back later!
+        </p>
+    </div>
+</asp:Panel></div><!-- Quick Help Modal --><div class="modal fade" id="quickHelpModal" tabindex="-1" aria-labelledby="quickHelpModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
