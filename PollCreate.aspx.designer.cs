@@ -60,24 +60,6 @@ namespace Society_management
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvExpireDate;
 
         /// <summary>
-        /// option1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText option1;
-
-        /// <summary>
-        /// option2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText option2;
-
-        /// <summary>
         /// cvOptions control.
         /// </summary>
         /// <remarks>

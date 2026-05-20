@@ -36,15 +36,18 @@ namespace Society_management
             string identifier = txtEmail.Text.Trim();
             string enteredPassword = txtPassword.Text.Trim();
 
-            // Generate the MD5 hash version of the entered password
             string hashedInputPassword = GetMD5Hash(enteredPassword);
 
             bool loginSuccess = false;
+            bool notAssigned = false;
 
             using (SqlConnection con = new SqlConnection(strcon))
             {
-                // Select user data by email or phone first, checking password matching logic inside C#
-                string query = "SELECT admin_id, name, email, password, phone_no FROM tblAdmin WHERE email = @id OR phone_no = @id";
+                string query = @"SELECT a.admin_id, a.name, a.email, a.password, a.phone_no,
+                                s.Society_id
+                         FROM tblAdmin a
+                         LEFT JOIN tblSociety s ON s.admin_id = a.admin_id
+                         WHERE a.email = @id OR a.phone_no = @id";
 
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {
@@ -57,25 +60,31 @@ namespace Society_management
                         {
                             string dbPassword = dr["password"]?.ToString();
 
-                            // DUAL VERIFICATION LOGIC:
-                            // Check 1: Match directly if password in DB is plain text
-                            // Check 2: Match using the MD5 hash if password in DB is encrypted
                             if (enteredPassword == dbPassword || hashedInputPassword == dbPassword)
                             {
-                                loginSuccess = true;
+                                // ✅ Check if society is assigned via tblSociety.admin_id
+                                string societyId = dr["Society_id"]?.ToString();
 
-                                // Set admin session values
-                                Session["A_id"] = dr["admin_id"].ToString();
-                                Session["A_name"] = dr["name"].ToString();
-                                Session["A_email"] = dr["email"].ToString();
-                                Session["A_pass"] = dbPassword;
-                                Session["A_phone"] = dr["phone_no"].ToString();
+                                if (string.IsNullOrEmpty(societyId))
+                                {
+                                    notAssigned = true; // Credentials correct but no society assigned
+                                }
+                                else
+                                {
+                                    loginSuccess = true;
 
-                                // Create a cookie for Auto-Login
-                                HttpCookie adminCookie = new HttpCookie("AdminInfo");
-                                adminCookie["A_id"] = dr["admin_id"].ToString();
-                                adminCookie.Expires = DateTime.Now.AddDays(1);
-                                Response.Cookies.Add(adminCookie);
+                                    Session["A_id"] = dr["admin_id"].ToString();
+                                    Session["A_name"] = dr["name"].ToString();
+                                    Session["A_email"] = dr["email"].ToString();
+                                    Session["A_pass"] = dbPassword;
+                                    Session["A_phone"] = dr["phone_no"].ToString();
+                                    Session["A_societyId"] = societyId; // ✅ Store for later use
+
+                                    HttpCookie adminCookie = new HttpCookie("AdminInfo");
+                                    adminCookie["A_id"] = dr["admin_id"].ToString();
+                                    adminCookie.Expires = DateTime.Now.AddDays(1);
+                                    Response.Cookies.Add(adminCookie);
+                                }
                             }
                         }
                     }
@@ -86,19 +95,35 @@ namespace Society_management
             {
                 Response.Redirect("AdminDashboard.aspx");
             }
+            else if (notAssigned)
+            {
+                // 🚫 No society assigned alert
+                string script = @"
+            <script>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Access Restricted',
+                    text: 'No society has been assigned to your account. Please contact the developer.',
+                    confirmButtonColor: '#f0ad4e',
+                    confirmButtonText: 'OK'
+                });
+            </script>";
+
+                ClientScript.RegisterStartupScript(this.GetType(), "NotAssigned", script);
+            }
             else
             {
-                // Display SweetAlert error if login fails
+                // ❌ Wrong credentials alert
                 string script = @"
-                    <script>
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Invalid User or Password',
-                            confirmButtonColor: '#d33',
-                            confirmButtonText: 'Try Again'
-                        });
-                    </script>";
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Invalid User or Password',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Try Again'
+                });
+            </script>";
 
                 ClientScript.RegisterStartupScript(this.GetType(), "LoginError", script);
             }

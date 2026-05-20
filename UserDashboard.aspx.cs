@@ -362,54 +362,88 @@ namespace Society_management
 
             using (SqlConnection conn = new SqlConnection(connStr))
             {
+                if (Session["U_id"] == null) return;
                 int userId = Convert.ToInt32(Session["U_id"]);
+
                 conn.Open();
+
+                // Step 1: Automatically archive expired notices globally before reading
                 string updateQuery = @"UPDATE tblNotices 
                                SET Status = 'Expired' 
                                WHERE Expiry_date < GETDATE() AND Status != 'Expired'";
                 SqlCommand updateCmd = new SqlCommand(updateQuery, conn);
                 updateCmd.ExecuteNonQuery();
+
                 DataSet allnotice = new DataSet();
-                if (IsCommitteeMember(userId) == true)
+
+                // Step 2: Core isolated SQL script template targeting the user's specific society
+                string baseNoticeQuery = @"
+            SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, 
+                   n.Importance, n.Status, n.Posted_date, a.name 
+            FROM tblNotices n 
+            INNER JOIN tblAdmin a ON n.admin_id = a.admin_id 
+            WHERE (n.Send_via='On App' OR n.Send_via='Email,On App') 
+              AND n.Broadcast_By = @BroadcastBy 
+              AND (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) 
+              AND n.admin_id = (
+                  SELECT TOP 1 s.admin_id
+                  FROM tblUser u
+                  INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+                  INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+                  INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+                  WHERE u.User_id = @UserId
+              )
+            ORDER BY n.Posted_date DESC";
+
+                // Filter and merge Committee notices
+                if (IsCommitteeMember(userId))
                 {
-                    // Step 1: Update expired notices
-
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App') and n.Broadcast_By='Committee Member' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-
-                    allnotice.Merge(ds);
-                }
-                if (IsOwner() == true)
-                {
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='Owners' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-
-                    allnotice.Merge(ds);
-                }
-                if (IsUser() == true)
-                {
-                    string selectQuery = "SELECT n.Notice_id, n.Title, n.Description, n.Expiry_date, n.File_path, n.Importance, n.Status,  n.Posted_date,  a.name FROM tblNotices n INNER JOIN tblAdmin a ON n.admin_id = a.admin_id WHERE (n.Send_via='On App' or n.Send_via='Email,On App')and n.Broadcast_By='All Members' and (n.Expiry_date IS NULL OR n.Expiry_date >= GETDATE()) ORDER BY  n.Posted_date DESC";
-                    SqlCommand cmd = new SqlCommand(selectQuery, conn);
-                    //  cmd.Parameters.AddWithValue("@id", Session["A_id"]);
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    DataSet ds = new DataSet();
-                    da.Fill(ds);
-                    allnotice.Merge(ds);
-
-
+                    using (SqlCommand cmd = new SqlCommand(baseNoticeQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@BroadcastBy", "Committee Member");
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        da.Fill(ds);
+                        allnotice.Merge(ds);
+                    }
                 }
 
+                // Filter and merge Owner notices
+                if (IsOwner())
+                {
+                    using (SqlCommand cmd = new SqlCommand(baseNoticeQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@BroadcastBy", "Owners");
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        da.Fill(ds);
+                        allnotice.Merge(ds);
+                    }
+                }
+
+                // Filter and merge General Member notices
+                if (IsUser())
+                {
+                    using (SqlCommand cmd = new SqlCommand(baseNoticeQuery, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@BroadcastBy", "All Members");
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        DataSet ds = new DataSet();
+                        da.Fill(ds);
+                        allnotice.Merge(ds);
+                    }
+                }
+
+                // Step 3: Clean up rendering collections and remove duplicate rows
                 if (allnotice.Tables.Count > 0 && allnotice.Tables[0].Rows.Count > 0)
                 {
-                    rptNotices.DataSource = allnotice;
+                    DataView dv = new DataView(allnotice.Tables[0]);
+                    DataTable uniqueNotices = dv.ToTable(true, "Notice_id", "Title", "Description", "Expiry_date", "File_path", "Importance", "Status", "Posted_date", "name");
+
+                    rptNotices.DataSource = uniqueNotices;
                     rptNotices.DataBind();
 
                     pnlNoNotice.Visible = false;

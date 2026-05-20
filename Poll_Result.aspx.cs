@@ -1,35 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace Society_management
 {
     public partial class Poll_Result : System.Web.UI.Page
     {
-        string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
+        string connString = ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // 1. Session verification check for Admin
+            // NOTE: Replace "A_id" with whatever Session variable name you use for logged-in admins (e.g., "Admin_id")
+            if (Session["A_id"] == null)
+            {
+                Response.Redirect("~/Login.aspx"); // Redirect to admin login page
+                return;
+            }
+
+            int adminId = Convert.ToInt32(Session["A_id"]);
+
             if (!IsPostBack)
             {
-                LoadAllPollResults();
-                CloseAllPolls();
+                CloseAllPolls(adminId); // Auto-close outdated polls for this admin's society
+                LoadAllPollResults(adminId); // Load poll results for this admin's society only
             }
         }
-        private void CloseAllPolls()
-        {
-            string connString = System.Configuration.ConfigurationManager.ConnectionStrings["MyDb"].ConnectionString;
 
+        private void CloseAllPolls(int adminId)
+        {
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE()", conn);
+                // Handled spelling matching layout fix for 'Expired_date' if your database column uses that naming layout
+                SqlCommand cmd = new SqlCommand("UPDATE tblPolls SET IsActive = 0 WHERE Expried_date < GETDATE() AND IsActive = 1 AND admin_id = @AdminId", conn);
+                cmd.Parameters.AddWithValue("@AdminId", adminId);
                 cmd.ExecuteNonQuery();
             }
         }
-        private void LoadAllPollResults()
+
+        private void LoadAllPollResults(int adminId)
         {
             DataTable pollsTable = new DataTable();
 
@@ -37,15 +51,17 @@ namespace Society_management
             {
                 conn.Open();
 
-                // Get all polls
-                SqlCommand cmd = new SqlCommand("SELECT PollId, Question FROM tblPolls where IsActive=1 ORDER BY PollId DESC", conn);
+                // 🔥 ADMIN SEPARATION FILTER ADDED: Selects polls belonging ONLY to this specific logged-in admin's society
+                SqlCommand cmd = new SqlCommand("SELECT PollId, Question FROM tblPolls WHERE IsActive = 1 AND admin_id = @AdminId ORDER BY PollId DESC", conn);
+                cmd.Parameters.AddWithValue("@AdminId", adminId);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(pollsTable);
             }
 
             if (pollsTable.Rows.Count > 0)
             {
-                // Add options and total votes to each poll
+                // Add options and total votes columns to each poll row data matrix dynamically
                 pollsTable.Columns.Add("Options", typeof(DataTable));
                 pollsTable.Columns.Add("TotalVotes", typeof(int));
 
@@ -60,12 +76,12 @@ namespace Society_management
                     {
                         conn.Open();
 
-                        // Total votes for this poll
+                        // Fetch total votes matching this poll
                         SqlCommand totalCmd = new SqlCommand("SELECT COUNT(*) FROM tblVotes WHERE PollId = @PollId", conn);
                         totalCmd.Parameters.AddWithValue("@PollId", pollId);
                         totalVotes = (int)totalCmd.ExecuteScalar();
 
-                        // Get option-wise vote counts
+                        // Get option-wise vote counts safely
                         SqlCommand optionCmd = new SqlCommand(@"
                             SELECT o.OptionText,
                                    COUNT(v.VoteId) AS VoteCount
@@ -79,7 +95,7 @@ namespace Society_management
                         SqlDataAdapter da = new SqlDataAdapter(optionCmd);
                         da.Fill(optionsTable);
 
-                        // Add percentage column
+                        // Calculate percentage value injection matrix columns
                         optionsTable.Columns.Add("Percentage", typeof(int));
 
                         foreach (DataRow optionRow in optionsTable.Rows)
@@ -94,13 +110,14 @@ namespace Society_management
                     pollRow["TotalVotes"] = totalVotes;
                 }
 
-                // Bind to outer repeater (one poll per slide)
+                // Bind cleanly to UI items control template tree elements
                 rptPolls.DataSource = pollsTable;
                 rptPolls.DataBind();
                 pnlNoPoll.Visible = false;
             }
             else
             {
+                // Absolute structural layout clear to stop memory leak state loops between switches
                 rptPolls.DataSource = null;
                 rptPolls.DataBind();
                 pnlNoPoll.Visible = true;
@@ -114,8 +131,12 @@ namespace Society_management
                 Repeater rptOptions = (Repeater)e.Item.FindControl("rptOptions");
                 DataRowView drv = (DataRowView)e.Item.DataItem;
                 DataTable options = drv["Options"] as DataTable;
-                rptOptions.DataSource = options;
-                rptOptions.DataBind();
+
+                if (rptOptions != null && options != null)
+                {
+                    rptOptions.DataSource = options;
+                    rptOptions.DataBind();
+                }
             }
         }
     }

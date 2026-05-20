@@ -34,31 +34,53 @@ namespace Society_management
             using (SqlConnection con = new SqlConnection(cs))
             {
                 string query = @"
-                SELECT 
-                    r.RemarkText AS Message,
-                    r.RemarkDate AS CreatedDate,
-                    a.name AS Title,
-                    'Remark' AS Type,
-                    c.Complaint_id AS RefId,
-                    r.IsSeenByUser AS IsRead
-                FROM tblRemarks r
-                INNER JOIN tblComplaint c ON r.Complaint_id = c.Complaint_id
-                INNER JOIN tblAdmin a ON r.admin_id = a.admin_id
-                WHERE c.User_id = @UserId
+SELECT 
+    r.RemarkText AS Message,
+    r.RemarkDate AS CreatedDate,
+    a.name AS Title,
+    'Remark' AS Type,
+    c.Complaint_id AS RefId,
+    r.IsSeenByUser AS IsRead
+FROM tblRemarks r
+INNER JOIN tblComplaint c ON r.Complaint_id = c.Complaint_id
+INNER JOIN tblAdmin a ON r.admin_id = a.admin_id
+WHERE c.User_id = @UserId
 
-                UNION ALL
+UNION ALL
 
-                SELECT 
-                    n.Message,
-                    n.CreatedDate,
-                    n.Title,
-                    n.Type,
-                    n.ReferenceID AS RefId,
-                    n.IsRead
-                FROM Notifications n
-                WHERE n.User_id = @UserId
-
-                ORDER BY CreatedDate DESC";
+SELECT 
+    n.Message,
+    n.CreatedDate,
+    n.Title,
+    n.Type,
+    n.ReferenceID AS RefId,
+    n.IsRead
+FROM Notifications n
+WHERE n.User_id = @UserId
+  AND (
+      n.Type NOT IN ('Notice', 'Event') 
+      OR n.ReferenceID IN (
+          SELECT Notice_id FROM tblNotices WHERE admin_id = (
+              SELECT TOP 1 s.admin_id 
+              FROM tblUser u
+              INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+              INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+              INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+              WHERE u.User_id = @UserId
+          )
+      )
+      OR n.ReferenceID IN (
+          SELECT EventId FROM tblEvents WHERE admin_id = (
+              SELECT TOP 1 s.admin_id 
+              FROM tblUser u
+              INNER JOIN tblOwner o ON u.Owner_id = o.Owner_id
+              INNER JOIN tblBlock b ON o.Block_id = b.Block_id
+              INNER JOIN tblSociety s ON b.Society_id = s.Society_id
+              WHERE u.User_id = @UserId
+          )
+      )
+  )
+ORDER BY CreatedDate DESC";
 
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@UserId", userId);
@@ -70,13 +92,23 @@ namespace Society_management
                 DataTable dtYesterday = dt.Clone();
                 DataTable dtEarlier = dt.Clone();
 
+                // 🧠 FORCE INDIAN STANDARD TIME (IST) TIME ZONE CONTEXT
+                TimeZoneInfo indiaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("India Standard Time");
+                DateTime indiaCurrentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, indiaTimeZone);
+                DateTime indiaToday = indiaCurrentTime.Date;
+                DateTime indiaYesterday = indiaToday.AddDays(-1);
+
                 foreach (DataRow row in dt.Rows)
                 {
-                    DateTime date = Convert.ToDateTime(row["CreatedDate"]);
+                    DateTime databaseDate = Convert.ToDateTime(row["CreatedDate"]);
 
-                    if (date.Date == DateTime.Today)
+                    // If your database stores dates in UTC, convert it to IST first. 
+                    // If your DB already stores absolute Indian time, use: DateTime checkDate = databaseDate.Date;
+                    DateTime checkDate = TimeZoneInfo.ConvertTime(databaseDate, indiaTimeZone).Date;
+
+                    if (checkDate == indiaToday)
                         dtToday.ImportRow(row);
-                    else if (date.Date == DateTime.Today.AddDays(-1))
+                    else if (checkDate == indiaYesterday)
                         dtYesterday.ImportRow(row);
                     else
                         dtEarlier.ImportRow(row);
@@ -91,12 +123,12 @@ namespace Society_management
                 rptEarlier.DataSource = dtEarlier;
                 rptEarlier.DataBind();
 
-                // ✅ PANEL VISIBILITY FIX
+                // PANEL VISIBILITY FIX
                 pnlToday.Visible = dtToday.Rows.Count > 0;
                 pnlYesterday.Visible = dtYesterday.Rows.Count > 0;
                 pnlEarlier.Visible = dtEarlier.Rows.Count > 0;
 
-                // ✅ EMPTY STATE
+                // EMPTY STATE
                 pnlEmpty.Visible =
                     dtToday.Rows.Count == 0 &&
                     dtYesterday.Rows.Count == 0 &&
@@ -114,20 +146,30 @@ namespace Society_management
             string type = e.CommandName;
             string refId = e.CommandArgument.ToString();
 
-            // 1. Mark as Read logic (Ensure your SQL update is called here)
-            MarkNotificationAsRead(refId);
+            // 1. Mark as Read logic based on types 
+            if (type == "Remark")
+            {
+                // Parse the reference ID into an integer to match your tblRemarks schema field parameters
+                if (int.TryParse(refId, out int complaintId))
+                {
+                    MarkRemarksAsSeen(complaintId);
+                }
+            }
+            else
+            {
+                MarkNotificationAsRead(refId);
+            }
 
-            // 2. Redirection Logic
+            // 2. Redirection Logic execution paths
             switch (type)
             {
                 case "Remark":
-                    Response.Redirect("User_Complaint_Details.aspx?id=" + refId); // Or wherever you show complaint remarks
+                    Response.Redirect("User_Complaint_Details.aspx?id=" + refId);
                     break;
                 case "Poll":
                     Response.Redirect("User_Poll.aspx?id=" + refId);
                     break;
                 case "Notice":
-                    // Redirect to the page where users view notices
                     Response.Redirect("UserDashboard.aspx#latest-announcements");
                     break;
                 case "Event":
